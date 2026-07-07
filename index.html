@@ -659,6 +659,7 @@ background:rgba(0,255,102,0.6);
 /* ================= CONFIG ================= */
 let currentScreen = 'start';
 let dashboardInterval = null;
+let config = null;
 
 /* ========================================
    📝 KONFIGURACE - ZDE MĚNÍŠ TYTO TŘI VĚCI
@@ -677,12 +678,15 @@ const MISSION_DEADLINE = new Date(Date.now() + 10 * 24 * 60 * 60 * 1000 + 2 * 60
 const registrationDeadline = new Date(new Date().getFullYear(), 8, 20, 23, 59, 59);
 const operationDeadline = new Date(new Date().getFullYear(), 11, 31, 23, 59, 59);
 
-const config = {
-  registrationEnd: registrationDeadline,
-  mission1End: MISSION_DEADLINE,
-  operationEnd: operationDeadline,
-  logoutTime: new Date(Date.now() + 2 * 60 * 1000)
-};
+/* ================= INIT CONFIG ================= */
+function initConfig() {
+  config = {
+    registrationEnd: registrationDeadline,
+    mission1End: MISSION_DEADLINE,
+    operationEnd: operationDeadline,
+    logoutTime: new Date(Date.now() + 2 * 60 * 1000)
+  };
+}
 
 let timeExpired = {
   registration: false,
@@ -799,6 +803,8 @@ document.getElementById("app").innerHTML = `
 /* ================= SCREEN 2: BRIEFING ==================== */
 function screenBriefing(){
 currentScreen = 'briefing';
+initConfig();
+
 const briefingText = `NEXUS CORE - BRIEFING
 
 Vítejte v systému NEXUS CORE.
@@ -1218,6 +1224,7 @@ type();
 }
 
 /* ================= INIT ================= */
+initConfig();
 screenStart();
 
 </script>
