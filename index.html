@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="screen-orientation" content="landscape">
+<title>NEXUS CORE - AGENT TERMINAL</title>
+
+<style>
+html,body{
+margin:0;
+height:100vh;
+width:100vw;
+background:black;
+color:#00ff66;
+font-family:'Courier New', monospace;
+overflow:hidden;
+touch-action:none;
+user-select:none;
+-webkit-user-select:none;
+-webkit-touch-callout:none;
+position:fixed;
+}
+
+*{
+box-sizing:border-box;
+-webkit-tap-highlight-color:transparent;
+}
+
+#matrix{
+position:fixed;
+inset:0;
+z-index:0;
+opacity:0.12;
+filter: contrast(1.2) brightness(1.1);
+}
+
+#glitch{
+position:fixed;
+inset:0;
+z-index:999;
+background:black;
+opacity:0;
+pointer-events:none;
+}
+
+.glitchOn{
+animation:glitchFlash 0.35s linear;
+}
+
+@keyframes glitchFlash{
+0%{opacity:0;}
+20%{opacity:1; background:rgba(0,255,80,0.18); transform:translate(2px,-2px);}
+40%{opacity:0.2; transform:translate(-3px,2px);}
+60%{opacity:1; background:black;}
+100%{opacity:0;}
+}
+
+#app{
+position:relative;
+z-index:2;
+width:100%;
+height:100%;
+overflow:hidden;
+}
+
+/* ==================== SCREEN 1: START ==================== */
+.screen-start{
+display:flex;
+align-items:center;
+justify-content:center;
+height:100%;
+flex-direction:column;
+}
+
+.screen-start .corner{
+position:absolute;
+width:45px;
+height:45px;
+border:2px solid #00ff66;
+opacity:0.6;
+}
+
+.screen-start .corner-tl{
+top:30px;
+left:30px;
+border-right:none;
+border-bottom:none;
+}
+
+.screen-start .corner-tr{
+top:30px;
+right:30px;
+border-left:none;
+border-bottom:none;
+}
+
+.screen-start .corner-bl{
+bottom:30px;
+left:30px;
+border-right:none;
+border-top:none;
+}
+
+.screen-start .corner-br{
+bottom:30px;
+right:30px;
+border-left:none;
+border-top:none;
+}
+
+.start-title{
+font-size:56px;
+letter-spacing:5px;
+margin-bottom:10px;
+text-shadow:0 0 25px rgba(0,255,102,0.4);
+font-weight:bold;
+}
+
+.start-subtitle{
+font-size:16px;
+letter-spacing:3px;
+opacity:0.8;
+margin-bottom:60px;
+}
+
+.start-btn{
+width:180px;
+height:180px;
+border:3px solid #00ff66;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:18px;
+cursor:pointer;
+background:rgba(0,255,102,0.03);
+transition:all 0.3s ease;
+letter-spacing:1px;
+text-shadow:0 0 10px rgba(0,255,102,0.3);
+line-height:1.3;
+}
+
+.start-btn:hover{
+box-shadow:0 0 40px rgba(0,255,102,0.4);
+background:rgba(0,255,102,0.1);
+}
+
+.start-btn:active{
+transform:scale(0.95);
+}
+
+.system-status{
+position:absolute;
+bottom:30px;
+left:30px;
+font-size:13px;
+opacity:0.7;
+}
+
+/* ==================== SCREEN 2: BRIEFING ==================== */
+.screen-briefing{
+display:flex;
+align-items:center;
+justify-content:center;
+height:100%;
+padding:20px;
+}
+
+.briefing-box{
+max-width:1100px;
+width:100%;
+padding:40px;
+background:rgba(0,0,0,0.92);
+border:2px solid rgba(0,255,102,0.6);
+border-radius:10px;
+box-shadow:0 0 40px rgba(0,255,102,0.1);
+max-height:95vh;
+overflow-y:auto;
+}
+
+.briefing-box h2{
+font-size:20px;
+letter-spacing:3px;
+margin:0 0 25px 0;
+text-shadow:0 0 20px rgba(0,255,102,0.3);
+}
+
+.briefing-box pre{
+font-size:15px;
+line-height:1.7;
+white-space:pre-wrap;
+word-break:break-word;
+margin:0;
+font-family:'Courier New', monospace;
+}
+
+.briefing-content{
+min-height:250px;
+}
+
+.continue-btn{
+padding:14px 35px;
+border:2px solid #00ff66;
+background:rgba(0,255,102,0.05);
+color:#00ff66;
+cursor:pointer;
+font-size:15px;
+margin-top:35px;
+border-radius:8px;
+letter-spacing:1px;
+transition:all 0.3s ease;
+float:right;
+}
+
+.continue-btn:hover{
+background:rgba(0,255,102,0.15);
+box-shadow:0 0 20px rgba(0,255,102,0.2);
+}
+
+.continue-btn:active{
+transform:scale(0.95);
+}
+
+/* ==================== SCREEN 3: BOOT ==================== */
+.screen-boot{
+display:flex;
+align-items:center;
+justify-content:center;
+height:100%;
+padding:20px;
+}
+
+.boot-box{
+max-width:1050px;
+width:100%;
+padding:35px;
+background:rgba(0,0,0,0.92);
+border:2px solid rgba(0,255,102,0.6);
+border-radius:10px;
+box-shadow:0 0 40px rgba(0,255,102,0.1);
+}
+
+.boot-box h2{
+font-size:18px;
+letter-spacing:2px;
+margin:0 0 20px 0;
+text-shadow:0 0 20px rgba(0,255,102,0.3);
+}
+
+.boot-log{
+font-size:14px;
+line-height:1.5;
+font-family:'Courier New', monospace;
+min-height:250px;
+max-height:350px;
+overflow-y:auto;
+}
+
+.boot-log .line{
+opacity:0;
+animation:fadeInLine 0.3s ease forwards;
+margin:3px 0;
+}
+
+@keyframes fadeInLine{
+0%{opacity:0; transform:translateY(-5px);}
+100%{opacity:1; transform:translateY(0);}
+}
+
+.boot-progress-section{
+margin-top:25px;
+}
+
+.boot-progress-label{
+font-size:13px;
+letter-spacing:1px;
+margin-bottom:10px;
+}
+
+.boot-bar{
+height:14px;
+border:2px solid rgba(0,255,102,0.6);
+border-radius:7px;
+background:rgba(0,255,102,0.05);
+overflow:hidden;
+margin-bottom:10px;
+}
+
+.boot-fill{
+height:100%;
+width:0%;
+background:linear-gradient(90deg, #00ff66, #66ffcc);
+box-shadow:0 0 20px rgba(0,255,102,0.4);
+transition:width 0.4s linear;
+}
+
+.boot-status{
+font-size:13px;
+text-align:right;
+opacity:0.8;
+}
+
+/* ==================== SCREEN 4: DASHBOARD ==================== */
+.screen-dashboard{
+display:flex;
+flex-direction:column;
+height:100%;
+padding:15px;
+overflow:hidden;
+gap:15px;
+}
+
+.dashboard-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+font-size:12px;
+letter-spacing:1px;
+flex-wrap:wrap;
+gap:15px;
+}
+
+.dashboard-header-title{
+font-size:16px;
+font-weight:bold;
+}
+
+.dashboard-content{
+display:grid;
+grid-template-columns:repeat(4, 1fr);
+gap:15px;
+flex:1;
+overflow:hidden;
+}
+
+.dashboard-grid-full{
+grid-column:1 / -1;
+}
+
+.card{
+border:2px solid rgba(0,255,102,0.6);
+background:rgba(0,0,0,0.85);
+padding:18px;
+border-radius:8px;
+box-shadow:0 0 25px rgba(0,255,102,0.08);
+display:flex;
+flex-direction:column;
+overflow:hidden;
+transition:all 0.3s ease;
+min-height:220px;
+}
+
+.card.expired{
+border-color:#ff3b3b;
+background:rgba(255,59,59,0.15);
+box-shadow:0 0 25px rgba(255,59,59,0.2);
+}
+
+.card-title{
+font-size:10px;
+letter-spacing:1.5px;
+margin-bottom:10px;
+opacity:0.75;
+font-weight:bold;
+}
+
+.card-value{
+font-size:32px;
+font-weight:bold;
+margin-bottom:10px;
+text-shadow:0 0 15px rgba(0,255,102,0.3);
+font-family:'Courier New', monospace;
+line-height:1;
+}
+
+.card-value-small{
+font-size:14px;
+}
+
+.card.expired .card-value{
+color:#ff3b3b;
+text-shadow:0 0 20px rgba(255,59,59,0.4);
+}
+
+.card-bar{
+height:8px;
+border:1px solid rgba(0,255,102,0.4);
+border-radius:4px;
+background:rgba(0,255,102,0.03);
+overflow:hidden;
+margin-bottom:8px;
+}
+
+.card.expired .card-bar{
+border-color:#ff3b3b;
+background:rgba(255,59,59,0.08);
+}
+
+.card-bar-fill{
+height:100%;
+background:linear-gradient(90deg, #00ff66, #66ffcc);
+box-shadow:0 0 15px rgba(0,255,102,0.3);
+transition:width 0.5s linear;
+}
+
+.card.expired .card-bar-fill{
+background:linear-gradient(90deg, #ff3b3b, #ff6b6b);
+box-shadow:0 0 15px rgba(255,59,59,0.3);
+}
+
+.card-percent{
+font-size:10px;
+text-align:right;
+opacity:0.6;
+}
+
+.card-time{
+font-size:12px;
+opacity:0.75;
+margin-top:8px;
+font-family:'Courier New', monospace;
+}
+
+.card.expired .card-time{
+color:#ff3b3b;
+}
+
+.card-expired-message{
+font-size:10px;
+color:#ff3b3b;
+margin-top:8px;
+font-weight:bold;
+opacity:0.9;
+animation:blinkWarning 0.8s infinite;
+}
+
+@keyframes blinkWarning{
+0%, 49%, 100%{opacity:0.9;}
+50%, 99%{opacity:0.4;}
+}
+
+.alert-list{
+font-size:11px;
+line-height:1.7;
+max-height:100%;
+overflow-y:auto;
+padding-right:8px;
+}
+
+.alert-item{
+padding:4px 0;
+border-bottom:1px solid rgba(0,255,102,0.15);
+animation:alertFadeIn 0.5s ease;
+}
+
+.alert-item:last-child{
+border-bottom:none;
+}
+
+.alert-time{
+opacity:0.6;
+color:#66ffcc;
+font-weight:bold;
+}
+
+@keyframes alertFadeIn{
+0%{opacity:0; transform:translateX(-8px);}
+100%{opacity:1; transform:translateX(0);}
+}
+
+.signal-visualization{
+width:100%;
+height:120px;
+background:rgba(0,255,102,0.05);
+border:2px solid rgba(0,255,102,0.3);
+border-radius:6px;
+display:flex;
+align-items:flex-end;
+justify-content:center;
+gap:6px;
+padding-bottom:12px;
+margin-bottom:12px;
+}
+
+.signal-bar{
+width:8px;
+background:rgba(0,255,102,0.3);
+border-radius:2px;
+transition:height 0.8s ease;
+box-shadow:0 0 10px rgba(0,255,102,0.2);
+}
+
+.signal-bar.active{
+background:linear-gradient(180deg, #00ff66, #66ffcc);
+box-shadow:0 0 15px rgba(0,255,102,0.5);
+}
+
+.network-bar{
+display:flex;
+gap:3px;
+}
+
+.network-segment{
+width:6px;
+height:18px;
+background:rgba(0,255,102,0.3);
+border-radius:2px;
+}
+
+.network-segment.active{
+background:linear-gradient(180deg, #00ff66, #66ffcc);
+box-shadow:0 0 8px rgba(0,255,102,0.4);
+}
+
+.dashboard-footer{
+font-size:10px;
+opacity:0.6;
+letter-spacing:0.5px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+border-top:1px solid rgba(0,255,102,0.2);
+padding-top:12px;
+gap:15px;
+flex-wrap:wrap;
+}
+
+.logout-btn{
+padding:12px 24px;
+border:2px solid #ff3b3b;
+background:rgba(255,59,59,0.05);
+color:#ff3b3b;
+cursor:pointer;
+font-size:13px;
+border-radius:8px;
+letter-spacing:1px;
+transition:all 0.3s ease;
+white-space:nowrap;
+margin-left:auto;
+}
+
+.logout-btn:hover{
+background:rgba(255,59,59,0.15);
+box-shadow:0 0 20px rgba(255,59,59,0.2);
+}
+
+.logout-btn:active{
+transform:scale(0.95);
+}
+
+/* ==================== SCREEN 5: LOGOFF ==================== */
+.screen-logoff{
+display:flex;
+align-items:center;
+justify-content:center;
+height:100%;
+padding:20px;
+}
+
+.logoff-box{
+max-width:900px;
+width:100%;
+padding:45px;
+background:rgba(0,0,0,0.92);
+border:2px solid rgba(0,255,102,0.6);
+border-radius:10px;
+box-shadow:0 0 40px rgba(0,255,102,0.1);
+text-align:center;
+}
+
+.logoff-box h2{
+font-size:18px;
+letter-spacing:2px;
+margin:0 0 35px 0;
+}
+
+.logoff-process{
+font-size:14px;
+line-height:2;
+margin-bottom:35px;
+font-family:'Courier New', monospace;
+}
+
+.logoff-item{
+opacity:0;
+animation:fadeInItem 0.5s ease forwards;
+}
+
+@keyframes fadeInItem{
+0%{opacity:0; transform:translateX(-10px);}
+100%{opacity:1; transform:translateX(0);}
+}
+
+.logoff-bar{
+height:14px;
+border:2px solid rgba(0,255,102,0.6);
+border-radius:7px;
+background:rgba(0,255,102,0.05);
+overflow:hidden;
+margin:25px 0;
+}
+
+.logoff-fill{
+height:100%;
+width:0%;
+background:linear-gradient(90deg, #00ff66, #66ffcc);
+box-shadow:0 0 20px rgba(0,255,102,0.4);
+transition:width 0.3s linear;
+}
+
+.logoff-status{
+font-size:13px;
+margin-top:35px;
+opacity:0.8;
+}
+
+/* ==================== COMMON ==================== */
+.cursor{
+animation:blink 0.8s infinite;
+}
+
+@keyframes blink{
+0%,50%{opacity:1;}
+51%,100%{opacity:0;}
+}
+
+::-webkit-scrollbar{
+width:6px;
+}
+
+::-webkit-scrollbar-track{
+background:rgba(0,255,102,0.05);
+}
+
+::-webkit-scrollbar-thumb{
+background:rgba(0,255,102,0.4);
+border-radius:3px;
+}
+
+::-webkit-scrollbar-thumb:hover{
+background:rgba(0,255,102,0.6);
+}
+
+</style>
+</head>
+
+<body>
+
+<canvas id="matrix"></canvas>
+<div id="glitch"></div>
+<div id="app"></div>
+
+<script>
+
+/* ================= CONFIG ================= */
+let currentScreen = 'start';
+let dashboardInterval = null;
+
+/* ========================================
+   📝 KONFIGURACE - ZDE MĚNÍŠ TYTO TŘI VĚCI
+   ======================================== */
+
+// ⬅️ ZMĚNÍ JMÉNO MISE
+const MISSION_NAME = "MISE 1 - DIGITÁLNÍ STOPA";
+
+// ⬅️ ZMĚNÍ ČAS MISE (dny, hodiny, minuty, sekundy)
+const MISSION_DEADLINE = new Date(Date.now() + 10 * 24 * 60 * 60 * 1000 + 2 * 60 * 60 * 1000 + 17 * 60 * 1000 + 45 * 1000);
+
+/* ========================================
+   PEVNÉ DATUMY - NEUMĚNIT
+   ======================================== */
+
+const registrationDeadline = new Date(new Date().getFullYear(), 8, 20, 23, 59, 59);
+const operationDeadline = new Date(new Date().getFullYear(), 11, 31, 23, 59, 59);
+
+const config = {
+  registrationEnd: registrationDeadline,
+  mission1End: MISSION_DEADLINE,
+  operationEnd: operationDeadline,
+  logoutTime: new Date(Date.now() + 2 * 60 * 1000)
+};
+
+let timeExpired = {
+  registration: false,
+  mission: false,
+  operation: false
+};
+
+const alertMessages = [
+  { time: "15:41:47", text: "AGENT NETWORK: ONLINE" },
+  { time: "15:41:47", text: "MISSION DATA: SYNCHRONIZED" },
+  { time: "15:42:03", text: "SYSTEM STATUS: OPTIMAL" },
+  { time: "15:42:15", text: "ALL SYSTEMS: NOMINAL" },
+  { time: "15:43:21", text: "DATA STREAM: ACTIVE" },
+  { time: "15:44:02", text: "ENCRYPTION: VERIFIED" },
+  { time: "15:44:58", text: "AGENT LINK: STABLE" },
+  { time: "15:45:12", text: "PROTOCOL: CONFIRMED" },
+  { time: "15:45:47", text: "SYNC CHECK: PASSED" },
+  { time: "15:46:33", text: "SECURITY: MAINTAINED" }
+];
+
+/* ================= MATRIX - LANDSCAPE OPTIMIZED ================= */
+const c=document.getElementById("matrix");
+const x=c.getContext("2d");
+
+function resize(){
+c.width=window.innerWidth;
+c.height=window.innerHeight;
+}
+resize();
+window.addEventListener("resize",resize);
+
+const chars="01NEXUSCOREAGENT██▓▒";
+let drops=Array(80).fill(1);
+
+function matrix(){
+x.fillStyle="rgba(0,0,0,0.15)";
+x.fillRect(0,0,c.width,c.height);
+
+x.fillStyle="#66ff33";
+x.font="14px monospace";
+
+for(let i=0;i<drops.length;i++){
+let t=chars[Math.random()*chars.length|0];
+x.fillText(t,i*20,(drops[i]*14));
+
+if((drops[i]*14)>c.height && Math.random()>0.985)drops[i]=0;
+drops[i]++;
+}
+
+requestAnimationFrame(matrix);
+}
+matrix();
+
+/* ================= GLITCH ================= */
+function glitch(){
+const g=document.getElementById("glitch");
+g.classList.remove("glitchOn");
+void g.offsetWidth;
+g.classList.add("glitchOn");
+}
+
+/* ================= TRANSITION ================= */
+function transition(fn){
+glitch();
+if(dashboardInterval){
+clearInterval(dashboardInterval);
+dashboardInterval = null;
+}
+setTimeout(fn, 180);
+}
+
+/* ================= TIME FORMAT ================= */
+function formatTimeWithSeconds(ms){
+if(ms <= 0) return "00d 00h 00m 00s";
+const days = Math.floor(ms / (24 * 60 * 60 * 1000));
+const hours = Math.floor((ms % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+const minutes = Math.floor((ms % (60 * 60 * 1000)) / (60 * 1000));
+const seconds = Math.floor((ms % (60 * 1000)) / 1000);
+return `${String(days).padStart(2, '0')}d ${String(hours).padStart(2, '0')}h ${String(minutes).padStart(2, '0')}m ${String(seconds).padStart(2, '0')}s`;
+}
+
+function getProgressFromDates(startDate, endDate){
+const now = Date.now();
+const start = startDate.getTime();
+const end = endDate.getTime();
+const total = end - start;
+const elapsed = now - start;
+const progress = Math.max(0, Math.min(100, (elapsed / total) * 100));
+return Math.round(progress);
+}
+
+/* ================= SCREEN 1: START ==================== */
+function screenStart(){
+currentScreen = 'start';
+timeExpired = { registration: false, mission: false, operation: false };
+document.getElementById("app").innerHTML = `
+<div class="screen-start">
+  <div class="corner corner-tl"></div>
+  <div class="corner corner-tr"></div>
+  <div class="corner corner-bl"></div>
+  <div class="corner corner-br"></div>
+  
+  <div class="start-title">NEXUS CORE</div>
+  <div class="start-subtitle">AGENT TERMINAL</div>
+  
+  <div class="start-btn" onclick="transition(screenBriefing)">
+    PŘIHLÁŠENÍ<br>AGENTA
+  </div>
+  
+  <div class="system-status">SYSTEM STATUS: STANDBY</div>
+</div>`;
+}
+
+/* ================= SCREEN 2: BRIEFING ==================== */
+function screenBriefing(){
+currentScreen = 'briefing';
+const briefingText = `NEXUS CORE - BRIEFING
+
+Vítejte v systému NEXUS CORE.
+Tento terminál je součástí Školní operace,
+která prověřuje tvoji schopnost řešit úkoly 
+a plnit mise.
+
+Jako agent zde budeš sledovat svůj postup,
+časové limity,
+a stav celé operace.
+
+Všechny operace jsou monitorovány
+v reálném čase. Úspěch závisí na tobě
+a tvých rozhodnutích.
+
+PŘIPRAV SE.
+SYSTÉM SE CHYSTÁ KE SPUŠTĚNÍ.`;
+
+document.getElementById("app").innerHTML = `
+<div class="screen-briefing">
+  <div class="briefing-box">
+    <h2>NEXUS CORE - BRIEFING</h2>
+    <div class="briefing-content">
+      <pre id="brief-text"></pre>
+    </div>
+    <button class="continue-btn" onclick="transition(screenBoot)">POKRAČOVAT →</button>
+    <div style="clear:both;"></div>
+  </div>
+</div>`;
+
+typeWriter(document.getElementById("brief-text"), briefingText, 16);
+}
+
+/* ================= SCREEN 3: BOOT ==================== */
+function screenBoot(){
+currentScreen = 'boot';
+document.getElementById("app").innerHTML = `
+<div class="screen-boot">
+  <div class="boot-box">
+    <h2>NEXUS CORE - SYSTEM BOOT</h2>
+    <div class="boot-log" id="boot-log"></div>
+    <div class="boot-progress-section">
+      <div class="boot-progress-label">BOOT PROGRESS:</div>
+      <div class="boot-bar">
+        <div class="boot-fill" id="boot-fill"></div>
+      </div>
+      <div class="boot-status" id="boot-status">0%</div>
+    </div>
+  </div>
+</div>`;
+
+const bootLog = document.getElementById("boot-log");
+const bootFill = document.getElementById("boot-fill");
+const bootStatus = document.getElementById("boot-status");
+
+const bootSteps = [
+  "> INITIALIZING MATRIX CORE.............. [ OK ]",
+  "> CHECKING SYSTEM INTEGRITY............ [ OK ]",
+  "> LOADING MISSION DATA................. [ OK ]",
+  "> CONNECTING TO CENTRAL DATABASE........ [ OK ]",
+  "> SYNCING AGENT NETWORK................ [ OK ]",
+  "> ENCRYPTING DATA CHANNELS............. [ OK ]",
+  "> CALIBRATING TIME CORE................ [ OK ]",
+  "> VERIFYING ACCESS LEVELS.............. [ OK ]",
+  "> FINALIZING BOOT PROCESS.............. [ OK ]",
+];
+
+let bootIdx = 0;
+
+function addBootLine(){
+if(bootIdx < bootSteps.length){
+const line = document.createElement("div");
+line.className = "line";
+line.textContent = bootSteps[bootIdx];
+bootLog.appendChild(line);
+
+const bootProgress = Math.round((bootIdx / bootSteps.length) * 100);
+bootFill.style.width = bootProgress + "%";
+bootStatus.textContent = bootProgress + "%";
+
+bootIdx++;
+setTimeout(addBootLine, 250);
+}else{
+bootFill.style.width = "100%";
+bootStatus.textContent = "100%";
+
+const finalLine = document.createElement("div");
+finalLine.textContent = "\nPŘÍSTUP POVOLEN\nVÍTEJ, AGENTE.";
+finalLine.style.marginTop = "15px";
+finalLine.style.opacity = "0.9";
+bootLog.appendChild(finalLine);
+
+setTimeout(()=>transition(screenDashboard), 1500);
+}
+}
+
+addBootLine();
+}
+
+/* ================= SIGNAL VISUALIZATION ================= */
+function generateSignalPattern(){
+const bars = [];
+for(let i = 0; i < 16; i++){
+const randomHeight = Math.random() * 80 + 20;
+bars.push(randomHeight);
+}
+return bars;
+}
+
+/* ================= GET RANDOM ALERTS ================= */
+function getRandomAlerts(){
+const count = 4;
+const shuffled = [...alertMessages].sort(() => Math.random() - 0.5);
+return shuffled.slice(0, count);
+}
+
+/* ================= SCREEN 4: DASHBOARD ==================== */
+function screenDashboard(){
+currentScreen = 'dashboard';
+const dashboardStartTime = Date.now();
+
+const dashboard = `
+<div class="screen-dashboard">
+  <div class="dashboard-header">
+    <div class="dashboard-header-title">NEXUS CORE // DASHBOARD</div>
+    <div style="color:#00ff66;">AGENT ID: NX-047 | TIME: <span id="header-time">15:42:18</span></div>
+  </div>
+
+  <div class="dashboard-content">
+    <!-- CARD 1: REGISTRATION -->
+    <div class="card" id="card-registration">
+      <div class="card-title">STAV REGISTRACE NOVÁCH AGENTŮ:</div>
+      <div class="card-value">AKTIVNÍ</div>
+      <div class="card-bar">
+        <div class="card-bar-fill" id="bar-reg" style="width:0%;"></div>
+      </div>
+      <div class="card-time" id="time-reg">ZBÝVAJÍCÍ ČAS: --</div>
+    </div>
+
+    <!-- CARD 2: MISSION -->
+    <div class="card" id="card-mission">
+      <div class="card-title">MISE:</div>
+      <div class="card-value card-value-small">${MISSION_NAME}</div>
+      <div class="card-bar">
+        <div class="card-bar-fill" id="bar-mission" style="width:0%;"></div>
+      </div>
+      <div class="card-time" id="time-mission">ZBÝVAJÍCÍ ČAS: --</div>
+    </div>
+
+    <!-- CARD 3: OPERATION -->
+    <div class="card" id="card-operation">
+      <div class="card-title">OPERACE SKONČÍ:</div>
+      <div class="card-value" id="val-operation">--d --h --m</div>
+      <div class="card-bar">
+        <div class="card-bar-fill" id="bar-operation" style="width:0%;"></div>
+      </div>
+      <div class="card-percent" id="percent-operation">0%</div>
+    </div>
+
+    <!-- CARD 4: LOGOUT -->
+    <div class="card">
+      <div class="card-title">ODHLÁŠENÍ AGENTA ZA:</div>
+      <div class="card-value" id="val-logout">00:00:00</div>
+      <div class="card-bar">
+        <div class="card-bar-fill" id="bar-logout" style="width:0%;"></div>
+      </div>
+      <div class="card-percent" id="percent-logout">0%</div>
+    </div>
+
+    <!-- ALERTS + NETWORK -->
+    <div class="card dashboard-grid-full">
+      <div style="display:flex; gap:20px; height:100%;">
+        <div style="flex:1.5;">
+          <div class="card-title">SYSTEM ALERTS</div>
+          <div class="alert-list" id="alert-list"></div>
+        </div>
+        <div style="flex:1;">
+          <div class="card-title">NETWORK STABILITY</div>
+          <div class="signal-visualization" id="signal-viz"></div>
+          <div style="text-align:center; font-size:15px; margin-bottom:8px; color:#00ff66;" id="signal-percent">100%</div>
+          <div class="network-bar">
+            <div class="network-segment active"></div>
+            <div class="network-segment active"></div>
+            <div class="network-segment active"></div>
+            <div class="network-segment active"></div>
+            <div class="network-segment active"></div>
+            <div class="network-segment active"></div>
+            <div class="network-segment active"></div>
+            <div class="network-segment active"></div>
+            <div class="network-segment active"></div>
+            <div class="network-segment active"></div>
+            <div class="network-segment active"></div>
+            <div class="network-segment active"></div>
+            <div class="network-segment active"></div>
+            <div class="network-segment active"></div>
+            <div class="network-segment active"></div>
+            <div class="network-segment active"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard-footer">
+    <div>TERMINAL ID: NX-CORE-07</div>
+    <div>🔒 ENCRYPTED</div>
+    <div id="dashboard-time">2025-05-18 16:24:13</div>
+    <button class="logout-btn" onclick="transition(screenLogoff)">ODHLÁSIT AGENTA</button>
+  </div>
+</div>`;
+
+document.getElementById("app").innerHTML = dashboard;
+
+let signalBars = generateSignalPattern();
+renderSignalViz(signalBars);
+
+renderAlerts(getRandomAlerts());
+
+function updateDashboard(){
+if(currentScreen !== 'dashboard') return;
+
+const now = Date.now();
+
+const timeEl = document.querySelector("#header-time");
+if(!timeEl) return;
+
+const dateObj = new Date();
+timeEl.textContent = dateObj.toLocaleTimeString('cs-CZ');
+
+// Registration
+const regRemain = Math.max(0, config.registrationEnd.getTime() - now);
+const timeRegEl = document.getElementById("time-reg");
+const cardReg = document.getElementById("card-registration");
+if(timeRegEl){
+timeRegEl.textContent = "ZBÝVAJÍCÍ ČAS: " + formatTimeWithSeconds(regRemain);
+if(regRemain === 0 && !timeExpired.registration){
+timeExpired.registration = true;
+if(cardReg) cardReg.classList.add("expired");
+if(timeRegEl) timeRegEl.innerHTML += '<div class="card-expired-message">▶ ČAS VYPRŠEL</div>';
+}
+}
+const regPercent = getProgressFromDates(new Date(dashboardStartTime - config.registrationEnd.getTime() + now), config.registrationEnd);
+const barReg = document.getElementById("bar-reg");
+if(barReg) barReg.style.width = regPercent + "%";
+
+// Mission
+const missRemain = Math.max(0, config.mission1End.getTime() - now);
+const timeMissEl = document.getElementById("time-mission");
+const cardMiss = document.getElementById("card-mission");
+if(timeMissEl){
+timeMissEl.textContent = "ZBÝVAJÍCÍ ČAS: " + formatTimeWithSeconds(missRemain);
+if(missRemain === 0 && !timeExpired.mission){
+timeExpired.mission = true;
+if(cardMiss) cardMiss.classList.add("expired");
+if(timeMissEl) timeMissEl.innerHTML += '<div class="card-expired-message">▶ ČAS VYPRŠEL</div>';
+}
+}
+const missPercent = getProgressFromDates(new Date(dashboardStartTime - config.mission1End.getTime() + now), config.mission1End);
+const barMiss = document.getElementById("bar-mission");
+if(barMiss) barMiss.style.width = missPercent + "%";
+
+// Operation
+const opRemain = Math.max(0, config.operationEnd.getTime() - now);
+const valOp = document.getElementById("val-operation");
+const cardOp = document.getElementById("card-operation");
+if(valOp){
+valOp.textContent = formatTimeWithSeconds(opRemain);
+if(opRemain === 0 && !timeExpired.operation){
+timeExpired.operation = true;
+if(cardOp) cardOp.classList.add("expired");
+}
+}
+const opPercent = getProgressFromDates(new Date(dashboardStartTime - config.operationEnd.getTime() + now), config.operationEnd);
+const barOp = document.getElementById("bar-operation");
+if(barOp) barOp.style.width = opPercent + "%";
+const percentOp = document.getElementById("percent-operation");
+if(percentOp) percentOp.textContent = opPercent + "%";
+
+// Logout
+const logoutRemain = Math.max(0, config.logoutTime.getTime() - now);
+const logoutSec = Math.floor(logoutRemain / 1000);
+const logoutMin = Math.floor(logoutSec / 60);
+const logoutMs = logoutSec % 60;
+const valLogout = document.getElementById("val-logout");
+if(valLogout) valLogout.textContent = "00:" + String(logoutMin).padStart(2,'0') + ":" + String(logoutMs).padStart(2,'0');
+const logoutPercent = getProgressFromDates(new Date(dashboardStartTime - config.logoutTime.getTime() + now), config.logoutTime);
+const barLogout = document.getElementById("bar-logout");
+if(barLogout) barLogout.style.width = logoutPercent + "%";
+const percentLogout = document.getElementById("percent-logout");
+if(percentLogout) percentLogout.textContent = logoutPercent + "%";
+
+const fullDate = dateObj.toISOString().slice(0,19).replace('T',' ');
+const dashTime = document.getElementById("dashboard-time");
+if(dashTime) dashTime.textContent = fullDate;
+
+if(Math.random() > 0.85){
+signalBars = generateSignalPattern();
+renderSignalViz(signalBars);
+}
+
+if(Math.random() > 0.92){
+renderAlerts(getRandomAlerts());
+}
+
+if(logoutRemain <= 0){
+clearInterval(dashboardInterval);
+transition(screenLogoff);
+}
+}
+
+function renderSignalViz(bars){
+const viz = document.getElementById("signal-viz");
+if(!viz) return;
+viz.innerHTML = '';
+const avgHeight = bars.reduce((a,b)=>a+b,0)/bars.length;
+const sigPercent = document.getElementById("signal-percent");
+if(sigPercent) sigPercent.textContent = Math.round(avgHeight) + "%";
+
+bars.forEach(height => {
+const bar = document.createElement("div");
+bar.className = "signal-bar";
+if(height > 40) bar.classList.add("active");
+bar.style.height = height + "%";
+viz.appendChild(bar);
+});
+}
+
+function renderAlerts(alerts){
+const alertList = document.getElementById("alert-list");
+if(!alertList) return;
+alertList.innerHTML = '';
+alerts.forEach(alert => {
+const item = document.createElement("div");
+item.className = "alert-item";
+item.innerHTML = `<span class="alert-time">${alert.time}</span> ${alert.text}`;
+alertList.appendChild(item);
+});
+}
+
+updateDashboard();
+dashboardInterval = setInterval(updateDashboard, 1000);
+}
+
+/* ================= SCREEN 5: LOGOFF ==================== */
+function screenLogoff(){
+currentScreen = 'logoff';
+document.getElementById("app").innerHTML = `
+<div class="screen-logoff">
+  <div class="logoff-box">
+    <h2>NEXUS CORE - LOGOFF</h2>
+    <div class="logoff-process" id="logoff-process"></div>
+    <div class="logoff-bar">
+      <div class="logoff-fill" id="logoff-fill"></div>
+    </div>
+    <div class="logoff-status" id="logoff-status"></div>
+  </div>
+</div>`;
+
+const logoffProcess = document.getElementById("logoff-process");
+const logoffFill = document.getElementById("logoff-fill");
+const logoffStatus = document.getElementById("logoff-status");
+
+const logoffSteps = [
+  "TERMINATING SESSION...",
+  "CLOSING CONNECTIONS...",
+  "SECURING DATA..."
+];
+
+let logoffIdx = 0;
+
+function addLogoffLine(){
+if(logoffIdx < logoffSteps.length){
+const item = document.createElement("div");
+item.className = "logoff-item";
+item.textContent = logoffSteps[logoffIdx];
+logoffProcess.appendChild(item);
+
+const progress = Math.round(((logoffIdx + 1) / (logoffSteps.length + 1)) * 100);
+logoffFill.style.width = progress + "%";
+
+logoffIdx++;
+setTimeout(addLogoffLine, 500);
+}else{
+logoffFill.style.width = "100%";
+
+logoffStatus.innerHTML = `
+<div style="margin-bottom:20px;">SYSTEM LOGOFF COMPLETE.</div>
+<div style="margin-bottom:20px;">DĚKUJEME, AGENTE.</div>
+<div style="margin-bottom:30px;">DO ZOBRAZENÍ VÝSLEDKŮ ZBÝVÁ:</div>
+<div style="font-size:36px; color:#00ff66; text-shadow:0 0 20px rgba(0,255,102,0.3);">00:10</div>
+`;
+
+setTimeout(()=>transition(screenStart), 3000);
+}
+}
+
+addLogoffLine();
+}
+
+/* ================= TYPEWRITER ================= */
+function typeWriter(el, text, speed){
+if(!el) return;
+let i = 0;
+el.innerHTML = '';
+
+function type(){
+if(i < text.length){
+el.textContent = text.slice(0, i) + '█';
+i++;
+setTimeout(type, speed);
+}else{
+el.textContent = text;
+}
+}
+
+type();
+}
+
+/* ================= INIT ================= */
+screenStart();
+
+</script>
+
+</body>
+</html>
