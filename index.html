@@ -251,10 +251,10 @@
             margin-left: 6px;
             box-shadow: var(--neon-glow);
         }
-        
+
         .cursor.red {
-            background-color: var(--alert-red);
-            box-shadow: var(--red-glow);
+            background-color: var(--alert-red) !important;
+            box-shadow: var(--red-glow) !important;
         }
 
         .countdown-timer {
@@ -298,7 +298,7 @@
             transition: width 0.5s ease;
         }
 
-        /* DIGITÁLNÍ KANVAS PRO AI JÁDRO - Zvětšeno o 25 % (z 260px na 325px) */
+        /* DIGITÁLNÍ KANVAS PRO AI JÁDRO */
         .ai-core-container-canvas {
             position: relative;
             width: 325px;
@@ -457,7 +457,7 @@
         .menu-grid .btn:nth-child(4) { grid-column: span 2; } 
         .menu-grid .btn:nth-child(5) { grid-column: span 2; }
         .menu-grid .btn:nth-child(6) { grid-column: span 2; }
-        .menu-grid .btn:nth-child(7) { grid-column: span 6; border-color: var(--neon-yellow); color: var(--neon-yellow); } /* Nové tlačítko přes celou šířku */
+        .menu-grid .btn:nth-child(7) { grid-column: span 6; } 
 
         .missions-menu-grid {
             display: grid;
@@ -473,7 +473,7 @@
         .missions-menu-grid .btn:nth-child(4) { grid-column: span 3; }
         .missions-menu-grid .btn:nth-child(5) { grid-column: span 3; }
 
-        /* OPRAVENÝ DASHBOARD LAYOUT */
+        /* DASHBOARD LAYOUT */
         .dashboard-grid {
             display: grid;
             grid-template-columns: 2.5fr 1fr;
@@ -522,6 +522,13 @@
         .rating-auth-wrapper { max-width: 650px; width: 100%; margin: auto; display: flex; flex-direction: column; gap: 20px; background: rgba(2, 6, 2, 0.9); border: 1px solid rgba(0, 255, 0, 0.25); padding: 35px; border-radius: 8px; box-shadow: var(--neon-glow); }
         .terminal-input { background: #000; border: 1px solid var(--neon-green); color: var(--neon-green); font-family: 'Courier New', monospace; font-size: 24px; padding: 15px 20px; width: 100%; outline: none; text-transform: uppercase; text-align: center; letter-spacing: 3px; box-shadow: inset 0 0 10px rgba(0,255,0,0.2); }
         .rating-result-box { display: none; margin-top: 20px; border: 1px dashed rgba(0, 255, 0, 0.4); background: rgba(0, 15, 0, 0.4); padding: 25px; border-radius: 6px; font-size: 18px; line-height: 1.8; text-align: left; }
+        
+        /* Třída pro kompletní přebarvení na červeno při chybě */
+        .rating-result-box.error-state {
+            border-color: var(--alert-red) !important;
+            background: rgba(20, 0, 0, 0.4) !important;
+            color: var(--alert-red) !important;
+        }
 
         .nav-footer { margin-top: auto; padding-top: 15px; width: 100%; display: flex; justify-content: space-between; border-top: 1px dashed rgba(0, 255, 0, 0.2); flex-shrink: 0; }
 
@@ -608,7 +615,7 @@
                 <button class="btn" onclick="showSection('registration-screen')">> REGISTRACE IDENTITY</button>
                 <button class="btn" onclick="showSection('faq-screen')">> DEŠIFROVANÉ FAQ</button>
                 <button class="btn" style="border-color: var(--neon-green); color: var(--neon-green);" onclick="showMissionsMenu()">> OPERAČNÍ MISE</button>
-                <button class="btn" onclick="openRatingSection()">[ 🗃️ ] HODNOCENÍ AGENTA (IDENTITY MATRIX)</button>
+                <button class="btn" onclick="openRatingSection()">> HODNOCENÍ AGENTA</button>
             </div>
             <button class="btn btn-red" style="margin-top: 20px; width: 100%; max-width: 1300px; padding: 18px;" onclick="triggerLogoff()">[ ✕ ] DEAKTIVOVAT TERMINÁL (LOGOFF)</button>
         </div>
@@ -616,9 +623,9 @@
         <div id="rating-screen" class="screen">
             <h2>NEXUS CORE // IDENTITY MATRIX HODNOCENÍ</h2>
             <div class="rating-auth-wrapper">
-                <p style="text-align: center; font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">Vložte kód k dešifrování osobních záznamů ze souboru agenti.csv:</p>
+                <p style="text-align: center; font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">Vložte ID Agenta ke zjištění výsledků:</p>
                 <input type="text" id="agent-id-input" class="terminal-input" placeholder="Zadejte ID Agenta..." autocomplete="off">
-                <button class="btn" style="border-color: var(--neon-yellow); color: var(--neon-yellow); margin: 0;" onclick="verifyAgentRating()">> OVĚŘIT KÓD IDENTITY</button>
+                <button class="btn" style="margin: 0;" onclick="verifyAgentRating()">> OVĚŘIT KÓD IDENTITY</button>
                 
                 <div class="rating-result-box" id="rating-output"></div>
             </div>
@@ -1288,43 +1295,25 @@
         }
 
         let typeTimeout;
-        function typeWriter(text, elementId, speed = 15, callback = null) {
+        function typeWriter(text, elementId, speed = 15, isError = false, callback = null) {
             clearTimeout(typeTimeout);
             const element = document.getElementById(elementId);
             if (!element) return;
             element.innerHTML = '';
             let i = 0;
+            
+            // Nastavení správné třídy pro kurzor (zelený nebo červený)
+            const cursorClass = isError ? 'cursor red' : 'cursor';
+            
             function type() {
                 if (i < text.length) {
-                    element.innerHTML = text.substring(0, i + 1) + '<span class="cursor"></span>';
+                    element.innerHTML = text.substring(0, i + 1) + `<span class="${cursorClass}"></span>`;
                     i++;
                     if(i % 2 === 0) sndType();
                     element.scrollTop = element.scrollHeight;
                     typeTimeout = setTimeout(type, speed);
                 } else {
-                    element.innerHTML = text + '<span class="cursor"></span>';
-                    element.scrollTop = element.scrollHeight;
-                    if (callback) callback();
-                }
-            }
-            type();
-        }
-
-        function typeWriterRed(text, elementId, speed = 15, callback = null) {
-            clearTimeout(typeTimeout);
-            const element = document.getElementById(elementId);
-            if (!element) return;
-            element.innerHTML = '';
-            let i = 0;
-            function type() {
-                if (i < text.length) {
-                    element.innerHTML = text.substring(0, i + 1) + '<span class="cursor red"></span>';
-                    i++;
-                    if(i % 2 === 0) sndType();
-                    element.scrollTop = element.scrollHeight;
-                    typeTimeout = setTimeout(type, speed);
-                } else {
-                    element.innerHTML = text + '<span class="cursor red"></span>';
+                    element.innerHTML = text + `<span class="${cursorClass}"></span>`;
                     element.scrollTop = element.scrollHeight;
                     if (callback) callback();
                 }
@@ -1341,30 +1330,30 @@
             const text = BRIEFINGY_TEXTY[idMise] || "Žádná data nebyla v tomto bloku nalezena.";
             
             document.getElementById('mission-detail-title').innerText = titulek;
-            typeWriter(text, 'mission-detail-container', 12);
+            typeWriter(text, 'mission-detail-container', 12, false);
         }
 
         function showSection(sectionId) {
             switchScreen(sectionId);
             if (sectionId === 'intro-screen') {
                 const txt = "Vítejte v rozhraní Operace Nexus Core.\n\nTento projekt představuje decentralizovaný systém simulací navržený pro testování taktických a dešifrovacích schopností vybraných agentů.\n\nV průběhou operace budete konfrontováni s logickými úkoly, datovými analýzami a šiframi. Vaším hlavním cílem je úspěšné zdolání všech uzlů dříve, než vyprší globální časový limit.";
-                typeWriter(txt, 'intro-text-container', 12);
+                typeWriter(txt, 'intro-text-container', 12, false);
             }
             else if (sectionId === 'rules-screen') {
                 const txt = "> REŽIM UTAJENÍ: Všechna data podléhají protokolu sub-0. Sdílení informací s neověřenými subjekty je klasifikováno jako vlastizrada.\n\n> POSTUPNOST: Uzly misí se odemykají striktně v chronologickém pořadí podle centrálního plánu.\n\n> BEZPEČNOST: Pokus o hrubou manipulaci se systémem nebo útoky na kód znamenají trvalou deaktivaci vašeho digitálního podpisu.\n\n> ODHLÁŠENÍ: Po ukončení práce se vždy bezpečně odhlaste, aby se korektně promazala mezipaměť terminálu.";
-                typeWriter(txt, 'rules-text-container', 12);
+                typeWriter(txt, 'rules-text-container', 12, false);
             }
             else if (sectionId === 'faq-screen') {
                 const txt = "Q: Proč jsou všechny mise 1 až 4 momentálně uzavřeny?\nA: Přístup k datovým uzlům podléhazí bezpečnostnímu fázování. Každý uzel má pevný časový zámek.\n\nQ: Co vyjadřují procenta u jednotlivých misí?\nA: Ukazují aktuální stav přípravy a synchronizace datového uzlu centrálním jádrem.\n\nQ: Co se stane po dosažení limitu na konci roku 2026?\nA: Dojde k plné uzávěře operace a dešifrovací klíče budou trvale zničeny.";
-                typeWriter(txt, 'faq-screen-container', 10);
+                typeWriter(txt, 'faq-screen-container', 10, false);
             }
         }
 
-        /* FUNKCE PRO DEŠIFROVÁNÍ CSV (NOVÁ LOGIKA) */
         function openRatingSection() {
             switchScreen('rating-screen');
             document.getElementById('agent-id-input').value = '';
             document.getElementById('rating-output').style.display = 'none';
+            document.getElementById('rating-output').classList.remove('error-state');
             document.getElementById('rating-output').innerHTML = '';
         }
 
@@ -1372,17 +1361,20 @@
             const inputVal = document.getElementById('agent-id-input').value.trim().toUpperCase();
             const outputBox = document.getElementById('rating-output');
             
+            // Vyčištění chybového stavu před novým ověřením
+            outputBox.classList.remove('error-state');
+
             if(!inputVal) {
                 sndWarning();
+                outputBox.classList.add('error-state');
                 outputBox.style.display = 'block';
-                outputBox.innerHTML = "<span style='color:var(--alert-red); font-weight:bold;'>[ ERROR ] NEBYLA ZADÁNA ŽÁDNÁ IDENTITA.</span>";
+                typeWriter("[ ERROR ] NEBYLA ZADÁNA ŽÁDNÁ IDENTITA.", 'rating-output', 8, true);
                 return;
             }
 
             outputBox.style.display = 'block';
             outputBox.innerHTML = "Stahuji zabezpečený registr `agenti.csv`...\nAutorizuji přístup k šifrované buňce...";
             
-            // Načtení externího CSV souboru umístěného vedle index.html
             fetch('agenti.csv')
                 .then(response => {
                     if (!response.ok) {
@@ -1391,18 +1383,14 @@
                     return response.text();
                 })
                 .then(csvText => {
-                    // Rozsekání CSV souboru na jednotlivé řádky
                     const lines = csvText.split(/\r?\n/);
                     let nalezeneData = null;
 
-                    // Procházení souboru (vynecháme první řádek s hlavičkou)
                     for (let i = 1; i < lines.length; i++) {
                         if (!lines[i]) continue;
                         
-                        // Rozdělení řádku podle středníku
                         const columns = lines[i].split(';');
                         
-                        // Sloupec 0 je ID Agenta. Porovnáváme velkými písmeny pro eliminaci chyb
                         if (columns[0] && columns[0].trim().toUpperCase() === inputVal) {
                             nalezeneData = {
                                 id: columns[0].trim(),
@@ -1413,7 +1401,7 @@
                                 celkem: columns[5] ? columns[5].trim() : "0",
                                 hodnost: columns[6] ? columns[6].trim() : "Neznámá"
                             };
-                            break; // Jakmile ho najdeme, ukončíme hledání
+                            break;
                         }
                     }
 
@@ -1422,27 +1410,32 @@
                         const vyslednyText = 
                             `==================================================\n` +
                             `  DEŠIFROVANÝ PROTOKOL IDENTITY: ${nalezeneData.id}\n` +
-                            `==================================================\n` +
+                            `==================================================\n\n` +
                             `> Body v Misi 1 : ${nalezeneData.m1}\n` +
                             `> Body v Misi 2 : ${nalezeneData.m2}\n` +
                             `> Body v Misi 3 : ${nalezeneData.m3}\n` +
-                            `> Body v Misi 4 : ${nalezeneData.m4}\n` +
+                            `> Body v Misi 4 : ${nalezeneData.m4}\n\n` +
                             `--------------------------------------------------\n` +
                             `> CELKOVÝ POČET DOSAŽENÝCH BODŮ : ${nalezeneData.celkem}\n` +
                             `> AKTUÁLNÍ SYSTÉMOVÁ HODNOST    : ${nalezeneData.hodnost}\n` +
+                            `--------------------------------------------------\n\n` +
+                            `Gratulujeme k výsledkům agente!\n\n` +
                             `==================================================`;
                         
-                        typeWriter(vyslednyText, 'rating-output', 8);
+                        typeWriter(vyslednyText, 'rating-output', 8, false);
                     } else {
                         sndWarning();
+                        // Zapnutí červeného vizuálního stavu pro celé pole
+                        outputBox.classList.add('error-state');
                         const chybaText = `[ ACCESS DENIED ] // IDENTITA NEBYLA DETEKOVÁNA\n` +
                                           `Upozornění: Pokus o neoprávněný vstup byl zalogován.`;
-                        typeWriterRed(chybaText, 'rating-output', 8);
+                        typeWriter(chybaText, 'rating-output', 8, true);
                     }
                 })
                 .catch(error => {
                     sndWarning();
-                    outputBox.innerHTML = `<span style='color:var(--alert-red); font-weight:bold;'>[ CRITICAL ERROR ] Soubor 'agenti.csv' nebyl nalezen vedle html souboru na GitHubu. Přilož ho tam podle instrukcí.</span>`;
+                    outputBox.classList.add('error-state');
+                    typeWriter("[ CRITICAL ERROR ] Soubor 'agenti.csv' nebyl nalezen vedle html souboru na GitHubu. Přilož ho tam podle instrukcí.", 'rating-output', 8, true);
                     console.error(error);
                 });
         }
@@ -1472,7 +1465,7 @@
                 "  ACCESS GRANTED // SUCCESSFUL AGENT LOGIN (LEVEL SUB-0)\n" +
                 "============================================================";
 
-            typeWriter(bootLogData, 'boot-log-container', 4);
+            typeWriter(bootLogData, 'boot-log-container', 4, false);
 
             let progress = 0;
             const progressInterval = setInterval(() => {
@@ -1494,7 +1487,7 @@
             const btn = document.getElementById('welcome-continue-btn');
             if(btn) btn.style.display = "none";
             const welcomeText = "Vítej, agente.\n\nByl jsi vybrán pro účast v Operaci NEXUS.\nTento systém sleduje průběh všech misí, agentů a časových protokolů v reálném čase.\n\nTvým úkolem je splnit zadané mise, získat informace, luštit šifry a posouvat se dál. Každé rozhodnutí ovlivňuje průběh operace.\n\nBuď bdělý. Buď rychlý. Buď nenápadný.\n\nOperace začíná nyní.";
-            typeWriter(welcomeText, 'welcome-text-container', 15, () => {
+            typeWriter(welcomeText, 'welcome-text-container', 15, false, () => {
                 if(btn) btn.style.display = "inline-block";
                 sndSuccess();
             });
@@ -1522,7 +1515,24 @@
                 "  TERMINAL DISCONNECTED // SECURE SHUTDOWN COMPLETED\n" +
                 "============================================================";
 
-            typeWriterRed(logoffLogData, 'logoff-log-container', 4);
+            const element = document.getElementById('logoff-log-container');
+            if (element) {
+                element.innerHTML = '';
+                let i = 0;
+                function type() {
+                    if (i < logoffLogData.length) {
+                        element.innerHTML = logoffLogData.substring(0, i + 1) + '<span class="cursor red"></span>';
+                        i++;
+                        if(i % 2 === 0) sndType();
+                        element.scrollTop = element.scrollHeight;
+                        setTimeout(type, 4);
+                    } else {
+                        element.innerHTML = logoffLogData + '<span class="cursor red"></span>';
+                        element.scrollTop = element.scrollHeight;
+                    }
+                }
+                type();
+            }
 
             let progress = 0;
             const progressInterval = setInterval(() => {
