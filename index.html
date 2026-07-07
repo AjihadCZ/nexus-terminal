@@ -1408,19 +1408,19 @@
                     if (nalezeneData) {
                         sndSuccess();
                         const vyslednyText = 
-                            `==================================================\n` +
-                            `  DEŠIFROVANÝ PROTOKOL IDENTITY: ${nalezeneData.id}\n` +
-                            `==================================================\n\n` +
+                            `========================================================================\n` +
+                            `DEŠIFROVANÝ PROTOKOL IDENTITY: ${nalezeneData.id}\n` +
+                            `========================================================================\n\n` +
                             `> Body v Misi 1 : ${nalezeneData.m1}\n` +
                             `> Body v Misi 2 : ${nalezeneData.m2}\n` +
                             `> Body v Misi 3 : ${nalezeneData.m3}\n` +
                             `> Body v Misi 4 : ${nalezeneData.m4}\n\n` +
-                            `--------------------------------------------------\n` +
+                            `------------------------------------------------------------------------\n` +
                             `> CELKOVÝ POČET DOSAŽENÝCH BODŮ : ${nalezeneData.celkem}\n` +
-                            `> AKTUÁLNÍ SYSTÉMOVÁ HODNOST    : ${nalezeneData.hodnost}\n` +
-                            `--------------------------------------------------\n\n` +
+                            `> AKTUÁLNÍ SYSTÉMOVÁ HODNOST   : ${nalezeneData.hodnost}\n` +
+                            `------------------------------------------------------------------------\n\n` +
                             `Gratulujeme k výsledkům agente!\n\n` +
-                            `==================================================`;
+                            `========================================================================`;
                         
                         typeWriter(vyslednyText, 'rating-output', 8, false);
                     } else {
