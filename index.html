@@ -13,14 +13,9 @@
             --alert-red: #ff3333;
             --panel-bg: rgba(2, 10, 2, 0.85);
             
-            /* Nová barva pro interaktivní AI jádro - Žlutá */
-            --neon-yellow: #ffea00;
-            --neon-magenta: #ff007f;
-            
             /* Úrovně svítivosti */
             --neon-glow: 0 0 20px rgba(0, 255, 0, 0.6), 0 0 40px rgba(0, 255, 0, 0.3);
             --red-glow: 0 0 20px rgba(255, 51, 51, 0.6), 0 0 40px rgba(255, 51, 51, 0.3);
-            --yellow-glow: 0 0 20px rgba(255, 234, 0, 0.6), 0 0 40px rgba(255, 234, 0, 0.3);
         }
 
         * {
@@ -51,7 +46,7 @@
             width: 100%;
             height: 100%;
             z-index: 1;
-            opacity: 0.50;
+            opacity: 0.50; 
             pointer-events: none;
         }
 
@@ -83,7 +78,6 @@
             display: flex;
             flex-direction: column;
             border-radius: 12px;
-            overflow: hidden;
         }
 
         .terminal-header {
@@ -96,7 +90,6 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             color: var(--dim-green);
-            flex-shrink: 0;
         }
 
         .primary-data {
@@ -110,8 +103,6 @@
             flex-direction: column;
             height: calc(100% - 60px);
             width: 100%;
-            flex-grow: 1;
-            overflow: hidden;
         }
 
         .screen.active {
@@ -154,10 +145,9 @@
             text-transform: uppercase;
             letter-spacing: 3px;
             text-shadow: var(--neon-glow);
-            flex-shrink: 0;
         }
 
-        /* Tlačítka */
+        /* Mass Effect Tlačítka */
         .btn {
             background: rgba(0, 30, 0, 0.5);
             border: 1px solid rgba(0, 255, 0, 0.5);
@@ -238,7 +228,11 @@
             border-radius: 6px;
             overflow-y: auto;
             color: var(--dim-green);
-            flex-grow: 1;
+        }
+
+        .typewriter-content.error-state {
+            border-color: var(--alert-red) !important;
+            color: var(--alert-red) !important;
         }
 
         .cursor {
@@ -253,8 +247,8 @@
         }
 
         .cursor.red {
-            background-color: var(--alert-red) !important;
-            box-shadow: var(--red-glow) !important;
+            background-color: var(--alert-red);
+            box-shadow: var(--red-glow);
         }
 
         .countdown-timer {
@@ -298,57 +292,58 @@
             transition: width 0.5s ease;
         }
 
-        /* DIGITÁLNÍ KANVAS PRO AI JÁDRO */
-        .ai-core-container-canvas {
+        /* ADVANCED AI JÁDRO */
+        .ai-hud-widget {
             position: relative;
-            width: 325px;
-            height: 325px;
+            width: 160px;
+            height: 160px;
             margin: 10px auto;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            flex-shrink: 0;
         }
-        
-        .ai-core-container-canvas canvas {
+
+        .ai-ring {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            border: 2px dashed var(--neon-green);
             border-radius: 50%;
+            opacity: 0.6;
+        }
+        .ai-ring-1 { width: 150px; height: 150px; border-style: dashed; animation: rotAI 20s linear infinite; border-color: rgba(0,255,0,0.4); }
+        .ai-ring-2 { width: 120px; height: 120px; border-style: double; border-width: 4px; animation: rotAIRev 14s linear infinite; border-color: var(--neon-green); filter: drop-shadow(0 0 5px rgba(0,255,0,0.5)); }
+        .ai-ring-3 { width: 80px; height: 80px; border-style: dotted; border-width: 3px; animation: rotAI 6s linear infinite; border-color: rgba(0,255,0,0.8); }
+        
+        .ai-core-center {
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 255, 0, 0.2);
+            border: 2px solid var(--neon-green);
+            border-radius: 50%;
+            box-shadow: var(--neon-glow), inset 0 0 15px rgba(0,255,0,0.6);
+            animation: corePulse 1.5s ease-in-out infinite alternate;
+            z-index: 5;
         }
 
         .ai-dynamic-status {
             margin-top: 10px;
             font-size: 14px;
             font-weight: bold;
-            color: var(--neon-yellow);
-            text-shadow: 0 0 10px rgba(255, 234, 0, 0.6);
+            color: var(--neon-green);
+            text-shadow: var(--neon-glow);
             letter-spacing: 2px;
             text-transform: uppercase;
             text-align: center;
-            transition: color 0.3s ease;
-            flex-shrink: 0;
-        }
-        
-        .ai-dynamic-status.overdrive {
-            color: var(--neon-magenta);
-            text-shadow: 0 0 15px rgba(255, 0, 127, 0.8);
         }
 
         /* AI CORE STATUS DETAIL */
         .ai-core-status-box {
-            background: rgba(15, 12, 0, 0.6);
-            border: 1px dashed rgba(255, 234, 0, 0.3);
+            background: rgba(0, 15, 0, 0.6);
+            border: 1px dashed rgba(0, 255, 0, 0.3);
             border-radius: 6px;
             padding: 12px;
             font-size: 13px;
             line-height: 1.5;
-            margin-top: 10px;
-            flex-grow: 1;
-            overflow-y: auto;
+            margin-top: 15px;
         }
         .ai-core-title {
             font-weight: bold;
@@ -356,12 +351,12 @@
             letter-spacing: 1px;
             margin-bottom: 8px;
             text-align: center;
-            border-bottom: 1px solid rgba(255,234,0,0.2);
+            border-bottom: 1px solid rgba(0,255,0,0.2);
             padding-bottom: 4px;
         }
         .ai-online-indicator {
-            color: var(--neon-yellow);
-            text-shadow: 0 0 10px rgba(255, 234, 0, 0.6);
+            color: var(--neon-green);
+            text-shadow: var(--neon-glow);
             font-weight: bold;
             animation: blink 1.5s infinite;
         }
@@ -372,9 +367,13 @@
             opacity: 0.7;
         }
         .ai-core-val {
-            color: var(--neon-yellow);
+            color: var(--neon-green);
             font-weight: bold;
         }
+
+        @keyframes rotAI { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes rotAIRev { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
+        @keyframes corePulse { from { transform: scale(0.9); opacity: 0.7; } to { transform: scale(1.1); opacity: 1; } }
 
         /* AMBIENT LOG BOX */
         .ambient-log-box {
@@ -457,8 +456,8 @@
         .menu-grid .btn:nth-child(4) { grid-column: span 2; } 
         .menu-grid .btn:nth-child(5) { grid-column: span 2; }
         .menu-grid .btn:nth-child(6) { grid-column: span 2; }
-        .menu-grid .btn:nth-child(7) { grid-column: span 6; } 
 
+        /* Mřížka pro podmenu misí */
         .missions-menu-grid {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
@@ -473,38 +472,40 @@
         .missions-menu-grid .btn:nth-child(4) { grid-column: span 3; }
         .missions-menu-grid .btn:nth-child(5) { grid-column: span 3; }
 
-        /* DASHBOARD LAYOUT */
         .dashboard-grid {
             display: grid;
             grid-template-columns: 2.5fr 1fr;
             gap: 20px;
-            flex-grow: 1;
-            overflow: hidden;
-            margin-bottom: 15px;
+            height: calc(100% - 90px);
         }
-        .dash-main { display: flex; flex-direction: column; gap: 20px; height: 100%; overflow: hidden; }
-        .dash-row-top { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; height: 120px; flex-shrink: 0; }
-        .dash-card { border: 1px solid rgba(0, 255, 0, 0.25); padding: 15px; background-color: rgba(2, 8, 2, 0.9); display: flex; flex-direction: column; border-radius: 8px; overflow: hidden; }
+        .dash-main { display: flex; flex-direction: column; gap: 20px; height: 100%; }
+        .dash-row-top { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; height: 130px; }
+        .dash-card { border: 1px solid rgba(0, 255, 0, 0.25); padding: 15px; background-color: rgba(2, 8, 2, 0.9); display: flex; flex-direction: column; border-radius: 8px; }
         .dash-card-misions { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
-        .dash-sidebar { display: flex; flex-direction: column; gap: 20px; height: 100%; overflow: hidden; }
+        .dash-sidebar { display: flex; flex-direction: column; gap: 20px; height: 100%; }
+        .dash-sidebar > .dash-card { flex: 1; justify-content: flex-start; }
+        .card-title { font-size: 14px; text-transform: uppercase; border-bottom: 1px dashed rgba(0, 255, 0, 0.3); padding-bottom: 8px; margin-bottom: 12px; letter-spacing: 2px; font-weight: bold; }
         
-        .card-title { font-size: 14px; text-transform: uppercase; border-bottom: 1px dashed rgba(0, 255, 0, 0.3); padding-bottom: 8px; margin-bottom: 12px; letter-spacing: 2px; font-weight: bold; flex-shrink: 0; }
-        
-        .mission-list { display: flex; flex-direction: column; gap: 10px; height: 100%; overflow-y: auto; }
-        .mission-item { border: 1px solid rgba(0, 85, 0, 0.4); padding: 12px 20px; font-size: 15px; background: rgba(0, 5, 0, 0.6); border-radius: 6px; display: flex; flex-direction: column; justify-content: center; }
+        .mission-list { display: flex; flex-direction: column; gap: 12px; height: 100%; justify-content: space-between; }
+        .mission-item { border: 1px solid rgba(0, 85, 0, 0.4); padding: 15px 20px; font-size: 15px; background: rgba(0, 5, 0, 0.6); border-radius: 6px; display: flex; flex-direction: column; justify-content: center; }
         .mission-item.locked { color: #556655; border-color: rgba(40,40,40,0.4); opacity: 0.6; }
-        .mission-header-row { display: flex; justify-content: space-between; font-weight: bold; font-size: 16px; margin-bottom: 6px; }
-        .mission-meta-row { display: flex; justify-content: space-between; font-size: 13px; opacity: 0.8; margin-bottom: 6px; }
+        .mission-header-row { display: flex; justify-content: space-between; font-weight: bold; font-size: 17px; margin-bottom: 8px; }
+        .mission-meta-row { display: flex; justify-content: space-between; font-size: 13px; opacity: 0.8; margin-bottom: 8px; }
         .mini-progress-container { width: 100%; border: 1px solid rgba(0, 255, 0, 0.15); padding: 2px; background: #000; }
-        .mini-progress-bar { height: 8px; width: 0%; transition: width 0.5s ease; }
+        .mini-progress-bar { height: 10px; width: 0%; transition: width 0.5s ease; }
 
-        .progress-container { width: 100%; border: 1px solid rgba(0, 255, 0, 0.3); padding: 6px; margin-top: auto; display: flex; align-items: center; background: rgba(0,0,0,0.5); flex-shrink: 0; }
+        .progress-container { width: 100%; border: 1px solid rgba(0, 255, 0, 0.3); padding: 6px; margin-top: auto; display: flex; align-items: center; background: rgba(0,0,0,0.5); }
         .progress-bar { height: 30px; background-color: var(--neon-green); box-shadow: var(--neon-glow); width: 0%; }
         .progress-text { margin-left: 20px; font-weight: bold; font-size: 20px; color: var(--neon-green); text-shadow: var(--neon-glow); }
 
-        /* QR SCANNER ELEMENTY */
-        .qr-display-container { display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(2, 8, 2, 0.9); border: 1px solid rgba(0, 255, 0, 0.3); padding: 30px; border-radius: 12px; margin: auto; max-width: 550px; }
-        .qr-scanner-wrapper { position: relative; padding: 12px; margin-bottom: 15px; }
+        /* QR SCANNER ELEMENTY & VERIFIKACE */
+        .qr-display-container { display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(2, 8, 2, 0.9); border: 1px solid rgba(0, 255, 0, 0.3); padding: 30px; border-radius: 12px; margin: auto; max-width: 750px; width: 100%; overflow-y: auto; max-height: calc(100% - 40px); }
+        .verification-input-box { width: 100%; max-width: 500px; margin-bottom: 20px; text-align: left; }
+        .verification-input-box label { display: block; margin-bottom: 8px; color: var(--neon-green); font-weight: bold; font-size: 14px; letter-spacing: 1px; }
+        .verification-input-box input { width: 100%; background: #000; border: 1px solid rgba(0, 255, 0, 0.5); color: var(--neon-green); padding: 12px; font-family: monospace; font-size: 16px; outline: none; border-radius: 4px; box-shadow: inset 0 0 5px rgba(0,255,0,0.2); }
+        .verification-input-box input:focus { border-color: var(--neon-green); box-shadow: inset 0 0 10px rgba(0,255,0,0.4), 0 0 10px rgba(0,255,0,0.2); }
+        .qr-flex-layout { display: flex; flex-direction: row; gap: 30px; align-items: center; justify-content: center; width: 100%; margin-top: 10px; }
+        .qr-scanner-wrapper { position: relative; padding: 12px; flex-shrink: 0; }
         .qr-scanner-wrapper::before, .qr-scanner-wrapper::after { content: ''; position: absolute; width: 20px; height: 20px; border: 4px solid var(--neon-green); z-index: 20; box-shadow: var(--neon-glow); }
         .qr-scanner-wrapper::before { top: 0; left: 0; border-right: none; border-bottom: none; }
         .qr-scanner-wrapper::after { top: 0; right: 0; border-left: none; border-bottom: none; }
@@ -512,25 +513,13 @@
         .qr-scanner-brackets-bottom::before, .qr-scanner-brackets-bottom::after { content: ''; position: absolute; width: 20px; height: 20px; border: 4px solid var(--neon-green); box-shadow: var(--neon-glow); }
         .qr-scanner-brackets-bottom::before { bottom: 0; left: 0; border-right: none; border-top: none; }
         .qr-scanner-brackets-bottom::after { bottom: 0; right: 0; border-left: none; border-top: none; }
-        .qr-frame { width: 240px; height: 240px; padding: 10px; background: #ffffff; display: flex; align-items: center; justify-content: center; border-radius: 4px; position: relative; overflow: hidden; }
+        .qr-frame { width: 180px; height: 180px; padding: 10px; background: #ffffff; display: flex; align-items: center; justify-content: center; border-radius: 4px; position: relative; overflow: hidden; }
         .qr-frame img { width: 100%; height: 100%; object-fit: contain; position: relative; z-index: 5; }
         .laser-line { position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: #00ff00; box-shadow: 0 0 15px 4px #00ff00; z-index: 10; animation: scanLaser 3.5s linear infinite; }
         @keyframes scanLaser { 0% { top: 0%; opacity: 0; } 5% { opacity: 1; } 95% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
-        .hash-ticker { font-family: monospace; font-size: 13px; color: #00aa00; margin-top: 10px; letter-spacing: 1px; }
+        .hash-ticker { font-family: monospace; font-size: 13px; color: #00aa00; margin-top: 10px; letter-spacing: 1px; text-align: center; }
 
-        /* INPUT SYSTÉM PRO HODNOCENÍ */
-        .rating-auth-wrapper { max-width: 650px; width: 100%; margin: auto; display: flex; flex-direction: column; gap: 20px; background: rgba(2, 6, 2, 0.9); border: 1px solid rgba(0, 255, 0, 0.25); padding: 35px; border-radius: 8px; box-shadow: var(--neon-glow); }
-        .terminal-input { background: #000; border: 1px solid var(--neon-green); color: var(--neon-green); font-family: 'Courier New', monospace; font-size: 24px; padding: 15px 20px; width: 100%; outline: none; text-transform: uppercase; text-align: center; letter-spacing: 3px; box-shadow: inset 0 0 10px rgba(0,255,0,0.2); }
-        .rating-result-box { display: none; margin-top: 20px; border: 1px dashed rgba(0, 255, 0, 0.4); background: rgba(0, 15, 0, 0.4); padding: 25px; border-radius: 6px; font-size: 18px; line-height: 1.8; text-align: left; }
-        
-        /* Třída pro kompletní přebarvení na červeno při chybě */
-        .rating-result-box.error-state {
-            border-color: var(--alert-red) !important;
-            background: rgba(20, 0, 0, 0.4) !important;
-            color: var(--alert-red) !important;
-        }
-
-        .nav-footer { margin-top: auto; padding-top: 15px; width: 100%; display: flex; justify-content: space-between; border-top: 1px dashed rgba(0, 255, 0, 0.2); flex-shrink: 0; }
+        .nav-footer { margin-top: auto; padding-top: 15px; width: 100%; display: flex; justify-content: space-between; border-top: 1px dashed rgba(0, 255, 0, 0.2); }
 
         /* TABLET MEDIA QUERIES */
         @media (max-width: 1024px) {
@@ -545,10 +534,7 @@
             .dash-sidebar { height: auto; }
             .ambient-log-box { display: none; }
             .btn { padding: 16px 25px; font-size: 18px; }
-        }
-
-        @media (max-height: 700px) {
-            .typewriter-content { max-height: 180px; }
+            .qr-flex-layout { flex-direction: column; gap: 15px; }
         }
 
         @keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
@@ -568,12 +554,15 @@
     <div class="terminal-container">
         <div class="terminal-header">
             <div>SYS: <span class="primary-data" style="text-shadow: none;">ONLINE</span> // SECURE NODE TERMINAL v3.5</div>
-            <div>TIME UPLINK: <span id="live-clock" class="primary-data">2026-07-07 22:20:49</span></div>
+            <div>TIME UPLINK: <span id="live-clock" class="primary-data">2026-07-07 18:16:51</span></div>
         </div>
 
         <div id="start-screen" class="screen screen-centered active">
-            <div class="ai-core-container-canvas" id="start-core-wrap">
-                <canvas id="ai-core-canvas-start"></canvas>
+            <div class="ai-hud-widget">
+                <div class="ai-ring ai-ring-1"></div>
+                <div class="ai-ring ai-ring-2"></div>
+                <div class="ai-ring ai-ring-3"></div>
+                <div class="ai-core-center"></div>
             </div>
             <div class="ai-dynamic-status" id="start-ai-status">CORE_STANDBY</div>
 
@@ -585,7 +574,7 @@
 
         <div id="boot-screen" class="screen">
             <h2>NEXUS CORE // DECENTRALIZED BOOT SEQUENCE</h2>
-            <div class="typewriter-content" id="boot-log-container" style="font-size: 16px; font-family: monospace;"></div>
+            <div class="typewriter-content" id="boot-log-container" style="height: 100%; font-size: 18px; font-family: monospace;"></div>
             <div class="progress-container">
                 <div class="progress-bar" id="boot-progress-bar"></div>
                 <div class="progress-text" id="boot-progress-text">0%</div>
@@ -594,45 +583,30 @@
 
         <div id="welcome-screen" class="screen">
             <h2>OPERATIVNÍ BRÍFING JÁDRA</h2>
-            <div class="typewriter-content" id="welcome-text-container"></div>
-            <div style="flex-shrink:0; text-align:right;">
-                <button class="btn" id="welcome-continue-btn" style="display:none; margin-top: 10px;" onclick="goToMenu()">> AKCEPTOVAT SMĚRNICI JÁDRA</button>
-            </div>
+            <div class="typewriter-content" id="welcome-text-container" style="height: 100%;"></div>
+            <button class="btn" id="welcome-continue-btn" style="display:none; margin-top: 20px;" onclick="goToMenu()">> AKCEPTOVAT SMĚRNICI JÁDRA</button>
         </div>
 
         <div id="menu-screen" class="screen screen-centered">
             <h1 style="font-size: 3.5rem; margin-bottom: 5px;">NEXUS MENU</h1>
             
-            <div class="ai-core-container-canvas" id="menu-core-wrap">
-                <canvas id="ai-core-canvas-menu"></canvas>
+            <div class="ai-hud-widget" style="transform: scale(0.7); margin: 0 auto 5px auto;">
+                <div class="ai-ring ai-ring-1"></div>
+                <div class="ai-ring ai-ring-2"></div>
+                <div class="ai-ring ai-ring-3"></div>
+                <div class="ai-core-center"></div>
             </div>
             <div class="ai-dynamic-status" id="menu-ai-status" style="margin-bottom: 20px;">CONNECTING...</div>
 
             <div class="menu-grid">
-                <button class="btn" onclick="showSection('intro-screen')">> ÚVODNÍ BRIEFING</button>
-                <button class="btn" onclick="showSection('rules-screen')">> OPERAČNÍ KODEX</button>
-                <button class="btn" onclick="showSection('dashboard-screen')">> ŘÍDÍCÍ DASHBOARD</button>
-                <button class="btn" onclick="showSection('registration-screen')">> REGISTRACE IDENTITY</button>
-                <button class="btn" onclick="showSection('faq-screen')">> DEŠIFROVANÉ FAQ</button>
-                <button class="btn" style="border-color: var(--neon-green); color: var(--neon-green);" onclick="showMissionsMenu()">> OPERAČNÍ MISE</button>
-                <button class="btn" onclick="openRatingSection()">> HODNOCENÍ AGENTA</button>
+                <button class="btn" onclick="showSection('intro-screen')">> 1. ÚVODNÍ BRIEFING</button>
+                <button class="btn" onclick="showSection('rules-screen')">> 2. OPERAČNÍ KODEX</button>
+                <button class="btn" onclick="showSection('dashboard-screen')">> 3. ŘÍDÍCÍ DASHBOARD</button>
+                <button class="btn" onclick="showSection('registration-screen')">> 4. REGISTRACE IDENTITY</button>
+                <button class="btn" onclick="showSection('faq-screen')">> 5. DEŠIFROVANÉ FAQ</button>
+                <button class="btn" style="border-color: var(--neon-green); color: var(--neon-green);" onclick="showMissionsMenu()">> 6. OPERAČNÍ MISE</button>
             </div>
-            <button class="btn btn-red" style="margin-top: 20px; width: 100%; max-width: 1300px; padding: 18px;" onclick="triggerLogoff()">[ ✕ ] DEAKTIVOVAT TERMINÁL (LOGOFF)</button>
-        </div>
-
-        <div id="rating-screen" class="screen">
-            <h2>NEXUS CORE // IDENTITY MATRIX HODNOCENÍ</h2>
-            <div class="rating-auth-wrapper">
-                <p style="text-align: center; font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">Vložte ID Agenta ke zjištění výsledků:</p>
-                <input type="text" id="agent-id-input" class="terminal-input" placeholder="Zadejte ID Agenta..." autocomplete="off">
-                <button class="btn" style="margin: 0;" onclick="verifyAgentRating()">> OVĚŘIT KÓD IDENTITY</button>
-                
-                <div class="rating-result-box" id="rating-output"></div>
-            </div>
-            <div class="nav-footer">
-                <button class="btn btn-red" onclick="triggerLogoff()">ODHLÁSIT</button>
-                <button class="btn" onclick="goToMenu()">ZPĚT DO MENU</button>
-            </div>
+            <button class="btn btn-red" style="margin-top: 30px; width: 100%; max-width: 1300px; padding: 18px;" onclick="triggerLogoff()">[ ✕ ] DEAKTIVOVAT TERMINÁL (LOGOFF)</button>
         </div>
 
         <div id="missions-menu-screen" class="screen screen-centered">
@@ -655,7 +629,7 @@
 
         <div id="mission-detail-screen" class="screen">
             <h2 id="mission-detail-title">SPECIFICKÝ BRIEFING UZLU</h2>
-            <div class="typewriter-content" id="mission-detail-container"></div>
+            <div class="typewriter-content" id="mission-detail-container" style="height: 100%;"></div>
             <div class="nav-footer">
                 <button class="btn btn-red" onclick="triggerLogoff()">ODHLÁSIT</button>
                 <button class="btn" onclick="showMissionsMenu()">ZPĚT NA VÝBĚR MISÍ</button>
@@ -707,7 +681,7 @@
                 </div>
                 
                 <div class="dash-sidebar">
-                    <div class="dash-card" style="flex-shrink: 0;">
+                    <div class="dash-card" style="flex: 0.9;">
                         <div class="card-title">HARDWARE TELEMETRIE</div>
                         <div style="padding-top: 5px;">
                             <div class="stat-row">
@@ -727,11 +701,13 @@
                         </div>
                     </div>
                     
-                    <div class="dash-card" style="flex-grow: 1;">
+                    <div class="dash-card" style="flex: 1.1;">
                         <div class="card-title">NEXUS ACTIVE INTELLIGENCE</div>
-                        
-                        <div class="ai-core-container-canvas" id="dash-core-wrap">
-                            <canvas id="ai-core-canvas-dash"></canvas>
+                        <div class="ai-hud-widget" style="transform: scale(0.75); margin: 0 auto;">
+                            <div class="ai-ring ai-ring-1"></div>
+                            <div class="ai-ring ai-ring-2"></div>
+                            <div class="ai-ring ai-ring-3"></div>
+                            <div class="ai-core-center"></div>
                         </div>
                         <div class="ai-dynamic-status" id="dash-ai-status" style="font-size:12px;">SYNCHRONIZED</div>
 
@@ -746,15 +722,15 @@
                             </div>
                             <div class="ai-core-row" style="margin-top: 8px;">
                                 <span class="ai-core-label">Learning:</span><br>
-                                <span class="ai-core-val" style="font-family: monospace; letter-spacing: 1px;">████████░░ 78%</span>
+                                <span class="ai-core-val" style="font-family: monospace; letter-spacing: 1px;">██████░░░░ 62%</span>
                             </div>
                             <div class="ai-core-row" style="margin-top: 8px;">
                                 <span class="ai-core-label">Threat detection:</span> 
-                                <span class="ai-core-val" style="color: var(--neon-yellow);">LOW</span>
+                                <span class="ai-core-val" style="color: var(--neon-green);">LOW</span>
                             </div>
                             <div class="ai-core-row">
                                 <span class="ai-core-label">Mission progress:</span> 
-                                <span class="ai-core-val" style="color: var(--neon-magenta); text-shadow: 0 0 10px rgba(255,0,127,0.5);">17%</span>
+                                <span class="ai-core-val" style="color: #33ccff; text-shadow: 0 0 10px rgba(51,204,255,0.5);">17%</span>
                             </div>
                         </div>
                     </div>
@@ -770,19 +746,30 @@
         <div id="registration-screen" class="screen">
             <h2>IDENTITY SECURE UPLINK REGISTRATION</h2>
             <div class="qr-display-container">
-                <div class="qr-scanner-wrapper">
-                    <div class="qr-frame">
-                        <div class="laser-line"></div>
-                        <img id="qr-code-image" src="qr_kod.png" alt="[ QR MATRIX ]">
-                    </div>
-                    <div class="qr-scanner-brackets-bottom"></div>
+                
+                <div class="verification-input-box">
+                    <label for="agent-id-input">> SECURE_DECRYPT: ZADEJTE KÓD AGENTA / IDENTITU</label>
+                    <input type="text" id="agent-id-input" placeholder="např. AJIHAD" onkeydown="if(event.key === 'Enter') verifyAgentRating()">
+                    <button class="btn" style="width: 100%; margin-top: 12px; padding: 12px 20px; font-size: 16px;" onclick="verifyAgentRating()">> SPUSTIT DEŠIFROVÁNÍ PROTOKOLU</button>
                 </div>
-                <div class="hash-ticker" id="qr-hash">SECURE_LINK // ID: ----</div>
-                <p style="font-size: 14px; text-transform: uppercase; letter-spacing: 2px; text-align: center; line-height: 1.6; margin-top: 15px; color: var(--neon-green); text-shadow: var(--neon-glow);">
-                    [ KROK 1 ] EXTERNÍ SCAN : NASKENUJTE KÓD TELEFONEM VIA NEXUS LINK<br>
-                    [ KROK 2 ] AUTENTIZACE : VYPLŇTE IDENTITY MATRIX FORMULÁŘ<br>
-                    [ KROK 3 ] AUTORIZACE  : VYČKEJTE NA DEKRET CENTRÁLNÍHO JÁDRA
-                </p>
+
+                <div class="typewriter-content" id="rating-output" style="width: 100%; font-size: 13px; font-family: monospace; white-space: pre; display: none; background: rgba(0, 5, 0, 0.95); margin-bottom: 20px;"></div>
+
+                <div class="qr-flex-layout">
+                    <div class="qr-scanner-wrapper">
+                        <div class="qr-frame">
+                            <div class="laser-line"></div>
+                            <img id="qr-code-image" src="qr_kod.png" alt="[ QR MATRIX ]">
+                        </div>
+                        <div class="qr-scanner-brackets-bottom"></div>
+                        <div class="hash-ticker" id="qr-hash">SECURE_LINK // ID: ----</div>
+                    </div>
+                    <p style="font-size: 13px; text-transform: uppercase; letter-spacing: 1px; text-align: left; line-height: 1.6; color: var(--neon-green); text-shadow: var(--neon-glow); max-width: 400px;">
+                        [ KROK 1 ] DEŠIFROVÁNÍ: Zadejte kód výše a ověřte stav v registru `agenti.csv`.<br><br>
+                        [ KROK 2 ] EXTERNÍ SCAN: Naskenujte kód telefonem pro nouzový mobilní přístup.<br><br>
+                        [ KROK 3 ] SYNCHRONIZACE: Vyčkejte na potvrzení centrálním jádrem.
+                    </p>
+                </div>
             </div>
             <div class="nav-footer">
                 <button class="btn btn-red" onclick="triggerLogoff()">ODHLÁSIT</button>
@@ -810,7 +797,7 @@
 
         <div id="faq-screen" class="screen">
             <h2>DEŠIFROVANÉ FAQ KONTEXTY</h2>
-            <div class="typewriter-content" id="faq-screen-container"></div>
+            <div class="typewriter-content" id="faq-screen-container" style="height: 100%;"></div>
             <div class="nav-footer">
                 <button class="btn btn-red" onclick="triggerLogoff()">ODHLÁSIT</button>
                 <button class="btn" onclick="goToMenu()">ZPĚT DO MENU</button>
@@ -819,7 +806,7 @@
 
         <div id="logoff-screen" class="screen">
             <h2 style="color: var(--alert-red); border-color: var(--alert-red); text-shadow: var(--red-glow);">NEXUS PROTOCOL // SECURE TERMINAL SHUTDOWN</h2>
-            <div class="typewriter-content" id="logoff-log-container" style="color: var(--alert-red); border-color: rgba(255,51,51,0.3); font-size: 16px; font-family: monospace;"></div>
+            <div class="typewriter-content" id="logoff-log-container" style="color: var(--alert-red); border-color: rgba(255,51,51,0.3); height: 100%;"></div>
             <div class="progress-container" style="border-color: rgba(255, 51, 51, 0.4); margin-top: auto;">
                 <div class="progress-bar" id="logoff-progress-bar" style="background-color: var(--alert-red); box-shadow: var(--red-glow);"></div>
                 <div class="progress-text" id="logoff-progress-text" style="color: var(--alert-red); text-shadow: var(--red-glow);">0%</div>
@@ -862,10 +849,6 @@
         let isAuthenticating = false;
         let audioCtx = null;
 
-        let aiCoreInstances = [];
-        let globalCoreOverdrive = false;
-        let overdriveTimer = 0;
-
         function initAudio() { 
             if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -903,8 +886,6 @@
             initBackgroundBuffers();
             window.addEventListener('resize', initBackgroundBuffers);
             
-            initAICores();
-
             setInterval(renderCombinedEngine, 45); 
             setInterval(updateClock, 1000); updateClock();
             setInterval(updateTimers, 1000); updateTimers();
@@ -918,154 +899,6 @@
             });
             spawnAmbientLog();
         });
-
-        function initAICores() {
-            const canvasIds = ['ai-core-canvas-start', 'ai-core-canvas-menu', 'ai-core-canvas-dash'];
-            
-            canvasIds.forEach(id => {
-                const c = document.getElementById(id);
-                if (!c) return;
-                
-                c.width = 325;
-                c.height = 325;
-                const cCtx = c.getContext('2d');
-                
-                let particles = [];
-                for(let i=0; i<45; i++) {
-                    let angle = Math.random() * Math.PI * 2;
-                    let dist = 45 + Math.random() * 70;
-                    particles.push({
-                        angle: angle,
-                        distance: dist,
-                        size: 1.5 + Math.random() * 2.5,
-                        speed: 0.01 + Math.random() * 0.02,
-                        pulsePhase: Math.random() * Math.PI
-                    });
-                }
-                
-                aiCoreInstances.push({ id: id, canvas: c, ctx: cCtx, particles: particles });
-                
-                const parent = c.parentElement;
-                if(parent) {
-                    const triggerOverdrive = () => {
-                        globalCoreOverdrive = true;
-                        overdriveTimer = 60; 
-                        playTone(1100, 'sine', 0.15, 0.05);
-                        document.querySelectorAll('.ai-dynamic-status').forEach(el => el.classList.add('overdrive'));
-                    };
-                    parent.addEventListener('mouseenter', triggerOverdrive);
-                    parent.addEventListener('touchstart', triggerOverdrive);
-                }
-            });
-            
-            setInterval(renderAICoreLoop, 30);
-        }
-
-        function renderAICoreLoop() {
-            if (globalCoreOverdrive) {
-                overdriveTimer--;
-                if (overdriveTimer <= 0) {
-                    globalCoreOverdrive = false;
-                    document.querySelectorAll('.ai-dynamic-status').forEach(el => el.classList.remove('overdrive'));
-                }
-            }
-
-            aiCoreInstances.forEach(inst => {
-                const c = inst.canvas;
-                const cCtx = inst.ctx;
-                const p = inst.particles;
-                const cx = c.width / 2;
-                const cy = c.height / 2;
-                
-                cCtx.clearRect(0, 0, c.width, c.height);
-                
-                let time = Date.now() * 0.001;
-                let activeSpeedMultiplier = globalCoreOverdrive ? 3.5 : 1.0;
-                let coreColor = globalCoreOverdrive ? 'rgba(255, 0, 127, ' : 'rgba(255, 234, 0, ';
-                let lineColor = globalCoreOverdrive ? 'rgba(255, 0, 127, 0.18)' : 'rgba(255, 234, 0, 0.15)';
-                
-                cCtx.strokeStyle = lineColor;
-                cCtx.lineWidth = 0.8;
-                for (let i = 0; i < p.length; i++) {
-                    let p1_x = cx + Math.cos(p[i].angle) * p[i].distance;
-                    let p1_y = cy + Math.sin(p[i].angle) * p[i].distance;
-                    
-                    let connectCount = 0;
-                    for (let j = i + 1; j < p.length; j++) {
-                        if (connectCount > 2) break; 
-                        
-                        let p2_x = cx + Math.cos(p[j].angle) * p[j].distance;
-                        let p2_y = cy + Math.sin(p[j].angle) * p[j].distance;
-                        
-                        let dx = p1_x - p2_x;
-                        let dy = p1_y - p2_y;
-                        let d = Math.sqrt(dx*dx + dy*dy);
-                        
-                        if (d < 55) { 
-                            cCtx.beginPath();
-                            cCtx.moveTo(p1_x, p1_y);
-                            cCtx.lineTo(p2_x, p2_y);
-                            cCtx.stroke();
-                            connectCount++;
-                        }
-                    }
-                }
-
-                p.forEach(pt => {
-                    pt.angle += pt.speed * activeSpeedMultiplier;
-                    pt.pulsePhase += 0.05;
-                    
-                    let currentDist = pt.distance + Math.sin(pt.pulsePhase) * (globalCoreOverdrive ? 12 : 4);
-                    let px = cx + Math.cos(pt.angle) * currentDist;
-                    let py = cy + Math.sin(pt.angle) * currentDist;
-                    
-                    let alpha = 0.5 + Math.sin(pt.pulsePhase) * 0.4;
-                    cCtx.fillStyle = coreColor + alpha + ')';
-                    
-                    cCtx.beginPath();
-                    cCtx.arc(px, py, pt.size * (globalCoreOverdrive ? 1.5 : 1.0), 0, Math.PI * 2);
-                    cCtx.fill();
-                    
-                    if (pt.size > 3) {
-                        cCtx.shadowColor = globalCoreOverdrive ? '#ff007f' : '#ffea00';
-                        cCtx.shadowBlur = 10;
-                        cCtx.fillStyle = coreColor + '1.0)';
-                        cCtx.beginPath();
-                        cCtx.arc(px, py, pt.size * 0.5, 0, Math.PI * 2);
-                        cCtx.fill();
-                        cCtx.shadowBlur = 0;
-                    }
-                });
-                
-                let pulseRadius = 32 + Math.sin(time * 4) * 4;
-                if(globalCoreOverdrive) pulseRadius += Math.sin(time * 15) * 6;
-                
-                let gradient = cCtx.createRadialGradient(cx, cy, 2, cx, cy, pulseRadius);
-                gradient.addColorStop(0, '#ffffff');
-                gradient.addColorStop(0.3, globalCoreOverdrive ? '#ff007f' : '#ffea00');
-                gradient.addColorStop(0.7, globalCoreOverdrive ? 'rgba(150, 0, 90, 0.4)' : 'rgba(140, 120, 0, 0.4)');
-                gradient.addColorStop(1, 'rgba(0,0,0,0)');
-                
-                cCtx.fillStyle = gradient;
-                cCtx.beginPath();
-                cCtx.arc(cx, cy, pulseRadius, 0, Math.PI * 2);
-                cCtx.fill();
-                
-                cCtx.strokeStyle = coreColor + '0.4)';
-                cCtx.lineWidth = 1;
-                cCtx.setLineDash([4, 12]);
-                cCtx.beginPath();
-                cCtx.arc(cx, cy, 140, 0, Math.PI * 2);
-                cCtx.stroke();
-                
-                cCtx.strokeStyle = coreColor + '0.2)';
-                cCtx.setLineDash([40, 25]);
-                cCtx.beginPath();
-                cCtx.arc(cx, cy, 152, time * 0.2, time * 0.2 + Math.PI * 2);
-                cCtx.stroke();
-                cCtx.setLineDash([]); 
-            });
-        }
 
         function initBackgroundBuffers() {
             canvas.width = window.innerWidth; 
@@ -1140,17 +973,12 @@
         }
 
         const aiStatuses = ["Awaiting input...", "Scanning network...", "Analyzing core...", "Encrypting data...", "Monitoring links...", "Synchronizing node...", "Listening..."];
-        const aiOverdriveStatuses = ["OVERDRIVE ACTIVE", "COMPUTING HASHES...", "DATA PACKET SURGE", "MATRIX INVERSION", "CRITICAL SYNC"];
-        
         function updateAIStatus() {
-            let status = globalCoreOverdrive 
-                ? aiOverdriveStatuses[Math.floor(Math.random() * aiOverdriveStatuses.length)]
-                : aiStatuses[Math.floor(Math.random() * aiStatuses.length)];
-                
+            let status = aiStatuses[Math.floor(Math.random() * aiStatuses.length)];
             let nodes = ['start-ai-status', 'menu-ai-status', 'dash-ai-status'];
             nodes.forEach(n => {
                 let el = document.getElementById(n);
-                if(el) el.innerText = globalCoreOverdrive ? `>> ${status} <<` : status;
+                if(el) el.innerText = status;
             });
         }
 
@@ -1295,26 +1123,20 @@
         }
 
         let typeTimeout;
-        function typeWriter(text, elementId, speed = 15, isError = false, callback = null) {
+        function typeWriter(text, elementId, speed = 15, callback = null) {
             clearTimeout(typeTimeout);
             const element = document.getElementById(elementId);
             if (!element) return;
             element.innerHTML = '';
             let i = 0;
-            
-            // Nastavení správné třídy pro kurzor (zelený nebo červený)
-            const cursorClass = isError ? 'cursor red' : 'cursor';
-            
             function type() {
                 if (i < text.length) {
-                    element.innerHTML = text.substring(0, i + 1) + `<span class="${cursorClass}"></span>`;
+                    element.innerHTML = text.substring(0, i + 1) + '<span class="cursor"></span>';
                     i++;
                     if(i % 2 === 0) sndType();
-                    element.scrollTop = element.scrollHeight;
                     typeTimeout = setTimeout(type, speed);
                 } else {
-                    element.innerHTML = text + `<span class="${cursorClass}"></span>`;
-                    element.scrollTop = element.scrollHeight;
+                    element.innerHTML = text + '<span class="cursor"></span>';
                     if (callback) callback();
                 }
             }
@@ -1330,38 +1152,127 @@
             const text = BRIEFINGY_TEXTY[idMise] || "Žádná data nebyla v tomto bloku nalezena.";
             
             document.getElementById('mission-detail-title').innerText = titulek;
-            typeWriter(text, 'mission-detail-container', 12, false);
+            typeWriter(text, 'mission-detail-container', 12);
         }
 
         function showSection(sectionId) {
             switchScreen(sectionId);
             if (sectionId === 'intro-screen') {
-                const txt = "Vítejte v rozhraní Operace Nexus Core.\n\nTento projekt představuje decentralizovaný systém simulací navržený pro testování taktických a dešifrovacích schopností vybraných agentů.\n\nV průběhou operace budete konfrontováni s logickými úkoly, datovými analýzami a šiframi. Vaším hlavním cílem je úspěšné zdolání všech uzlů dříve, než vyprší globální časový limit.";
-                typeWriter(txt, 'intro-text-container', 12, false);
+                const txt = "Vítejte v rozhraní Operace Nexus Core.\n\nTento projekt představuje decentralizovaný systém simulací navržený pro testování taktických a dešifrovacích schopností vybraných agentů.\n\nV průběhu operace budete konfrontováni s logickými úkoly, datovými analýzami a šiframi. Vaším hlavním cílem je úspěšné zdolání všech uzlů dříve, než vyprší globální časový limit.";
+                typeWriter(txt, 'intro-text-container', 12);
             }
             else if (sectionId === 'rules-screen') {
                 const txt = "> REŽIM UTAJENÍ: Všechna data podléhají protokolu sub-0. Sdílení informací s neověřenými subjekty je klasifikováno jako vlastizrada.\n\n> POSTUPNOST: Uzly misí se odemykají striktně v chronologickém pořadí podle centrálního plánu.\n\n> BEZPEČNOST: Pokus o hrubou manipulaci se systémem nebo útoky na kód znamenají trvalou deaktivaci vašeho digitálního podpisu.\n\n> ODHLÁŠENÍ: Po ukončení práce se vždy bezpečně odhlaste, aby se korektně promazala mezipaměť terminálu.";
-                typeWriter(txt, 'rules-text-container', 12, false);
+                typeWriter(txt, 'rules-text-container', 12);
             }
             else if (sectionId === 'faq-screen') {
-                const txt = "Q: Proč jsou všechny mise 1 až 4 momentálně uzavřeny?\nA: Přístup k datovým uzlům podléhazí bezpečnostnímu fázování. Každý uzel má pevný časový zámek.\n\nQ: Co vyjadřují procenta u jednotlivých misí?\nA: Ukazují aktuální stav přípravy a synchronizace datového uzlu centrálním jádrem.\n\nQ: Co se stane po dosažení limitu na konci roku 2026?\nA: Dojde k plné uzávěře operace a dešifrovací klíče budou trvale zničeny.";
-                typeWriter(txt, 'faq-screen-container', 10, false);
+                const txt = "Q: Proč jsou všechny mise 1 až 4 momentálně uzavřeny?\nA: Přístup k datovým uzlům podléhá bezpečnostnímu fázování. Každý uzel má pevný časový zámek.\n\nQ: Co vyjadřují procenta u jednotlivých misí?\nA: Ukazují aktuální stav přípravy a synchronizace datového uzlu centrálním jádrem.\n\nQ: Co se stane po dosažení limitu na konci roku 2026?\nA: Dojde k plné uzávěře operace a dešifrovací klíče budou trvale zničeny.";
+                typeWriter(txt, 'faq-screen-container', 10);
             }
         }
 
-        function openRatingSection() {
-            switchScreen('rating-screen');
-            document.getElementById('agent-id-input').value = '';
-            document.getElementById('rating-output').style.display = 'none';
-            document.getElementById('rating-output').classList.remove('error-state');
-            document.getElementById('rating-output').innerHTML = '';
+        function startBootSequence() {
+            switchScreen('boot-screen');
+            const logContainer = document.getElementById('boot-log-container');
+            const progressBar = document.getElementById('boot-progress-bar');
+            const progressText = document.getElementById('boot-progress-text');
+            
+            const lines = [
+                "> INITIALIZING MATRIX CORE COMPONENTS Engine.v32..... [ OK ]",
+                "> INTEGRITY OF ENCRYPTION PROTOCOLS SHA-512........... [ OK ]",
+                "> SYNCHRONIZING WITH OPERATIONAL MAP NODES............ [ OK ]",
+                "> RE-CALIBRATING HIGH-DENSITY TABLET PIXELS.......... [ OK ]",
+                "> FIREWALL BYPASS DETECTION LAYER ACTIVE............. [ OK ]",
+                "> SYSTEM READY. GRANTED ACCESS LEVEL GR-MAX..."
+            ];
+
+            let currentLine = 0;
+            logContainer.innerHTML = '<span class="cursor"></span>';
+
+            function printLine() {
+                if (currentLine < lines.length) {
+                    const currentText = logContainer.innerHTML.replace('<span class="cursor"></span>', '');
+                    logContainer.innerHTML = currentText + lines[currentLine] + "\n<span class=\"cursor\"></span>";
+                    currentLine++;
+                    playTone(600, 'sine', 0.04, 0.04);
+                    setTimeout(printLine, 350); 
+                }
+            }
+            printLine();
+
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                progress += 1; 
+                if (progress > 100) progress = 100;
+                if(progressBar && progressText) {
+                    progressBar.style.width = progress + '%';
+                    progressText.innerText = progress + '%';
+                }
+                if (progress === 100) {
+                    clearInterval(progressInterval);
+                    setTimeout(() => { startBriefing(); }, 600);
+                }
+            }, 30); 
         }
 
+        function startBriefing() {
+            switchScreen('welcome-screen');
+            const btn = document.getElementById('welcome-continue-btn');
+            if(btn) btn.style.display = "none";
+            const welcomeText = "Vítej, agente.\n\nByl jsi vybrán pro účast v Operaci NEXUS.\nTento systém sleduje průběh všech misí, agentů a časových protokolů v reálném čase.\n\nTvým úkolem je splnit zadané mise, získat informace, luštit šifry a posouvat se dál. Každé rozhodnutí ovlivňuje průběh operace.\n\nBuď bdělý. Buď rychlý. Buď nenápadný.\n\nOperace začíná nyní.";
+            typeWriter(welcomeText, 'welcome-text-container', 15, () => {
+                if(btn) btn.style.display = "inline-block";
+                sndSuccess();
+            });
+        }
+
+        function triggerLogoff() {
+            switchScreen('logoff-screen');
+            sndWarning();
+            const logContainer = document.getElementById('logoff-log-container');
+            const progressBar = document.getElementById('logoff-progress-bar');
+            const progressText = document.getElementById('logoff-progress-text');
+
+            const lines = [
+                "> TERMINATING CONTEXT CHANNELS...",
+                "> WIPING SENSITIVE IDENTITY CACHE...",
+                "> DISCONNECTING FROM OPERATIONAL BACKEND...",
+                "> LOGOFF SEQUENCE COMPLETED."
+            ];
+
+            let currentLine = 0;
+            logContainer.innerHTML = '<span class="cursor red"></span>';
+
+            function printLine() {
+                if (currentLine < lines.length) {
+                    const currentText = logContainer.innerHTML.replace('<span class="cursor red"></span>', '');
+                    logContainer.innerHTML = currentText + lines[currentLine] + "\n<span class=\"cursor red\"></span>";
+                    currentLine++;
+                    setTimeout(printLine, 250);
+                }
+            }
+            printLine();
+
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                progress += 2;
+                if (progress > 100) progress = 100;
+                if(progressBar && progressText) {
+                    progressBar.style.width = progress + '%';
+                    progressText.innerText = progress + '%';
+                }
+                if (progress === 100) {
+                    clearInterval(progressInterval);
+                    setTimeout(() => { switchScreen('start-screen'); }, 600);
+                }
+            }, 20);
+        }
+
+        // TATO FUNKCE STRUCTURUJE A VYPISUJE PROTOKOL AGENTA V NAPROSTO PŘESNÉM POŽADOVANÉM TVARU
         function verifyAgentRating() {
             const inputVal = document.getElementById('agent-id-input').value.trim().toUpperCase();
             const outputBox = document.getElementById('rating-output');
             
-            // Vyčištění chybového stavu před novým ověřením
             outputBox.classList.remove('error-state');
 
             if(!inputVal) {
@@ -1391,9 +1302,17 @@
                         
                         const columns = lines[i].split(';');
                         
+                        // Porovnání zadané identity s nultým sloupcem v CSV
                         if (columns[0] && columns[0].trim().toUpperCase() === inputVal) {
+                            // Zachování původního formátu jména (např. Ajihad s velkým počátečním písmenem)
+                            let formatovaneId = columns[0].trim();
+                            if(formatovaneId.toLowerCase() === 'ajihad') formatovaneId = 'Ajihad';
+                            if(formatovaneId.toLowerCase() === 'azzith') formatovaneId = 'Azzith';
+                            if(formatovaneId.toLowerCase() === 'yarick') formatovaneId = 'Yarick';
+                            if(formatovaneId.toLowerCase() === 'raul') formatovaneId = 'Raul';
+
                             nalezeneData = {
-                                id: columns[0].trim(),
+                                id: formatovaneId,
                                 m1: columns[1] ? columns[1].trim() : "0",
                                 m2: columns[2] ? columns[2].trim() : "0",
                                 m3: columns[3] ? columns[3].trim() : "0",
@@ -1407,25 +1326,26 @@
 
                     if (nalezeneData) {
                         sndSuccess();
+                        
+                        // NAPROSTO PŘESNÝ TVAR, ODSZENÍ A STRUKTURA PODLE ZADÁNÍ (72 znaků oddělovače)
                         const vyslednyText = 
-                            `==================================================\n` +
-                            `  DEŠIFROVANÝ PROTOKOL IDENTITY: ${nalezeneData.id}\n` +
-                            `==================================================\n\n` +
+                            `========================================================================\n` +
+                            `DEŠIFROVANÝ PROTOKOL IDENTITY AGENTA: ${nalezeneData.id}\n` +
+                            `========================================================================\n\n` +
                             `> Body v Misi 1 : ${nalezeneData.m1}\n` +
                             `> Body v Misi 2 : ${nalezeneData.m2}\n` +
                             `> Body v Misi 3 : ${nalezeneData.m3}\n` +
                             `> Body v Misi 4 : ${nalezeneData.m4}\n\n` +
-                            `--------------------------------------------------\n` +
+                            `------------------------------------------------------------------------\n` +
                             `> CELKOVÝ POČET DOSAŽENÝCH BODŮ : ${nalezeneData.celkem}\n` +
-                            `> AKTUÁLNÍ SYSTÉMOVÁ HODNOST    : ${nalezeneData.hodnost}\n` +
-                            `--------------------------------------------------\n\n` +
+                            `> AKTUÁLNÍ SYSTÉMOVÁ HODNOST   : ${nalezeneData.hodnost}\n` +
+                            `------------------------------------------------------------------------\n\n` +
                             `Gratulujeme k výsledkům agente!\n\n` +
-                            `==================================================`;
+                            `========================================================================`;
                         
-                        typeWriter(vyslednyText, 'rating-output', 8, false);
+                        typeWriter(vyslednyText, 'rating-output', 5, false);
                     } else {
                         sndWarning();
-                        // Zapnutí červeného vizuálního stavu pro celé pole
                         outputBox.classList.add('error-state');
                         const chybaText = `[ ACCESS DENIED ] // IDENTITA NEBYLA DETEKOVÁNA\n` +
                                           `Upozornění: Pokus o neoprávněný vstup byl zalogován.`;
@@ -1435,118 +1355,9 @@
                 .catch(error => {
                     sndWarning();
                     outputBox.classList.add('error-state');
-                    typeWriter("[ CRITICAL ERROR ] Soubor 'agenti.csv' nebyl nalezen vedle html souboru na GitHubu. Přilož ho tam podle instrukcí.", 'rating-output', 8, true);
+                    typeWriter("[ CRITICAL ERROR ] Soubor 'agenti.csv' nebyl nalezen vedle html souboru na serveru / GitHubu.", 'rating-output', 8, true);
                     console.error(error);
                 });
-        }
-
-        function startBootSequence() {
-            switchScreen('boot-screen');
-            const progressBar = document.getElementById('boot-progress-bar');
-            const progressText = document.getElementById('boot-progress-text');
-            
-            const bootLogData = 
-                "> INITIALIZING MATRIX CORE COMPONENTS Engine.v32..... [ OK ]\n" +
-                "> ALLOCATING KERNEL MEMORY SPACE [0x7FFF8000]......... [ OK ]\n" +
-                "> LOADING DECENTRALIZED NETWORK DRIVERS.............. [ OK ]\n" +
-                "> INTEGRITY OF ENCRYPTION PROTOCOLS SHA-512........... [ OK ]\n" +
-                "> ESTABLISHING QUANTUM LINK TO CLOUD REPOSITORIES.... [ OK ]\n" +
-                "> DETECTING SUBSYSTEM OVERLAYS....................... [ OK ]\n" +
-                "> MOUNTING ENCRYPTED PARTITION /dev/node_0a........... [ OK ]\n" +
-                "> RE-CALIBRATING HIGH-DENSITY TABLET PIXELS.......... [ OK ]\n" +
-                "> INJECTING ANTI-LOGGING ANTI-HEURISTIC ROUTINES...... [ OK ]\n" +
-                "> FIREWALL BYPASS DETECTION LAYER ACTIVE............. [ OK ]\n" +
-                "> RESOLVING DISTRIBUTED HASH TABLES (DHT)............ [ OK ]\n" +
-                "> SYNCHRONIZING WITH OPERATIONAL MAP NODES............ [ OK ]\n" +
-                "> CLEARING TEMPORARY REGISTRY BUFFER BLOCKS.......... [ OK ]\n" +
-                "> SCANNING LOGICAL OBSTACLES AND TRAPS............... [ OK ]\n" +
-                "> SYSTEM READY. LEVEL GR-MAX ACCESS GRANTED..........\n\n" + 
-                "============================================================\n" +
-                "  ACCESS GRANTED // SUCCESSFUL AGENT LOGIN (LEVEL SUB-0)\n" +
-                "============================================================";
-
-            typeWriter(bootLogData, 'boot-log-container', 4, false);
-
-            let progress = 0;
-            const progressInterval = setInterval(() => {
-                progress += 1; 
-                if (progress > 100) progress = 100;
-                if(progressBar && progressText) {
-                    progressBar.style.width = progress + '%';
-                    progressText.innerText = progress + '%';
-                }
-                if (progress === 100) {
-                    clearInterval(progressInterval);
-                    setTimeout(() => { startBriefing(); }, 2500);
-                }
-            }, 45); 
-        }
-
-        function startBriefing() {
-            switchScreen('welcome-screen');
-            const btn = document.getElementById('welcome-continue-btn');
-            if(btn) btn.style.display = "none";
-            const welcomeText = "Vítej, agente.\n\nByl jsi vybrán pro účast v Operaci NEXUS.\nTento systém sleduje průběh všech misí, agentů a časových protokolů v reálném čase.\n\nTvým úkolem je splnit zadané mise, získat informace, luštit šifry a posouvat se dál. Každé rozhodnutí ovlivňuje průběh operace.\n\nBuď bdělý. Buď rychlý. Buď nenápadný.\n\nOperace začíná nyní.";
-            typeWriter(welcomeText, 'welcome-text-container', 15, false, () => {
-                if(btn) btn.style.display = "inline-block";
-                sndSuccess();
-            });
-        }
-
-        function triggerLogoff() {
-            switchScreen('logoff-screen');
-            sndWarning();
-            const progressBar = document.getElementById('logoff-progress-bar');
-            const progressText = document.getElementById('logoff-progress-text');
-
-            const logoffLogData = 
-                "> INITIATING TERMINATION SIGNAL FOR CONTEXT CHANNELS...\n" +
-                "> CLEARING VOLATILE CACHE BLOCKS [0x000000 to 0xFFFFFF]\n" +
-                "> DE-ALLOCATING OPERATIONAL MEMORY HEAP............... [ DONE ]\n" +
-                "> UNMOUNTING ENCRYPTED STORAGE NODE DISKS............. [ DONE ]\n" +
-                "> WIPING SENSITIVE IDENTITY SIGNS & COOKIE CACHE...... [ DONE ]\n" +
-                "> DESTROYING TEMPORARY FREQUENCY ANALYSIS SALTS....... [ DONE ]\n" +
-                "> PURGING AI PERSONALITY SUB-ROUTINES FROM BUFFER..... [ DONE ]\n" +
-                "> REVOKING AGENT LEVEL SUB-0 AUTHORIZATION TOKEN...... [ DONE ]\n" +
-                "> DISCONNECTING FROM OPERATIONAL BACKEND INFRASTRUCTURE [ DONE ]\n" +
-                "> CLOSING ENCRYPTED SOCKET CONNECTIONS Safely......... [ DONE ]\n" +
-                "> INITIATING SHUTDOWN SM-3 PROCEDURE.................. [ DONE ]\n\n" + 
-                "============================================================\n" +
-                "  TERMINAL DISCONNECTED // SECURE SHUTDOWN COMPLETED\n" +
-                "============================================================";
-
-            const element = document.getElementById('logoff-log-container');
-            if (element) {
-                element.innerHTML = '';
-                let i = 0;
-                function type() {
-                    if (i < logoffLogData.length) {
-                        element.innerHTML = logoffLogData.substring(0, i + 1) + '<span class="cursor red"></span>';
-                        i++;
-                        if(i % 2 === 0) sndType();
-                        element.scrollTop = element.scrollHeight;
-                        setTimeout(type, 4);
-                    } else {
-                        element.innerHTML = logoffLogData + '<span class="cursor red"></span>';
-                        element.scrollTop = element.scrollHeight;
-                    }
-                }
-                type();
-            }
-
-            let progress = 0;
-            const progressInterval = setInterval(() => {
-                progress += 2;
-                if (progress > 100) progress = 100;
-                if(progressBar && progressText) {
-                    progressBar.style.width = progress + '%';
-                    progressText.innerText = progress + '%';
-                }
-                if (progress === 100) {
-                    clearInterval(progressInterval);
-                    setTimeout(() => { switchScreen('start-screen'); }, 3000);
-                }
-            }, 30);
         }
     </script>
 </body>
