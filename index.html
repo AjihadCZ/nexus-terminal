@@ -338,23 +338,23 @@
             text-shadow: 0 0 15px rgba(255, 0, 127, 0.8);
         }
 
-        /* AI CORE STATUS DETAIL */
+        /* AI CORE STATUS DETAIL - UPRAVENO PRO ZAMEZENÍ SCROLLU */
         .ai-core-status-box {
             background: rgba(15, 12, 0, 0.6);
             border: 1px dashed rgba(255, 234, 0, 0.3);
             border-radius: 6px;
-            padding: 12px;
-            font-size: 13px;
-            line-height: 1.5;
+            padding: 10px;
+            font-size: 12px; /* Mírně zmenšené písmo */
+            line-height: 1.4; /* Snížené řádkování */
             margin-top: 10px;
             flex-grow: 1;
-            overflow-y: auto;
+            overflow-y: hidden; /* Odstraněn scrollbar */
         }
         .ai-core-title {
             font-weight: bold;
             color: #ffffff;
             letter-spacing: 1px;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             text-align: center;
             border-bottom: 1px solid rgba(255,234,0,0.2);
             padding-bottom: 4px;
@@ -366,7 +366,7 @@
             animation: blink 1.5s infinite;
         }
         .ai-core-row {
-            margin-bottom: 6px;
+            margin-bottom: 4px; /* Zmenšené rozestupy */
         }
         .ai-core-label {
             opacity: 0.7;
