@@ -338,17 +338,17 @@
             text-shadow: 0 0 15px rgba(255, 0, 127, 0.8);
         }
 
-        /* AI CORE STATUS DETAIL - UPRAVENO PRO ZAMEZENÍ SCROLLU */
+        /* AI CORE STATUS DETAIL */
         .ai-core-status-box {
             background: rgba(15, 12, 0, 0.6);
             border: 1px dashed rgba(255, 234, 0, 0.3);
             border-radius: 6px;
             padding: 10px;
-            font-size: 12px; /* Mírně zmenšené písmo */
-            line-height: 1.4; /* Snížené řádkování */
+            font-size: 12px;
+            line-height: 1.4;
             margin-top: 10px;
             flex-grow: 1;
-            overflow-y: hidden; /* Odstraněn scrollbar */
+            overflow-y: hidden;
         }
         .ai-core-title {
             font-weight: bold;
@@ -366,7 +366,7 @@
             animation: blink 1.5s infinite;
         }
         .ai-core-row {
-            margin-bottom: 4px; /* Zmenšené rozestupy */
+            margin-bottom: 4px;
         }
         .ai-core-label {
             opacity: 0.7;
@@ -518,12 +518,25 @@
         @keyframes scanLaser { 0% { top: 0%; opacity: 0; } 5% { opacity: 1; } 95% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
         .hash-ticker { font-family: monospace; font-size: 13px; color: #00aa00; margin-top: 10px; letter-spacing: 1px; }
 
-        /* INPUT SYSTÉM PRO HODNOCENÍ */
-        .rating-auth-wrapper { max-width: 650px; width: 100%; margin: auto; display: flex; flex-direction: column; gap: 20px; background: rgba(2, 6, 2, 0.9); border: 1px solid rgba(0, 255, 0, 0.25); padding: 35px; border-radius: 8px; box-shadow: var(--neon-glow); }
-        .terminal-input { background: #000; border: 1px solid var(--neon-green); color: var(--neon-green); font-family: 'Courier New', monospace; font-size: 24px; padding: 15px 20px; width: 100%; outline: none; text-transform: uppercase; text-align: center; letter-spacing: 3px; box-shadow: inset 0 0 10px rgba(0,255,0,0.2); }
-        .rating-result-box { display: none; margin-top: 20px; border: 1px dashed rgba(0, 255, 0, 0.4); background: rgba(0, 15, 0, 0.4); padding: 25px; border-radius: 6px; font-size: 18px; line-height: 1.8; text-align: left; }
+        /* INPUT SYSTÉM PRO HODNOCENÍ - OPTIMALIZOVÁNO PRO SAMOSTATNÉ ŘÁDKY BEZ SCROLLOVÁNÍ */
+        .rating-auth-wrapper { max-width: 650px; width: 100%; margin: auto; display: flex; flex-direction: column; gap: 15px; background: rgba(2, 6, 2, 0.9); border: 1px solid rgba(0, 255, 0, 0.25); padding: 25px; border-radius: 8px; box-shadow: var(--neon-glow); }
+        .terminal-input { background: #000; border: 1px solid var(--neon-green); color: var(--neon-green); font-family: 'Courier New', monospace; font-size: 24px; padding: 12px 20px; width: 100%; outline: none; text-transform: uppercase; text-align: center; letter-spacing: 3px; box-shadow: inset 0 0 10px rgba(0,255,0,0.2); }
         
-        /* Třída pro kompletní přebarvení na červeno při chybě */
+        .rating-result-box { 
+            display: none; 
+            margin-top: 15px; 
+            border: 1px dashed rgba(0, 255, 0, 0.4); 
+            background: rgba(0, 15, 0, 0.4); 
+            padding: 15px 20px; 
+            border-radius: 6px; 
+            font-size: 15px; 
+            line-height: 1.45; 
+            text-align: left; 
+            min-height: 220px;
+            max-height: 240px;
+            overflow-y: hidden;
+        }
+        
         .rating-result-box.error-state {
             border-color: var(--alert-red) !important;
             background: rgba(20, 0, 0, 0.4) !important;
@@ -1302,7 +1315,6 @@
             element.innerHTML = '';
             let i = 0;
             
-            // Nastavení správné třídy pro kurzor (zelený nebo červený)
             const cursorClass = isError ? 'cursor red' : 'cursor';
             
             function type() {
@@ -1327,7 +1339,7 @@
         function loadMissionBriefing(idMise) {
             switchScreen('mission-detail-screen');
             const titulek = BRIEFINGY_TITULKY[idMise] || "NEXUS CORE // OPERAČNÍ UZEL";
-            const text = BRIEFINGY_TEXTY[idMise] || "Žádná data nebyla v tomto bloku nalezena.";
+            const text = BRIEFINGY_TEXTY[idMise] || "Žádaná data nebyla v tomto bloku nalezena.";
             
             document.getElementById('mission-detail-title').innerText = titulek;
             typeWriter(text, 'mission-detail-container', 12, false);
@@ -1336,7 +1348,7 @@
         function showSection(sectionId) {
             switchScreen(sectionId);
             if (sectionId === 'intro-screen') {
-                const txt = "Vítejte v rozhraní Operace Nexus Core.\n\nTento projekt představuje decentralizovaný systém simulací navržený pro testování taktických a dešifrovacích schopností vybraných agentů.\n\nV průběhou operace budete konfrontováni s logickými úkoly, datovými analýzami a šiframi. Vaším hlavním cílem je úspěšné zdolání všech uzlů dříve, než vyprší globální časový limit.";
+                const txt = "Vítejte v rozhraní Operace Nexus Core.\n\nTento projekt představuje decentralizovaný systém simulací navržený pro testování taktických a dešifrovacích schopností vybraných agentů.\n\nV průběhu operace budete konfrontováni s logickými úkoly, datovými analýzami a šiframi. Vaším hlavním cílem je úspěšné zdolání všech uzlů dříve, než vyprší globální časový limit.";
                 typeWriter(txt, 'intro-text-container', 12, false);
             }
             else if (sectionId === 'rules-screen') {
@@ -1344,7 +1356,7 @@
                 typeWriter(txt, 'rules-text-container', 12, false);
             }
             else if (sectionId === 'faq-screen') {
-                const txt = "Q: Proč jsou všechny mise 1 až 4 momentálně uzavřeny?\nA: Přístup k datovým uzlům podléhazí bezpečnostnímu fázování. Každý uzel má pevný časový zámek.\n\nQ: Co vyjadřují procenta u jednotlivých misí?\nA: Ukazují aktuální stav přípravy a synchronizace datového uzlu centrálním jádrem.\n\nQ: Co se stane po dosažení limitu na konci roku 2026?\nA: Dojde k plné uzávěře operace a dešifrovací klíče budou trvale zničeny.";
+                const txt = "Q: Proč jsou všechny mise 1 až 4 momentálně uzavřeny?\nA: Přístup k datovým uzlům podléhá bezpečnostnímu fázování. Každý uzel má pevný časový zámek.\n\nQ: Co vyjadřují procenta u jednotlivých misí?\nA: Ukazují aktuální stav přípravy a synchronizace datového uzlu centrálním jádrem.\n\nQ: Co se stane po dosažení limitu na konci roku 2026?\nA: Dojde k plné uzávěře operace a dešifrovací klíče budou trvale zničeny.";
                 typeWriter(txt, 'faq-screen-container', 10, false);
             }
         }
@@ -1357,11 +1369,11 @@
             document.getElementById('rating-output').innerHTML = '';
         }
 
+        /* FUNKCE UPRAVENA PRO MAXIMÁLNÍ PŘEHLEDNOST A ZAMEZENÍ SCROLLOVÁNÍ */
         function verifyAgentRating() {
             const inputVal = document.getElementById('agent-id-input').value.trim().toUpperCase();
             const outputBox = document.getElementById('rating-output');
             
-            // Vyčištění chybového stavu před novým ověřením
             outputBox.classList.remove('error-state');
 
             if(!inputVal) {
@@ -1408,24 +1420,18 @@
                     if (nalezeneData) {
                         sndSuccess();
                         const vyslednyText = 
-                            `========================================================================\n` +
-                            `DEŠIFROVANÝ PROTOKOL IDENTITY: ${nalezeneData.id}\n` +
-                            `========================================================================\n\n` +
-                            `> Body v Misi 1 : ${nalezeneData.m1}\n` +
-                            `> Body v Misi 2 : ${nalezeneData.m2}\n` +
-                            `> Body v Misi 3 : ${nalezeneData.m3}\n` +
-                            `> Body v Misi 4 : ${nalezeneData.m4}\n\n` +
-                            `------------------------------------------------------------------------\n` +
-                            `> CELKOVÝ POČET DOSAŽENÝCH BODŮ : ${nalezeneData.celkem}\n` +
-                            `> AKTUÁLNÍ SYSTÉMOVÁ HODNOST   : ${nalezeneData.hodnost}\n` +
-                            `------------------------------------------------------------------------\n\n` +
-                            `Gratulujeme k výsledkům agente!\n\n` +
-                            `========================================================================`;
+                            `Body v misi 1: ${nalezeneData.m1}\n` +
+                            `Body v misi 2: ${nalezeneData.m2}\n` +
+                            `Body v misi 3: ${nalezeneData.m3}\n` +
+                            `Body v misi 4: ${nalezeneData.m4}\n\n` +
+                            `Celkový počet bodů: ${nalezeneData.celkem}\n` +
+                            `Aktuální hodnost agenta: ${nalezeneData.hodnost}\n\n` +
+                            `Gratulujeme k výsledkům Agente!\n` +
+                            `Jen tak dál!`;
                         
                         typeWriter(vyslednyText, 'rating-output', 8, false);
                     } else {
                         sndWarning();
-                        // Zapnutí červeného vizuálního stavu pro celé pole
                         outputBox.classList.add('error-state');
                         const chybaText = `[ ACCESS DENIED ] // IDENTITA NEBYLA DETEKOVÁNA\n` +
                                           `Upozornění: Pokus o neoprávněný vstup byl zalogován.`;
