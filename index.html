@@ -482,7 +482,7 @@
         
         .card-title { font-size: 14px; text-transform: uppercase; border-bottom: 1px dashed rgba(0, 255, 0, 0.3); padding-bottom: 8px; margin-bottom: 12px; letter-spacing: 2px; font-weight: bold; flex-shrink: 0; }
         
-        .mission-list { display: flex; flex-direction: column; gap: 10px; height: 100%; overflow-y: auto; }
+        .mission-list { display: flex; flex-direction: column; gap: 10px; height: calc(100% - 150px); overflow-y: auto; }
         .mission-item { border: 1px solid rgba(0, 85, 0, 0.4); padding: 12px 20px; font-size: 15px; background: rgba(0, 5, 0, 0.6); border-radius: 6px; display: flex; flex-direction: column; justify-content: center; }
         .mission-item.locked { color: #556655; border-color: rgba(40,40,40,0.4); opacity: 0.6; }
         .mission-header-row { display: flex; justify-content: space-between; font-weight: bold; font-size: 16px; margin-bottom: 6px; }
@@ -490,9 +490,92 @@
         .mini-progress-container { width: 100%; border: 1px solid rgba(0, 255, 0, 0.15); padding: 2px; background: #000; }
         .mini-progress-bar { height: 8px; width: 0%; transition: width 0.5s ease; }
 
+        /* Styl pro Live log na Dashboardu */
+        .system-activity-log {
+            margin-top: auto;
+            border-top: 1px dashed rgba(0, 255, 0, 0.3);
+            padding-top: 12px;
+            font-family: monospace;
+            flex-shrink: 0;
+        }
+        .activity-header {
+            color: var(--neon-green);
+            font-size: 12px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+        .blink-dot {
+            color: var(--alert-red);
+            animation: blink 1s infinite;
+        }
+        .activity-rows {
+            height: 95px;
+            overflow: hidden;
+            font-size: 12px;
+            color: rgba(0, 180, 0, 0.8);
+            line-height: 1.4;
+        }
+        .activity-row {
+            animation: logFadeIn 0.25s ease-out;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .activity-row.warning { color: var(--neon-yellow); }
+
         .progress-container { width: 100%; border: 1px solid rgba(0, 255, 0, 0.3); padding: 6px; margin-top: auto; display: flex; align-items: center; background: rgba(0,0,0,0.5); flex-shrink: 0; }
         .progress-bar { height: 30px; background-color: var(--neon-green); box-shadow: var(--neon-glow); width: 0%; }
         .progress-text { margin-left: 20px; font-weight: bold; font-size: 20px; color: var(--neon-green); text-shadow: var(--neon-glow); }
+
+        /* Dvousloupcová struktura pro boot screen */
+        .boot-wrapper {
+            display: flex;
+            width: 100%;
+            height: calc(100% - 75px);
+            gap: 30px;
+            overflow: hidden;
+        }
+        .boot-log-side {
+            width: 60%;
+            height: 100%;
+        }
+        .boot-visual-side {
+            width: 40%;
+            border: 1px solid rgba(0, 255, 0, 0.2);
+            background: rgba(2, 6, 2, 0.9);
+            border-radius: 6px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 4px;
+            width: 100%;
+            max-width: 320px;
+            margin: 20px 0;
+        }
+        .matrix-cell {
+            width: 100%;
+            aspect-ratio: 1;
+            background-color: rgba(0, 20, 0, 0.4);
+            border: 1px solid rgba(0, 60, 0, 0.5);
+            border-radius: 2px;
+            transition: all 0.1s ease;
+        }
+        .matrix-cell.loading { background-color: rgba(0, 120, 0, 0.6); }
+        .matrix-cell.done { 
+            background-color: var(--neon-green); 
+            box-shadow: 0 0 6px rgba(0, 255, 0, 0.8);
+            border-color: #ffffff;
+        }
 
         .qr-display-container { display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(2, 8, 2, 0.9); border: 1px solid rgba(0, 255, 0, 0.3); padding: 30px; border-radius: 12px; margin: auto; max-width: 550px; }
         .qr-scanner-wrapper { position: relative; padding: 12px; margin-bottom: 15px; }
@@ -517,13 +600,13 @@
             margin-top: 15px; 
             border: 1px dashed rgba(0, 255, 0, 0.4); 
             background: rgba(0, 15, 0, 0.4); 
-            padding: 15px 20px; 
+            padding: 20px; 
             border-radius: 6px; 
             font-size: 15px; 
             line-height: 1.45; 
             text-align: left; 
             min-height: 220px;
-            max-height: 240px;
+            max-height: 245px;
             overflow-y: hidden;
         }
         
@@ -531,6 +614,52 @@
             border-color: var(--alert-red) !important;
             background: rgba(20, 0, 0, 0.4) !important;
             color: var(--alert-red) !important;
+        }
+
+        /* Strukturované a čisté styly pro výpis hodnocení agenta */
+        .evaluation-report {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            font-family: 'Courier New', monospace;
+        }
+        .report-section {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .report-line {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px dotted rgba(0, 120, 0, 0.4);
+            padding-bottom: 2px;
+            font-size: 15px;
+        }
+        .report-line.highlight {
+            font-size: 16px;
+            color: var(--neon-green);
+            text-shadow: var(--neon-glow);
+            font-weight: bold;
+            border-bottom-style: dashed;
+            margin-top: 5px;
+        }
+        .report-line .rank-badge {
+            color: var(--neon-yellow);
+            text-shadow: 0 0 8px rgba(255, 234, 0, 0.5);
+            font-weight: bold;
+        }
+        .report-divider {
+            border: 0;
+            border-top: 1px dashed rgba(0, 255, 0, 0.3);
+            margin: 10px 0;
+        }
+        .report-message {
+            margin-top: 12px;
+            text-align: center;
+            color: var(--neon-green);
+            font-style: italic;
+            font-size: 14px;
         }
 
         .rating-timeout-display {
@@ -571,6 +700,9 @@
             .dash-sidebar { height: auto; }
             .ambient-log-box { display: none; }
             .btn { padding: 16px 25px; font-size: 18px; }
+            .boot-wrapper { flex-direction: column; }
+            .boot-log-side { width: 100%; height: 60%; }
+            .boot-visual-side { width: 100%; height: 40%; }
         }
 
         @keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
@@ -607,7 +739,14 @@
 
         <div id="boot-screen" class="screen">
             <h2>NEXUS CORE // DECENTRALIZED BOOT SEQUENCE</h2>
-            <div class="typewriter-content" id="boot-log-container" style="font-size: 16px; font-family: monospace;"></div>
+            <div class="boot-wrapper">
+                <div class="boot-log-side typewriter-content" id="boot-log-container" style="font-size: 16px; font-family: monospace; margin-bottom: 0;"></div>
+                <div class="boot-visual-side">
+                    <div style="font-size: 13px; font-weight: bold; letter-spacing: 2px;">SECURE_SECTOR_VERIFICATION</div>
+                    <div class="matrix-grid" id="boot-matrix-grid"></div>
+                    <div style="font-size: 13px; opacity: 0.8;">SECTORS_CHECKED: <span id="sector-percent" style="color: var(--neon-green); font-weight: bold;">0%</span></div>
+                </div>
+            </div>
             <div class="progress-container">
                 <div class="progress-bar" id="boot-progress-bar"></div>
                 <div class="progress-text" id="boot-progress-text">0%</div>
@@ -636,7 +775,7 @@
                 <button class="btn" onclick="showSection('dashboard-screen')">> ŘÍDÍCÍ DASHBOARD</button>
                 <button class="btn" onclick="showSection('registration-screen')">> REGISTRACE IDENTITY</button>
                 <button class="btn" onclick="showSection('faq-screen')">> DEŠIFROVANÉ FAQ</button>
-                <button class="btn" style="border-color: var(--neon-green); color: var(--neon-green);" onclick="showMissionsMenu()">> OPERAČNÍ MISE</button>
+                <button class="btn" style="border-color: var(--neon-green); color: var(--neon-green);" onclick="showMissionsMenu()">> OPERAČNIES MISE</button>
                 <button class="btn" onclick="openRatingSection()">> HODNOCENÍ AGENTA</button>
             </div>
             <button class="btn btn-red" style="margin-top: 20px; width: 100%; max-width: 1300px; padding: 18px;" onclick="triggerLogoff()">[ ✕ ] DEAKTIVOVAT TERMINÁL (LOGOFF)</button>
@@ -725,6 +864,14 @@
                                 <div class="mission-meta-row"><span id="m4-timer">Zámek active</span><span>Progres: 0%</span></div>
                                 <div class="mini-progress-container"><div class="mini-progress-bar" style="background:#222;"></div></div>
                             </div>
+                        </div>
+
+                        <div class="system-activity-log">
+                            <div class="activity-header">
+                                <span>SÍŤOVÁ AKTIVITA A TELEMETRIE JÁDRA</span>
+                                <span class="blink-dot">● LIVE</span>
+                            </div>
+                            <div class="activity-rows" id="dashboard-activity-rows"></div>
                         </div>
                     </div>
                 </div>
@@ -876,6 +1023,17 @@
             'm4': "NEXUS CORE // BRIEFING K MISI 4"
         };
 
+        const FIKTIVNI_HLASKY_DASH = [
+            "SYS: Paket ze sub-uzlu 01 ověřen via SHA-512.",
+            "NET: Pokus o ping na bránu Firewall... Odezva 12ms.",
+            "CRYPTO: Generování nového dešifrovacího salta.",
+            "WARN: Zvýšený datový tok na komunikačním portu 8443.",
+            "SYS: Čištění vyrovnávací paměti jádra... STABLE.",
+            "NEXUS-AI: Kalibrace predikčního modelu dokončena.",
+            "SEC: Detekován pokus o neautorizované čtení (Blokováno).",
+            "SYS: Synchronizace času s hlavním clusterem úspěšná."
+        ];
+
         let canvas, ctx;
         let mColumns, mRainDrops;
         const matrixChars = "010101#@ΔΣλ%AB9FXYZΩΨΞ".split("");
@@ -929,6 +1087,7 @@
             window.addEventListener('resize', initBackgroundBuffers);
             
             initAICores();
+            initBootMatrixGrid();
 
             setInterval(renderCombinedEngine, 45); 
             setInterval(updateClock, 1000); updateClock();
@@ -937,12 +1096,65 @@
             setInterval(updateAIStatus, 3000);
             setInterval(updateLiveStats, 1200);
             setInterval(spawnAmbientLog, 4000);
+            setInterval(spawnDashboardActivityLog, 4000);
 
             document.querySelectorAll('button').forEach(btn => {
                 btn.addEventListener('click', sndClick);
             });
             spawnAmbientLog();
+            spawnDashboardActivityLog();
         });
+
+        function initBootMatrixGrid() {
+            const grid = document.getElementById('boot-matrix-grid');
+            if(!grid) return;
+            grid.innerHTML = '';
+            for(let i=0; i<144; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'matrix-cell';
+                grid.appendChild(cell);
+            }
+        }
+
+        function updateBootVisualMatrix(progressPercent) {
+            const cells = document.querySelectorAll('#boot-matrix-grid .matrix-cell');
+            const totalCells = cells.length;
+            if (totalCells === 0) return;
+            
+            const targetDoneCount = Math.floor((progressPercent / 100) * totalCells);
+            const percentEl = document.getElementById('sector-percent');
+            if(percentEl) percentEl.innerText = `${progressPercent}%`;
+            
+            cells.forEach((cell, index) => {
+                if (index < targetDoneCount) {
+                    cell.className = 'matrix-cell done';
+                } else if (index < targetDoneCount + 8 && index < totalCells) {
+                    cell.className = (Math.random() > 0.4) ? 'matrix-cell loading' : 'matrix-cell';
+                } else {
+                    cell.className = 'matrix-cell';
+                }
+            });
+        }
+
+        function spawnDashboardActivityLog() {
+            const container = document.getElementById('dashboard-activity-rows');
+            if(!container) return;
+            
+            const text = FIKTIVNI_HLASKY_DASH[Math.floor(Math.random() * FIKTIVNI_HLASKY_DASH.length)];
+            const timeStr = new Date().toLocaleTimeString();
+            
+            const row = document.createElement('div');
+            row.className = 'activity-row';
+            if (text.includes("WARN") || text.includes("SEC")) {
+                row.className += ' warning';
+            }
+            row.innerText = `[${timeStr}] ${text}`;
+            container.appendChild(row);
+            
+            if (container.children.length > 5) {
+                container.removeChild(container.firstChild);
+            }
+        }
 
         function initAICores() {
             const canvasIds = ['ai-core-canvas-start', 'ai-core-canvas-menu', 'ai-core-canvas-dash'];
@@ -1310,8 +1522,15 @@
             
             function type() {
                 if (i < text.length) {
-                    element.innerHTML = text.substring(0, i + 1) + `<span class="${cursorClass}"></span>`;
-                    i++;
+                    // Pokud narazíme na HTML kód, vložíme ho přímo a posuneme se za něj
+                    if (text.substr(i, 4) === "<div" || text.substr(i, 3) === "<hr" || text.substr(i, 5) === "</div") {
+                        let endTag = text.indexOf(">", i);
+                        element.innerHTML = text.substring(0, endTag + 1) + `<span class="${cursorClass}"></span>`;
+                        i = endTag + 1;
+                    } else {
+                        element.innerHTML = text.substring(0, i + 1) + `<span class="${cursorClass}"></span>`;
+                        i++;
+                    }
                     if(i % 2 === 0) sndType();
                     element.scrollTop = element.scrollHeight;
                     typeTimeout = setTimeout(type, speed);
@@ -1447,17 +1666,27 @@
 
                     if (nalezeneData) {
                         sndSuccess();
-                        const vyslednyText = 
-                            `Body v misi 1: ${nalezeneData.m1}\n` +
-                            `Body v misi 2: ${nalezeneData.m2}\n` +
-                            `Body v misi 3: ${nalezeneData.m3}\n` +
-                            `Body v misi 4: ${nalezeneData.m4}\n\n` +
-                            `Celkový počet bodů: ${nalezeneData.celkem}\n` +
-                            `Aktuální hodnost agenta: ${nalezeneData.hodnost}\n\n` +
-                            `Gratulujeme k výsledkům Agente!\n` +
-                            `Jen tak dál!`;
                         
-                        typeWriter(vyslednyText, 'rating-output', 8, false, () => {
+                        // Strukturovaný HTML kód zalomený do řádků pro hodnocení
+                        const strukturovanyVypis = 
+                            `<div class="evaluation-report">` +
+                                `<div class="report-section">` +
+                                    `<div class="report-line"><span>Body v misi 1:</span><strong>${nalezeneData.m1} b</strong></div>` +
+                                    `<div class="report-line"><span>Body v misi 2:</span><strong>${nalezeneData.m2} b</strong></div>` +
+                                    `<div class="report-line"><span>Body v misi 3:</span><strong>${nalezeneData.m3} b</strong></div>` +
+                                    `<div class="report-line"><span>Body v misi 4:</span><strong>${nalezeneData.m4} b</strong></div>` +
+                                `</div>` +
+                                `<hr class="report-divider">` +
+                                `<div class="report-section">` +
+                                    `<div class="report-line highlight"><span>Celkový počet bodů:</span><strong>${nalezeneData.celkem} b</strong></div>` +
+                                    `<div class="report-line highlight"><span>Hodnost agenta:</span><span class="rank-badge">${nalezeneData.hodnost}</span></div>` +
+                                `</div>` +
+                                `<div class="report-message">` +
+                                    `Autorizace kompletní. Gratulujeme k výsledkům, Agente!` +
+                                `</div>` +
+                            `</div>`;
+                        
+                        typeWriter(strukturovanyVypis, 'rating-output', 6, false, () => {
                             startRatingTimeout();
                         });
                     } else {
@@ -1482,6 +1711,7 @@
 
         function startBootSequence() {
             switchScreen('boot-screen');
+            initBootMatrixGrid();
             const progressBar = document.getElementById('boot-progress-bar');
             const progressText = document.getElementById('boot-progress-text');
             
@@ -1511,10 +1741,14 @@
             const progressInterval = setInterval(() => {
                 progress += 1; 
                 if (progress > 100) progress = 100;
+                
                 if(progressBar && progressText) {
                     progressBar.style.width = progress + '%';
                     progressText.innerText = progress + '%';
                 }
+                
+                updateBootVisualMatrix(progress);
+                
                 if (progress === 100) {
                     clearInterval(progressInterval);
                     setTimeout(() => { startBriefing(); }, 2500);
@@ -1526,7 +1760,7 @@
             switchScreen('welcome-screen');
             const btn = document.getElementById('welcome-continue-btn');
             if(btn) btn.style.display = "none";
-            const welcomeText = "Vítej, agente.\n\nByl jsi vybrán pro účast v Operaci NEXUS.\nTento systém sleduje průběh všech misí, agentů a časových protokolů v reálném čase.\n\nTvým úkolem je splnit zadané mise, získat informace, luštit šifry a posouvat se dál. Každé rozhodnutí ovlivňuje průběh operace.\n\nBuď bdělý. Buď rychlý. Buď nenápadný.\n\nOperace začíná nyní.";
+            const welcomeText = "Vítej, agente.\n\nByl jsi vybrán pro účast v Operace NEXUS.\nTento systém sleduje průběh všech misí, agentů a časových protokolů v reálném čase.\n\nTvým úkolem je splnit zadané mise, získat informace, luštit šifry a posouvat se dál. Každé rozhodnutí ovlivňuje průběh operace.\n\nBuď bdělý. Buď rychlý. Buď nenápadný.\n\nOperace začíná nyní.";
             typeWriter(welcomeText, 'welcome-text-container', 15, false, () => {
                 if(btn) btn.style.display = "inline-block";
                 sndSuccess();
