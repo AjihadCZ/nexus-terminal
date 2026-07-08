@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NEXUS CORE // AGENT TERMINAL v3.5</title>
+    <title>NEXUS CORE // AGENT TERMINAL v3.6</title>
     <style>
         :root {
             --neon-green: #00ff00;
@@ -12,23 +12,17 @@
             --bg-black: #020202;
             --alert-red: #ff3333;
             --panel-bg: rgba(2, 10, 2, 0.85);
-            
-            /* Nová barva pro interaktivní AI jádro - Žlutá */
             --neon-yellow: #ffea00;
             --neon-magenta: #ff007f;
             
-            /* Úrovně svítivosti */
             --neon-glow: 0 0 20px rgba(0, 255, 0, 0.6), 0 0 40px rgba(0, 255, 0, 0.3);
             --red-glow: 0 0 20px rgba(255, 51, 51, 0.6), 0 0 40px rgba(255, 51, 51, 0.3);
-            --yellow-glow: 0 0 20px rgba(255, 234, 0, 0.6), 0 0 40px rgba(255, 234, 0, 0.3);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            user-select: none;
-            -webkit-user-select: none;
         }
 
         body {
@@ -42,6 +36,8 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         #hud-matrix-canvas {
@@ -68,7 +64,6 @@
             opacity: 0.4;
         }
 
-        /* HLAVNÍ KONTEJNER */
         .terminal-container {
             position: relative;
             z-index: 10;
@@ -157,12 +152,12 @@
             flex-shrink: 0;
         }
 
-        /* Tlačítka */
         .btn {
             background: rgba(0, 30, 0, 0.5);
             border: 1px solid rgba(0, 255, 0, 0.5);
             color: var(--dim-green);
             padding: 20px 40px;
+            min-height: 50px;
             font-family: 'Courier New', Courier, monospace;
             font-size: 20px;
             font-weight: bold;
@@ -173,6 +168,9 @@
             transition: all 0.1s ease;
             margin: 10px 0;
             border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .btn::after {
@@ -228,8 +226,9 @@
         }
 
         .typewriter-content {
-            font-size: 20px;
-            line-height: 1.6;
+            font-size: 21px;
+            line-height: 1.7;
+            letter-spacing: 0.5px;
             white-space: pre-wrap;
             margin-bottom: 25px;
             background-color: rgba(2, 5, 2, 0.95);
@@ -267,7 +266,6 @@
             letter-spacing: 1px;
         }
 
-        /* HARDWARE STATUS */
         .stat-row {
             display: flex;
             justify-content: space-between;
@@ -298,7 +296,6 @@
             transition: width 0.5s ease;
         }
 
-        /* DIGITÁLNÍ KANVAS PRO AI JÁDRO */
         .ai-core-container-canvas {
             position: relative;
             width: 325px;
@@ -338,7 +335,6 @@
             text-shadow: 0 0 15px rgba(255, 0, 127, 0.8);
         }
 
-        /* AI CORE STATUS DETAIL */
         .ai-core-status-box {
             background: rgba(15, 12, 0, 0.6);
             border: 1px dashed rgba(255, 234, 0, 0.3);
@@ -376,7 +372,6 @@
             font-weight: bold;
         }
 
-        /* AMBIENT LOG BOX */
         .ambient-log-box {
             position: absolute;
             bottom: 25px;
@@ -405,7 +400,6 @@
         }
         @keyframes logFadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* WOW AUTH OVERLAY */
         #wow-auth-screen {
             display: none;
             position: fixed;
@@ -442,7 +436,6 @@
             height: 40px;
         }
 
-        /* LAYOUTS & RESPONSIVITY */
         .menu-grid {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
@@ -473,7 +466,6 @@
         .missions-menu-grid .btn:nth-child(4) { grid-column: span 3; }
         .missions-menu-grid .btn:nth-child(5) { grid-column: span 3; }
 
-        /* DASHBOARD LAYOUT */
         .dashboard-grid {
             display: grid;
             grid-template-columns: 2.5fr 1fr;
@@ -502,7 +494,6 @@
         .progress-bar { height: 30px; background-color: var(--neon-green); box-shadow: var(--neon-glow); width: 0%; }
         .progress-text { margin-left: 20px; font-weight: bold; font-size: 20px; color: var(--neon-green); text-shadow: var(--neon-glow); }
 
-        /* QR SCANNER ELEMENTY */
         .qr-display-container { display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(2, 8, 2, 0.9); border: 1px solid rgba(0, 255, 0, 0.3); padding: 30px; border-radius: 12px; margin: auto; max-width: 550px; }
         .qr-scanner-wrapper { position: relative; padding: 12px; margin-bottom: 15px; }
         .qr-scanner-wrapper::before, .qr-scanner-wrapper::after { content: ''; position: absolute; width: 20px; height: 20px; border: 4px solid var(--neon-green); z-index: 20; box-shadow: var(--neon-glow); }
@@ -518,9 +509,8 @@
         @keyframes scanLaser { 0% { top: 0%; opacity: 0; } 5% { opacity: 1; } 95% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
         .hash-ticker { font-family: monospace; font-size: 13px; color: #00aa00; margin-top: 10px; letter-spacing: 1px; }
 
-        /* INPUT SYSTÉM PRO HODNOCENÍ - OPTIMALIZOVÁNO PRO SAMOSTATNÉ ŘÁDKY BEZ SCROLLOVÁNÍ */
         .rating-auth-wrapper { max-width: 650px; width: 100%; margin: auto; display: flex; flex-direction: column; gap: 15px; background: rgba(2, 6, 2, 0.9); border: 1px solid rgba(0, 255, 0, 0.25); padding: 25px; border-radius: 8px; box-shadow: var(--neon-glow); }
-        .terminal-input { background: #000; border: 1px solid var(--neon-green); color: var(--neon-green); font-family: 'Courier New', monospace; font-size: 24px; padding: 12px 20px; width: 100%; outline: none; text-transform: uppercase; text-align: center; letter-spacing: 3px; box-shadow: inset 0 0 10px rgba(0,255,0,0.2); }
+        .terminal-input { background: #000; border: 1px solid var(--neon-green); color: var(--neon-green); font-family: 'Courier New', monospace; font-size: 24px; padding: 16px 20px; min-height: 50px; width: 100%; outline: none; text-transform: uppercase; text-align: center; letter-spacing: 3px; box-shadow: inset 0 0 10px rgba(0,255,0,0.2); user-select: text; -webkit-user-select: text; }
         
         .rating-result-box { 
             display: none; 
@@ -543,9 +533,32 @@
             color: var(--alert-red) !important;
         }
 
-        .nav-footer { margin-top: auto; padding-top: 15px; width: 100%; display: flex; justify-content: space-between; border-top: 1px dashed rgba(0, 255, 0, 0.2); flex-shrink: 0; }
+        .rating-timeout-display {
+            display: none;
+            text-align: center;
+            font-size: 14px;
+            color: var(--alert-red);
+            text-shadow: var(--red-glow);
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-top: 5px;
+            text-transform: uppercase;
+        }
 
-        /* TABLET MEDIA QUERIES */
+        .nav-footer { 
+            margin-top: auto; 
+            padding-top: 15px; 
+            width: 100%; 
+            display: flex; 
+            justify-content: space-between; 
+            border-top: 1px dashed rgba(0, 255, 0, 0.2); 
+            flex-shrink: 0; 
+        }
+        .nav-footer .btn {
+            min-height: 50px;
+            padding: 12px 30px;
+        }
+
         @media (max-width: 1024px) {
             body { padding: 10px; }
             .terminal-container { padding: 15px; }
@@ -560,14 +573,10 @@
             .btn { padding: 16px 25px; font-size: 18px; }
         }
 
-        @media (max-height: 700px) {
-            .typewriter-content { max-height: 180px; }
-        }
-
         @keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
     </style>
 </head>
-<body>
+<body onclick="resetRatingTimeout()">
 
     <div id="wow-auth-screen">
         <div class="wow-banner">▲ CRITICAL SYSTEM ALERT ▲</div>
@@ -580,8 +589,8 @@
 
     <div class="terminal-container">
         <div class="terminal-header">
-            <div>SYS: <span class="primary-data" style="text-shadow: none;">ONLINE</span> // SECURE NODE TERMINAL v3.5</div>
-            <div>TIME UPLINK: <span id="live-clock" class="primary-data">2026-07-07 22:20:49</span></div>
+            <div>SYS: <span class="primary-data" style="text-shadow: none;">ONLINE</span> // SECURE NODE TERMINAL v3.6</div>
+            <div>TIME UPLINK: <span id="live-clock" class="primary-data">2026-07-08 16:00:00</span></div>
         </div>
 
         <div id="start-screen" class="screen screen-centered active">
@@ -593,7 +602,7 @@
             <h1 style="margin-top: 20px;">NEXUS CORE</h1>
             <p style="letter-spacing: 6px; margin-bottom: 35px; font-size: 16px; opacity: 0.6; text-align: center;">NEXUS SYSTEM OPERATIONAL UNIT // CODENAME: 2026</p>
             
-            <button class="btn" onclick="triggerWowAuthentication()">> INICIÁLNÍ PŘIHLÁŠENÍ AGENTA <br><span style="font-size: 13px; font-weight: normal; opacity: 0.7;">BEZPEČNÝ PROTOKOL SUB-0</span></button>
+            <button class="btn" onclick="triggerWowAuthentication()">> INICIÁLNÍ PŘIHLÁŠENÍ AGENTA <br><span style="font-size: 13px; font-weight: normal; opacity: 0.7; margin-left: 5px;">BEZPEČNÝ PROTOKOL SUB-0</span></button>
         </div>
 
         <div id="boot-screen" class="screen">
@@ -637,14 +646,15 @@
             <h2>NEXUS CORE // IDENTITY MATRIX HODNOCENÍ</h2>
             <div class="rating-auth-wrapper">
                 <p style="text-align: center; font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">Vložte ID Agenta ke zjištění výsledků:</p>
-                <input type="text" id="agent-id-input" class="terminal-input" placeholder="Zadejte ID Agenta..." autocomplete="off">
+                <input type="text" id="agent-id-input" class="terminal-input" placeholder="Zadejte ID Agenta..." autocomplete="off" oninput="resetRatingTimeout()">
                 <button class="btn" style="margin: 0;" onclick="verifyAgentRating()">> OVĚŘIT KÓD IDENTITY</button>
                 
                 <div class="rating-result-box" id="rating-output"></div>
+                <div class="rating-timeout-display" id="rating-timeout-text">Z bezpečnostních důvodů budeš odhlášen za: 60s</div>
             </div>
             <div class="nav-footer">
-                <button class="btn btn-red" onclick="triggerLogoff()">ODHLÁSIT</button>
-                <button class="btn" onclick="goToMenu()">ZPĚT DO MENU</button>
+                <button class="btn btn-red" onclick="clearRatingTimeout(); triggerLogoff();">ODHLÁSIT</button>
+                <button class="btn" onclick="clearRatingTimeout(); goToMenu();">ZPĚT DO MENU</button>
             </div>
         </div>
 
@@ -695,25 +705,25 @@
                     <div class="dash-card dash-card-misions">
                         <div class="card-title">FAZOVANÉ SYSTÉMOVÉ UZLY</div>
                         <div class="mission-list">
-                            <div class="mission-item locked" id="m1-container">
+                            <div class="mission-item locked">
                                 <div class="mission-header-row"><span>NODE 01: DIGITÁLNÍ STOPA</span><span style="color:var(--alert-red);">[ LOCKED ]</span></div>
-                                <div class="mission-meta-row"><span id="m1-timer">Zámek active</span><span id="m1-percent">Progres: 0%</span></div>
-                                <div class="mini-progress-container"><div class="mini-progress-bar" id="m1-bar" style="background:#222;"></div></div>
+                                <div class="mission-meta-row"><span id="m1-timer">Zámek active</span><span>Progres: 0%</span></div>
+                                <div class="mini-progress-container"><div class="mini-progress-bar" style="background:#222;"></div></div>
                             </div>
-                            <div class="mission-item locked" id="m2-container">
+                            <div class="mission-item locked">
                                 <div class="mission-header-row"><span>NODE 02: KRYPTOGRAFICKÝ KLÍČ</span><span style="color:var(--alert-red);">[ LOCKED ]</span></div>
-                                <div class="mission-meta-row"><span id="m2-timer">Zámek active</span><span id="m2-percent">Progres: 0%</span></div>
-                                <div class="mini-progress-container"><div class="mini-progress-bar" id="m2-bar" style="background:#222;"></div></div>
+                                <div class="mission-meta-row"><span id="m2-timer">Zámek active</span><span>Progres: 0%</span></div>
+                                <div class="mini-progress-container"><div class="mini-progress-bar" style="background:#222;"></div></div>
                             </div>
-                            <div class="mission-item locked" id="m3-container">
+                            <div class="mission-item locked">
                                 <div class="mission-header-row"><span>NODE 03: INFILTRACE REAKTORU</span><span style="color:var(--alert-red);">[ LOCKED ]</span></div>
-                                <div class="mission-meta-row"><span id="m3-timer">Zámek active</span><span id="m3-percent">Progres: 0%</span></div>
-                                <div class="mini-progress-container"><div class="mini-progress-bar" id="m3-bar" style="background:#222;"></div></div>
+                                <div class="mission-meta-row"><span id="m3-timer">Zámek active</span><span>Progres: 0%</span></div>
+                                <div class="mini-progress-container"><div class="mini-progress-bar" style="background:#222;"></div></div>
                             </div>
-                            <div class="mission-item locked" id="m4-container">
+                            <div class="mission-item locked">
                                 <div class="mission-header-row"><span>NODE 04: FINÁLNÍ PURGE</span><span style="color:var(--alert-red);">[ LOCKED ]</span></div>
-                                <div class="mission-meta-row"><span id="m4-timer">Zámek active</span><span id="m4-percent">Progres: 0%</span></div>
-                                <div class="mini-progress-container"><div class="mini-progress-bar" id="m4-bar" style="background:#222;"></div></div>
+                                <div class="mission-meta-row"><span id="m4-timer">Zámek active</span><span>Progres: 0%</span></div>
+                                <div class="mini-progress-container"><div class="mini-progress-bar" style="background:#222;"></div></div>
                             </div>
                         </div>
                     </div>
@@ -844,10 +854,10 @@
 
     <script>
         const CONFIG_MISI = {
-            m1: { targetDate: 'August 1, 2026 12:00:00', percent: 0 },
-            m2: { targetDate: 'September 1, 2026 12:00:00', percent: 0 },
-            m3: { targetDate: 'October 1, 2026 12:00:00', percent: 0 },
-            m4: { targetDate: 'November 1, 2026 12:00:00', percent: 0 }
+            m1: { targetDate: 'August 1, 2026 12:00:00' },
+            m2: { targetDate: 'September 1, 2026 12:00:00' },
+            m3: { targetDate: 'October 1, 2026 12:00:00' },
+            m4: { targetDate: 'November 1, 2026 12:00:00' }
         };
 
         const BRIEFINGY_TEXTY = {
@@ -869,7 +879,6 @@
         let canvas, ctx;
         let mColumns, mRainDrops;
         const matrixChars = "010101#@ΔΣλ%AB9FXYZΩΨΞ".split("");
-        const matrixWords = ["ACCESS", "NODE", "SYSTEM", "NEXUS", "CORE", "CIPHER", "ALARM"];
         let hexPatternCanvas = null;
 
         let isAuthenticating = false;
@@ -878,6 +887,9 @@
         let aiCoreInstances = [];
         let globalCoreOverdrive = false;
         let overdriveTimer = 0;
+
+        let ratingTimeoutSeconds = 60;
+        let ratingTimeoutInterval = null;
 
         function initAudio() { 
             if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -1038,16 +1050,6 @@
                     cCtx.beginPath();
                     cCtx.arc(px, py, pt.size * (globalCoreOverdrive ? 1.5 : 1.0), 0, Math.PI * 2);
                     cCtx.fill();
-                    
-                    if (pt.size > 3) {
-                        cCtx.shadowColor = globalCoreOverdrive ? '#ff007f' : '#ffea00';
-                        cCtx.shadowBlur = 10;
-                        cCtx.fillStyle = coreColor + '1.0)';
-                        cCtx.beginPath();
-                        cCtx.arc(px, py, pt.size * 0.5, 0, Math.PI * 2);
-                        cCtx.fill();
-                        cCtx.shadowBlur = 0;
-                    }
                 });
                 
                 let pulseRadius = 32 + Math.sin(time * 4) * 4;
@@ -1131,17 +1133,7 @@
             ctx.font = 'bold 16px monospace';
             for (let i = 0; i < mRainDrops.length; i++) {
                 let text = matrixChars[Math.floor(Math.random() * matrixChars.length)];
-                
-                if (Math.random() > 0.985) {
-                    text = " " + matrixWords[Math.floor(Math.random() * matrixWords.length)] + " ";
-                    ctx.fillStyle = '#ffffff'; 
-                    ctx.shadowColor = '#00ff00';
-                    ctx.shadowBlur = 10;
-                } else {
-                    ctx.fillStyle = 'rgba(0, 255, 0, 0.98)';
-                    ctx.shadowBlur = 0;
-                }
-
+                ctx.fillStyle = 'rgba(0, 255, 0, 0.98)';
                 ctx.fillText(text, i * 20, mRainDrops[i] * 20);
                 
                 if (mRainDrops[i] * 20 > canvas.height && Math.random() > 0.95) {
@@ -1149,7 +1141,6 @@
                 }
                 mRainDrops[i]++;
             }
-            ctx.shadowBlur = 0; 
         }
 
         const aiStatuses = ["Awaiting input...", "Scanning network...", "Analyzing core...", "Encrypting data...", "Monitoring links...", "Synchronizing node...", "Listening..."];
@@ -1367,9 +1358,44 @@
             document.getElementById('rating-output').style.display = 'none';
             document.getElementById('rating-output').classList.remove('error-state');
             document.getElementById('rating-output').innerHTML = '';
+            document.getElementById('rating-timeout-text').style.display = 'none';
+            clearRatingTimeout();
         }
 
-        /* FUNKCE UPRAVENA PRO MAXIMÁLNÍ PŘEHLEDNOST A ZAMEZENÍ SCROLLOVÁNÍ */
+        function startRatingTimeout() {
+            clearRatingTimeout();
+            ratingTimeoutSeconds = 60;
+            const el = document.getElementById('rating-timeout-text');
+            el.innerText = `Z bezpečnostních důvodů budeš odhlášen za: ${ratingTimeoutSeconds}s`;
+            el.style.display = 'block';
+
+            ratingTimeoutInterval = setInterval(() => {
+                ratingTimeoutSeconds--;
+                if (ratingTimeoutSeconds <= 0) {
+                    clearInterval(ratingTimeoutInterval);
+                    triggerLogoff();
+                } else {
+                    el.innerText = `Z bezpečnostních důvodů budeš odhlášen za: ${ratingTimeoutSeconds}s`;
+                }
+            }, 1000);
+        }
+
+        function resetRatingTimeout() {
+            const el = document.getElementById('rating-timeout-text');
+            if (ratingTimeoutInterval && el.style.display === 'block') {
+                ratingTimeoutSeconds = 60;
+                el.innerText = `Z bezpečnostních důvodů budeš odhlášen za: ${ratingTimeoutSeconds}s`;
+            }
+        }
+
+        function clearRatingTimeout() {
+            if (ratingTimeoutInterval) {
+                clearInterval(ratingTimeoutInterval);
+                ratingTimeoutInterval = null;
+            }
+            document.getElementById('rating-timeout-text').style.display = 'none';
+        }
+
         function verifyAgentRating() {
             const inputVal = document.getElementById('agent-id-input').value.trim().toUpperCase();
             const outputBox = document.getElementById('rating-output');
@@ -1380,7 +1406,9 @@
                 sndWarning();
                 outputBox.classList.add('error-state');
                 outputBox.style.display = 'block';
-                typeWriter("[ ERROR ] NEBYLA ZADÁNA ŽÁDNÁ IDENTITA.", 'rating-output', 8, true);
+                typeWriter("[ ERROR ] NEBYLA ZADÁNA ŽÁDNÁ IDENTITA.", 'rating-output', 8, true, () => {
+                    startRatingTimeout();
+                });
                 return;
             }
 
@@ -1420,28 +1448,34 @@
                     if (nalezeneData) {
                         sndSuccess();
                         const vyslednyText = 
-                            ">Body v misi 1: ${nalezeneData.m1}\n" +
-                            ">Body v misi 2: ${nalezeneData.m2}\n" +
-                            ">Body v misi 3: ${nalezeneData.m3}\n" +
-                            ">Body v misi 4: ${nalezeneData.m4}\n\n" +
-                            ">Celkový počet bodů: ${nalezeneData.celkem}\n" +
-                            ">Aktuální hodnost agenta: ${nalezeneData.hodnost}\n\n" +
-                            ">Gratulujeme k výsledkům Agente!\n" +
-                            ">Jen tak dál!";
+                            `Body v misi 1: ${nalezeneData.m1}\n` +
+                            `Body v misi 2: ${nalezeneData.m2}\n` +
+                            `Body v misi 3: ${nalezeneData.m3}\n` +
+                            `Body v misi 4: ${nalezeneData.m4}\n\n` +
+                            `Celkový počet bodů: ${nalezeneData.celkem}\n` +
+                            `Aktuální hodnost agenta: ${nalezeneData.hodnost}\n\n` +
+                            `Gratulujeme k výsledkům Agente!\n` +
+                            `Jen tak dál!`;
                         
-                        typeWriter(vyslednyText, 'rating-output', 8, false);
+                        typeWriter(vyslednyText, 'rating-output', 8, false, () => {
+                            startRatingTimeout();
+                        });
                     } else {
                         sndWarning();
                         outputBox.classList.add('error-state');
                         const chybaText = `[ ACCESS DENIED ] // IDENTITA NEBYLA DETEKOVÁNA\n` +
                                           `Upozornění: Pokus o neoprávněný vstup byl zalogován.`;
-                        typeWriter(chybaText, 'rating-output', 8, true);
+                        typeWriter(chybaText, 'rating-output', 8, true, () => {
+                            startRatingTimeout();
+                        });
                     }
                 })
                 .catch(error => {
                     sndWarning();
                     outputBox.classList.add('error-state');
-                    typeWriter("[ CRITICAL ERROR ] Soubor 'agenti.csv' nebyl nalezen vedle html souboru na GitHubu. Přilož ho tam podle instrukcí.", 'rating-output', 8, true);
+                    typeWriter("[ CRITICAL ERROR ] Soubor 'agenti.csv' nebyl nalezen vedle html souboru na GitHubu. Přilož ho tam podle instrukcí.", 'rating-output', 8, true, () => {
+                        startRatingTimeout();
+                    });
                     console.error(error);
                 });
         }
@@ -1500,6 +1534,7 @@
         }
 
         function triggerLogoff() {
+            clearRatingTimeout(); 
             switchScreen('logoff-screen');
             sndWarning();
             const progressBar = document.getElementById('logoff-progress-bar');
