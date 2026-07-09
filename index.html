@@ -734,7 +734,7 @@
             <h1 style="margin-top: 20px;">NEXUS CORE</h1>
             <p style="letter-spacing: 6px; margin-bottom: 35px; font-size: 16px; opacity: 0.6; text-align: center;">NEXUS SYSTEM OPERATIONAL UNIT // CODENAME: 2026</p>
             
-            <button class="btn" onclick="triggerWowAuthentication()">> INICIÁLNÍ PŘIHLÁŠENÍ AGENTA <br><span style="font-size: 13px; font-weight: normal; opacity: 0.7; margin-left: 5px;">BEZPEČNÝ PROTOKOL SUB-0</span></button>
+            <button class="btn" onclick="triggerWowAuthentication()">> PŘIHLÁŠENÍ AGENTA <br><span style="font-size: 13px; font-weight: normal; opacity: 0.7; margin-left: 5px;">BEZPEČNÝ PROTOKOL SUB-0</span></button>
         </div>
 
         <div id="boot-screen" class="screen">
@@ -757,7 +757,7 @@
             <h2>OPERATIVNÍ BRÍFING JÁDRA</h2>
             <div class="typewriter-content" id="welcome-text-container"></div>
             <div style="flex-shrink:0; text-align:right;">
-                <button class="btn" id="welcome-continue-btn" style="display:none; margin-top: 10px;" onclick="goToMenu()">> AKCEPTOVAT SMĚRNICI JÁDRA</button>
+                <button class="btn" id="welcome-continue-btn" style="display:none; margin-top: 10px;" onclick="goToMenu()">> AKCEPTOVAT</button>
             </div>
         </div>
 
@@ -771,12 +771,12 @@
 
             <div class="menu-grid">
                 <button class="btn" onclick="showSection('intro-screen')">> ÚVODNÍ BRIEFING</button>
-                <button class="btn" onclick="showSection('rules-screen')">> OPERAČNÍ KODEX</button>
+                <button class="btn" onclick="showSection('rules-screen')">> KODEX AGENTA</button>
                 <button class="btn" onclick="showSection('dashboard-screen')">> ŘÍDÍCÍ DASHBOARD</button>
-                <button class="btn" onclick="showSection('registration-screen')">> REGISTRACE IDENTITY</button>
-                <button class="btn" onclick="showSection('faq-screen')">> DEŠIFROVANÉ FAQ</button>
-                <button class="btn" style="border-color: var(--neon-green); color: var(--neon-green);" onclick="showMissionsMenu()">> OPERAČNIES MISE</button>
-                <button class="btn" onclick="openRatingSection()">> HODNOCENÍ AGENTA</button>
+                <button class="btn" onclick="showSection('registration-screen')">> REGISTRACE AGENTA</button>
+                <button class="btn" onclick="showSection('faq-screen')">> DOTAZY</button>
+                <button class="btn" style="border-color: var(--neon-green); color: var(--neon-green);" onclick="showMissionsMenu()">> OPERAČNI MISE</button>
+                <button class="btn" onclick="openRatingSection()">> ZJIŠTĚNÍ ÚROVNĚ AGENTA</button>
             </div>
             <button class="btn btn-red" style="margin-top: 20px; width: 100%; max-width: 1300px; padding: 18px;" onclick="triggerLogoff()">[ ✕ ] DEAKTIVOVAT TERMINÁL (LOGOFF)</button>
         </div>
@@ -793,7 +793,7 @@
             </div>
             <div class="nav-footer">
                 <button class="btn btn-red" onclick="clearRatingTimeout(); triggerLogoff();">ODHLÁSIT</button>
-                <button class="btn" onclick="clearRatingTimeout(); goToMenu();">ZPĚT DO MENU</button>
+                <button class="btn" onclick="clearRatingTimeout(); goToMenu();">ZPĚT</button>
             </div>
         </div>
 
@@ -811,7 +811,7 @@
 
             <div class="nav-footer" style="max-width: 1300px; width: 100%; margin-top: 40px;">
                 <button class="btn btn-red" onclick="triggerLogoff()">ODHLÁSIT</button>
-                <button class="btn" onclick="goToMenu()">ZPĚT DO MENU</button>
+                <button class="btn" onclick="goToMenu()">ZPĚT</button>
             </div>
         </div>
 
@@ -820,7 +820,7 @@
             <div class="typewriter-content" id="mission-detail-container"></div>
             <div class="nav-footer">
                 <button class="btn btn-red" onclick="triggerLogoff()">ODHLÁSIT</button>
-                <button class="btn" onclick="showMissionsMenu()">ZPĚT NA VÝBĚR MISÍ</button>
+                <button class="btn" onclick="showMissionsMenu()">ZPĚT</button>
             </div>
         </div>
 
@@ -933,7 +933,7 @@
             
             <div class="nav-footer">
                 <button class="btn btn-red" onclick="triggerLogoff()">ODHLÁSIT</button>
-                <button class="btn" onclick="goToMenu()">ZPĚT DO MENU</button>
+                <button class="btn" onclick="goToMenu()">ZPĚT</button>
             </div>
         </div>
 
@@ -953,10 +953,17 @@
                     [ KROK 2 ] AUTENTIZACE : VYPLŇTE IDENTITY MATRIX FORMULÁŘ<br>
                     [ KROK 3 ] AUTORIZACE  : VYČKEJTE NA DEKRET CENTRÁLNÍHO JÁDRA
                 </p>
+                
+                <!-- Červený varovný rámeček pro agenty -->
+                <div style="margin-top: 25px; border: 1px solid #ff3333; padding: 12px; background: rgba(255, 51, 51, 0.1); border-radius: 4px; box-shadow: 0 0 10px rgba(255, 51, 51, 0.2);">
+                    <p style="color: #ff3333; font-size: 13px; line-height: 1.5; margin: 0; font-weight: bold; letter-spacing: 0.5px; text-align: left;">
+                        > NEZAPOMEŇ AGENTE, ŽE POKUD CHCEŠ POUŽÍT TELEFON, TAK SE NEZAPOMEŇ ZEPTAT DOZORU. RESPEKTUJEME ŠKOLNÍ ŘÁD.
+                    </p>
+                </div>
             </div>
             <div class="nav-footer">
                 <button class="btn btn-red" onclick="triggerLogoff()">ODHLÁSIT</button>
-                <button class="btn" onclick="goToMenu()">ZPĚT DO MENU</button>
+                <button class="btn" onclick="goToMenu()">ZPĚT</button>
             </div>
         </div>
 
@@ -965,7 +972,7 @@
             <div class="typewriter-content" id="intro-text-container"></div>
             <div class="nav-footer">
                 <button class="btn btn-red" onclick="triggerLogoff()">ODHLÁSIT</button>
-                <button class="btn" onclick="goToMenu()">ZPĚT DO MENU</button>
+                <button class="btn" onclick="goToMenu()">ZPĚT</button>
             </div>
         </div>
 
@@ -974,7 +981,7 @@
             <div class="typewriter-content" id="rules-text-container"></div>
             <div class="nav-footer">
                 <button class="btn btn-red" onclick="triggerLogoff()">ODHLÁSIT</button>
-                <button class="btn" onclick="goToMenu()">ZPĚT DO MENU</button>
+                <button class="btn" onclick="goToMenu()">ZPĚT</button>
             </div>
         </div>
 
@@ -983,7 +990,7 @@
             <div class="typewriter-content" id="faq-screen-container"></div>
             <div class="nav-footer">
                 <button class="btn btn-red" onclick="triggerLogoff()">ODHLÁSIT</button>
-                <button class="btn" onclick="goToMenu()">ZPĚT DO MENU</button>
+                <button class="btn" onclick="goToMenu()">ZPĚT</button>
             </div>
         </div>
 
@@ -1759,16 +1766,16 @@
                 
                 if (progress === 100) {
                     clearInterval(progressInterval);
-                    setTimeout(() => { startBriefing(); }, 2500);
+                    setTimeout(() => { startBriefing(); }, 5000); // Prodlouženo na 5 vteřin
                 }
-            }, 60); 
+            }, 120); // Zpomaleno z 60 na 120 milisekund
         }
 
         function startBriefing() {
             switchScreen('welcome-screen');
             const btn = document.getElementById('welcome-continue-btn');
             if(btn) btn.style.display = "none";
-            const welcomeText = "Vítej, agente.\n\nByl jsi vybrán pro účast v Operace NEXUS.\nTento systém sleduje průběh všech misí, agentů a časových protokolů v reálném čase.\n\nTvým úkolem je splnit zadané mise, získat informace, luštit šifry a posouvat se dál. Každé rozhodnutí ovlivňuje průběh operace.\n\nBuď bdělý. Buď rychlý. Buď nenápadný.\n\nOperace začíná nyní.";
+            const welcomeText = "Vítej, agente.\n\nPrávě ses přihlásil do terminálu Operace Nexus – centrálního systému, který tě bude provázet celou soutěží.\n\nOd této chvíle se stáváš součástí sítě agentů, kteří budou během čtyř misí prověřovat své schopnosti v oblasti informatiky, logického myšlení, algoritmizace a práce s digitálními technologiemi.\n\nTento terminál je tvým hlavním informačním centrem. Najdeš zde všechny důležité informace o soutěži, aktuální stav systému, časové odpočty, přehled misí i své průběžné výsledky.\n\nJednotlivé mise jsou po registraci uzamčeny. Jakmile nastane čas jejich spuštění, systém je postupně zpřístupní. Po zadání svého Agent ID budeš moci zobrazit své bodové hodnocení, získanou hodnost i další informace o svém postupu v Operaci Nexus.\n\nKaždá mise představuje novou výzvu. Hodnotí se nejen správnost řešení, ale také logický postup, kreativita a schopnost samostatně řešit problémy.\n\nInternet i nástroje umělé inteligence můžeš při řešení využívat jako podporu. Nejdůležitější je však porozumět svému řešení a být schopen vysvětlit, jak jsi k němu dospěl.\n\nPravidelně sleduj tento terminál. Právě zde budou postupně odemykány nové mise a zveřejňovány důležité informace o průběhu soutěže.\n\nOperace Nexus byla zahájena.\n\nPřejeme ti mnoho úspěchů, agente.";
             typeWriter(welcomeText, 'welcome-text-container', 15, false, () => {
                 if(btn) btn.style.display = "inline-block";
                 sndSuccess();
