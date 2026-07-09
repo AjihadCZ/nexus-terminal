@@ -1899,8 +1899,8 @@
                 }
             }, 45);
         }
- function spustDestrukciTerminalu() {
-    // 1. DYNAMICKÉ VLOŽENÍ STYLŮ (VČETNĚ CRT TV VYPNUTÍ)
+function spustDestrukciTerminalu() {
+    // 1. DYNAMICKÉ VLOŽENÍ STYLŮ (VČETNĚ CRT TV VYPNUTÍ NA 1 VTEŘINU A REBOOT BOXU)
     const style = document.createElement('style');
     style.id = 'destruction-effects';
     style.innerHTML = `
@@ -1916,21 +1916,24 @@
             80% { transform: translate(3px, 3px); }
             100% { transform: translate(0, 0); }
         }
-        /* EFEKT STARÉ CRT TELEVIZE */
+        /* EFEKT STARÉ CRT TELEVIZE - PRODLOUŽEN NA 1 VTEŘINU */
         @keyframes crt-tv-off {
             0% {
                 transform: scaleY(1) scaleX(1);
                 filter: brightness(1) contrast(1) blur(0px);
+                opacity: 1;
             }
             40% {
                 transform: scaleY(0.005) scaleX(1.05);
                 filter: brightness(3) contrast(2) blur(0.5px);
-                background: #ffffff; /* Záblesk bílé v lince */
+                background: #ffffff;
+                opacity: 1;
             }
             75% {
                 transform: scaleY(0.005) scaleX(0.005);
                 filter: brightness(6) blur(1px);
-                background: #ffffff; /* Bod uprostřed jasně svítí */
+                background: #ffffff;
+                opacity: 1;
             }
             100% {
                 transform: scaleY(0) scaleX(0);
@@ -1979,16 +1982,34 @@
             white-space: nowrap;
             text-transform: uppercase;
         }
-        /* Třída pro spuštění TV vypnutí na celé body */
+        /* Třída pro spuštění TV vypnutí (trvá přesně 1s) */
         .tv-shutdown-active {
-            animation: crt-tv-off 0.55s cubic-bezier(0.23, 1, 0.32, 1) forwards !important;
+            animation: crt-tv-off 1s cubic-bezier(0.23, 1, 0.32, 1) forwards !important;
             transform-origin: center center !important;
             overflow: hidden !important;
+        }
+        /* STYL PRO OKÉNKO NÁSLEDNÉHO REBOOTU */
+        .reboot-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px solid #00ff00;
+            background-color: #050505;
+            color: #00ff00;
+            padding: 25px 45px;
+            font-family: monospace;
+            font-size: 18px;
+            z-index: 99999999;
+            text-shadow: 0 0 5px #00ff00;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+            text-align: center;
+            letter-spacing: 1px;
         }
     `;
     document.head.appendChild(style);
 
-    // Aby efekt staré televize fungoval správně, pozadí samotného okna prohlížeče (html) musí být černé
+    // Příprava černého podkladu okna prohlížeče
     document.documentElement.style.backgroundColor = '#000000';
     document.documentElement.style.height = '100%';
     document.body.style.height = '100%';
@@ -1996,7 +2017,7 @@
     // 2. ZAHÁJENÍ ODPOČTU OD 5
     const countdownBox = document.createElement('div');
     countdownBox.className = 'destruction-box';
-    countdownBox.innerHTML = '> Terminal bude zničen za:<br><span id="destruct-timer" class="countdown-num">5</span>';
+    countdownBox.innerHTML = 'Terminal bude znicen za<br><span id="destruct-timer" class="countdown-num">5</span>';
     document.body.appendChild(countdownBox);
 
     document.body.classList.add('shake-active');
@@ -2011,8 +2032,6 @@
         } else {
             clearInterval(countdownInterval);
             countdownBox.remove();
-            
-            // Přejde na záplavu chyb
             spustZalavuErroru();
         }
     }, 1000);
@@ -2052,27 +2071,60 @@
                 clearInterval(errorInterval);
                 setTimeout(() => {
                     vypnoutJakoTelevizi();
-                }, 400); // Malá chvíle na prozkoumání chyb, než to "bouchne"
+                }, 400);
             }
         }, 25); 
     }
 
-    // 4. SAMOTNÉ CRT TELEVIZNÍ VYPNUTÍ
+    // 4. CRT TELEVIZNÍ VYPNUTÍ (Nyní trvá přesně 1 vteřinu)
     function vypnoutJakoTelevizi() {
-        // Vypneme třesení, abychom nenarušili TV animaci
         document.body.classList.remove('shake-active');
-        
-        // Spustíme animaci staré televize na celé tělo stránky
         document.body.classList.add('tv-shutdown-active');
 
-        // Animace televize trvá 550ms. Jakmile skončí, nastane absolutní tma.
+        // Čekáme 1000ms na dokončení TV vypnutí
         setTimeout(() => {
-            // Teď jsme ve tmě. Počkáme přesně tvou vteřinu (1000ms) a pak reload.
-            setTimeout(() => {
-                location.reload();
-            }, 1000); 
+            // Bezpečně vyčistíme zničené rozhraní a resetujeme deformaci body elementu
+            document.body.classList.remove('tv-shutdown-active');
+            document.body.innerHTML = ''; 
+            document.body.style.opacity = '1';
+            document.body.style.transform = 'none';
+            document.body.style.filter = 'none';
+            document.body.style.backgroundColor = '#000000';
 
-        }, 550);
+            // Přecházíme na zobrazení reboot loadingu
+            spustRebootLoading();
+        }, 1000);
+    }
+
+    // 5. NOVÉ OKÉNKO: REBOOT SYSTEM .... X% (Trvá přesně 1,5 sekundy)
+    function spustRebootLoading() {
+        const rebootBox = document.createElement('div');
+        rebootBox.className = 'reboot-box';
+        rebootBox.innerHTML = 'Reboot system .... <span id="reboot-pct">0</span>%';
+        document.body.appendChild(rebootBox);
+
+        let rebootProgress = 0;
+        const rebootPctElem = document.getElementById('reboot-pct');
+
+        // Interval 15ms * 100 kroků = přesně 1500ms (1.5 sekundy)
+        const rebootInterval = setInterval(() => {
+            rebootProgress++;
+            if (rebootPctElem) {
+                rebootPctElem.innerText = rebootProgress;
+            }
+
+            if (rebootProgress >= 100) {
+                clearInterval(rebootInterval);
+                
+                // Schováme okénko loadingu, aby nastala absolutní tma
+                rebootBox.remove();
+
+                // Slíbená půlvteřinová pauza na závěr (500ms ticho) a pak reload stránky
+                setTimeout(() => {
+                    location.reload();
+                }, 500);
+            }
+        }, 15);
     }
 }
     </script>
