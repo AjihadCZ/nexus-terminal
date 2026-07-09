@@ -769,13 +769,14 @@
             </div>
             <div class="ai-dynamic-status" id="menu-ai-status" style="margin-bottom: 20px;">CONNECTING...</div>
 
-           <div class="menu-container">
-            <button class="menu-btn" onclick="switchScreen('briefing-screen')">> Briefing Nexus</button>
-            <button class="menu-btn" onclick="switchScreen('codex-screen')">> Kodex Agenta</button>
-            <button class="menu-btn" onclick="switchScreen('faq-screen')">> Dotazy Agentů FAQ</button>
-            <button class="menu-btn" onclick="switchScreen('missions-screen')">> Operační Mise</button>
-            <button class="menu-btn" onclick="switchScreen('rating-screen')">> Výsledky agenta</button>
-            <button class="menu-btn" onclick="triggerLogoff()">> Odhlásit se z terminálu</button>
+            <div class="menu-grid">
+                <button class="btn" onclick="showSection('intro-screen')">> ÚVODNÍ BRIEFING</button>
+                <button class="btn" onclick="showSection('rules-screen')">> KODEX AGENTA</button>
+                <button class="btn" onclick="showSection('dashboard-screen')">> ŘÍDÍCÍ DASHBOARD</button>
+                <button class="btn" onclick="showSection('registration-screen')">> REGISTRACE AGENTA</button>
+                <button class="btn" onclick="showSection('faq-screen')">>DOTAZY AGENTů</button>
+                <button class="btn" style="border-color: var(--neon-green); color: var(--neon-green);" onclick="showMissionsMenu()">> OPERAČNIES MISE</button>
+                <button class="btn" onclick="openRatingSection()">> CELKOVÉ HODNOCENÍ AGENTA</button>
             </div>
             <button class="btn btn-red" style="margin-top: 20px; width: 100%; max-width: 1300px; padding: 18px;" onclick="triggerLogoff()">[ ✕ ] DEAKTIVOVAT TERMINÁL (LOGOFF)</button>
         </div>
@@ -792,7 +793,7 @@
             </div>
             <div class="nav-footer">
                 <button class="btn btn-red" onclick="clearRatingTimeout(); triggerLogoff();">ODHLÁSIT</button>
-                <button class="btn" onclick="clearRatingTimeout(); goToMenu();">ZPĚT DO MENU</button>
+                <button class="btn" onclick="clearRatingTimeout(); goToMenu();">ZPĚT</button>
             </div>
         </div>
 
@@ -810,7 +811,7 @@
 
             <div class="nav-footer" style="max-width: 1300px; width: 100%; margin-top: 40px;">
                 <button class="btn btn-red" onclick="triggerLogoff()">ODHLÁSIT</button>
-                <button class="btn" onclick="goToMenu()">ZPĚT DO MENU</button>
+                <button class="btn" onclick="goToMenu()">ZPĚT</button>
             </div>
         </div>
 
@@ -834,7 +835,7 @@
                             <div style="font-size: 12px; text-align: center; opacity: 0.5; margin-top: 4px;">Ukončení: 20. 9. 2026</div>
                         </div>
                         <div class="dash-card">
-                            <div class="card-title">UZAVŘENÍ CELĚ OPERACE 2026</div>
+                            <div class="card-title">UZAVŘENÍ CELÉ OPERACE 2026</div>
                             <div class="countdown-timer" id="global-countdown" style="color:var(--neon-green); text-shadow:var(--neon-glow);">000D 00H 00M 00S</div>
                             <div style="font-size: 12px; text-align: center; opacity: 0.5; margin-top: 4px;">Konec operace: 31. 12. 2026</div>
                         </div>
@@ -932,7 +933,7 @@
             
             <div class="nav-footer">
                 <button class="btn btn-red" onclick="triggerLogoff()">ODHLÁSIT</button>
-                <button class="btn" onclick="goToMenu()">ZPĚT DO MENU</button>
+                <button class="btn" onclick="goToMenu()">ZPĚT</button>
             </div>
         </div>
 
@@ -954,14 +955,14 @@
                 </p>
                 <!-- Červený varovný rámeček pro agenty -->
                 <div style="margin-top: 25px; border: 1px solid #ff3333; padding: 12px; background: rgba(255, 51, 51, 0.1); border-radius: 4px; box-shadow: 0 0 10px rgba(255, 51, 51, 0.2);">
-                <p style="color: #ff3333; font-size: 13px; line-height: 1.5; margin: 0; font-weight: bold; letter-spacing: 0.5px;">
-                    > NEZAPOMEŇ AGENTE, ŽE POKUD CHCEŠ POUŽÍT TELEFON, TAK SE NEZAPOMEŇ ZEPTAT DOZORU. RESPEKTUJEME ŠKOLNÍ ŘÁD.
-                </p>
-    </div>
+                    <p style="color: #ff3333; font-size: 13px; line-height: 1.5; margin: 0; font-weight: bold; letter-spacing: 0.5px;">
+            > NEZAPOMEŇ AGENTE, ŽE POKUD CHCEŠ POUŽÍT TELEFON, TAK SE NEZAPOMEŇ ZEPTAT DOZORU. RESPEKTUJEME ŠKOLNÍ ŘÁD.
+                    </p>
+                </div>
             </div>
             <div class="nav-footer">
                 <button class="btn btn-red" onclick="triggerLogoff()">ODHLÁSIT</button>
-                <button class="btn" onclick="goToMenu()">ZPĚT DO MENU</button>
+                <button class="btn" onclick="goToMenu()">ZPĚT</button>
             </div>
         </div>
 
@@ -970,7 +971,7 @@
             <div class="typewriter-content" id="intro-text-container"></div>
             <div class="nav-footer">
                 <button class="btn btn-red" onclick="triggerLogoff()">ODHLÁSIT</button>
-                <button class="btn" onclick="goToMenu()">ZPĚT DO MENU</button>
+                <button class="btn" onclick="goToMenu()">ZPĚT</button>
             </div>
         </div>
 
@@ -979,7 +980,7 @@
             <div class="typewriter-content" id="rules-text-container"></div>
             <div class="nav-footer">
                 <button class="btn btn-red" onclick="triggerLogoff()">ODHLÁSIT</button>
-                <button class="btn" onclick="goToMenu()">ZPĚT DO MENU</button>
+                <button class="btn" onclick="goToMenu()">ZPĚT</button>
             </div>
         </div>
 
@@ -988,7 +989,7 @@
             <div class="typewriter-content" id="faq-screen-container"></div>
             <div class="nav-footer">
                 <button class="btn btn-red" onclick="triggerLogoff()">ODHLÁSIT</button>
-                <button class="btn" onclick="goToMenu()">ZPĚT DO MENU</button>
+                <button class="btn" onclick="goToMenu()">ZPĚT</button>
             </div>
         </div>
 
@@ -1720,25 +1721,34 @@
             const progressBar = document.getElementById('boot-progress-bar');
             const progressText = document.getElementById('boot-progress-text');
             
-          const bootLogData = 
-                "> INICIALIZACE KOMPONENT MATRICOVÉHO JÁDRA Engine.v32 [ OK ]\n" +
-                "> ALOKACE PAMĚŤOVÉHO PROSTORU JÁDRA [0x7FFF8000]...... [ OK ]\n" +
-                "> NAČÍTÁNÍ DECENTRALIZOVANÝCH SÍŤOVÝCH OVLADAČŮ....... [ OK ]\n" +
-                "> KONTROLA INTEGRITY ŠIFROVACÍCH PROTOKOLŮ SHA-512.... [ OK ]\n" +
-                "> NAVAZOVÁNÍ KVANTOVÉHO SPOJENÍ S CLOUDOVÝMI ÚLOŽIŠTI. [ OK ]\n" +
-                "> DETEKCE OVERLAYŮ BEZPEČNOSTNÍCH SUBSYSTÉMŮ.......... [ OK ]\n" +
-                "> PŘIPOJOVÁNÍ ŠIFROVANÉHO ODDÍLU /dev/node_0a......... [ OK ]\n" +
-                "> REKALIBRACE PIXELŮ TABLETU S VYSOKOU HUSTOTOU....... [ OK ]\n" +
-                "> IMPLANTACE ANTI-LOGGOVACÍCH A ANTI-HEURISTICKÝCH RUTIN [ OK ]\n" +
-                "> DETEKČNÍ VRSTVA PRO OBCHÁZENÍ FIREWALLU AKTIVNÍ..... [ OK ]\n" +
-                "> RESOLVING DISTRIBUTOVANÝCH HASHOVACÍCH TABULEK (DHT). [ OK ]\n" +
-                "> SYNCHRONIZACE S OPERAČNÍMI UZLY MAPY................ [ OK ]\n" +
-                "> ČIŠTĚNÍ DOČASNÝCH VYROVNÁVACÍCH BLOKŮ REGISTRU...... [ OK ]\n" +
-                "> SKENOVÁNÍ LOGICKÝCH PŘEKÁŽEK A NASTRAŽENÝCH PASTÍ.... [ OK ]\n" +
+         const bootLogData = 
+                "> INICIALIZACE KOMPONENT MATRICOVÉHO JÁDRA Engine.v32..... [ OK ]\n" +
+                "> ALOKACE PAMĚŤOVÉHO PROSTORU JÁDRA [0x7FFF8000].......... [ OK ]\n" +
+                "> NAČÍTÁNÍ DECENTRALIZOVANÝCH SÍŤOVÝCH OVLADAČŮ........... [ OK ]\n" +
+                "> KONTROLA INTEGRITY ŠIFROVACÍCH PROTOKOLŮ SHA-512........ [ OK ]\n" +
+                "> NAVAZOVÁNÍ KVANTOVÉHO SPOJENÍ S CLOUDOVÝMI ÚLOŽIŠTI..... [ OK ]\n" +
+                "> DETEKCE OVERLAYŮ BEZPEČNOSTNÍCH SUBSYSTÉMŮ.............. [ OK ]\n" +
+                "> PŘIPOJOVÁNÍ ŠIFROVANÉHO ODDÍLU /dev/node_0a............. [ OK ]\n" +
+                "> REKALIBRACE PIXELŮ TABLETU S VYSOKOU HUSTOTOU........... [ OK ]\n" +
+                "> IMPLANTACE ANTI-LOGGOVACÍCH A ANTI-HEURISTICKÝCH RUTIN.. [ OK ]\n" +
+                "> DETEKČNÍ VRSTVA PRO OBCHÁZENÍ FIREWALLU AKTIVNÍ......... [ OK ]\n" +
+                "> RESOLVING DISTRIBUTOVANÝCH HASHOVACÍCH TABULEK (DHT).... [ OK ]\n" +
+                "> SYNCHRONIZACE S OPERAČNÍMI UZLY MAPY.................... [ OK ]\n" +
+                "> ČIŠTĚNÍ DOČASNÝCH VYROVNÁVACÍCH BLOKŮ REGISTRU.......... [ OK ]\n" +
+                "> SKENOVÁNÍ LOGICKÝCH PŘEKÁŽEK A NASTRAŽENÝCH PASTÍ....... [ OK ]\n" +
+                "> AKTIVACE ANONYMIZAČNÍCH REPROXIFIKAČNÍCH VRSTEV......... [ OK ]\n" +
+                "> KONTROLA STABILITY NEURÁLNÍCH SYNAPTIK NEXUS AI......... [ OK ]\n" +
+                "> NAČÍTÁNÍ BALISTICKÝCH A TAKTICKÝCH MAP SEKTORU.......... [ OK ]\n" +
+                "> AUTORIZACE HARDWAROVÝCH KLÍČŮ CRYPTO-NODE v2............ [ OK ]\n" +
+                "> KONTROLA INTEGRITY PERIFERNÍHO SNÍMAČE IDENTITY......... [ OK ]\n" +
+                "> ČIŠTĚNÍ STOP PO PŘEDCHOZÍCH SEZENÍCH (LOG_PURGE)........ [ OK ]\n" +
+                "> TESTOVÁNÍ ODOLNOSTI PROTI VNĚJŠÍMU DDOS IMPULSU......... [ OK ]\n" +
+                "> SPUŠTĚNÍ LOKÁLNÍCH PROTOKOLŮ PROTI ZPĚTNÉMU SKENOVÁNÍ... [ OK ]\n" +
                 "> SYSTÉM PŘIPRAVEN. PŘÍSTUP ÚROVNĚ GR-MAX UDĚLEN......\n\n" + 
                 "============================================================\n" +
                 "  PŘÍSTUP POVOLEN // ÚSPĚŠNÉ PŘIHLÁŠENÍ AGENTA (ÚROVEŇ SUB-0)\n" +
                 "============================================================";
+
             typeWriter(bootLogData, 'boot-log-container', 4, false);
 
             let progress = 0;
