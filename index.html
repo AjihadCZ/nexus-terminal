@@ -1895,10 +1895,105 @@
                 }
                 if (progress === 100) {
                     clearInterval(progressInterval);
-                    setTimeout(() => { switchScreen('start-screen'); }, 3000);
+                    setTimeout(() => { spustDestrukciTerminalu(); }, 3000);
                 }
             }, 45);
         }
+        function spustDestrukciTerminalu() {
+    // 1. DYNAMICKÉ VLOŽENÍ STYLŮ PRO EFEKT DESTRUKCE
+    const style = document.createElement('style');
+    style.id = 'destruction-effects';
+    style.innerHTML = `
+        @keyframes red-blink {
+            0%, 100% { border-color: #ff3333; box-shadow: 0 0 20px rgba(255, 51, 51, 0.7); opacity: 1; }
+            50% { border-color: transparent; box-shadow: 0 0 5px rgba(255, 51, 51, 0.2); }
+        }
+        @keyframes terminal-shake {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            20% { transform: translate(-3px, 2px) rotate(-0.5deg); }
+            40% { transform: translate(3px, -1px) rotate(0.5deg); }
+            60% { transform: translate(-2px, -2px) rotate(0deg); }
+            80% { transform: translate(2px, 3px) rotate(-0.5deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+        @keyframes terminal-disintegrate {
+            0% { transform: scale(1); filter: blur(0px) contrast(100%); opacity: 1; }
+            15% { transform: scale(1.03) skewX(-10deg); filter: blur(2px) contrast(200%) hue-rotate(90deg); }
+            35% { transform: scale(0.97) skewY(10deg); filter: blur(4px) invert(30%); }
+            60% { transform: scale(1.1) rotate(3deg); filter: blur(10deg) grayscale(100%); opacity: 0.8; }
+            85% { transform: scale(0.5) rotate(-10deg); filter: blur(20px); opacity: 0.3; }
+            100% { transform: scale(0); filter: blur(50px); opacity: 0; }
+        }
+        .destruction-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 3px solid #ff3333;
+            background-color: rgba(10, 0, 0, 0.95);
+            color: #ff3333;
+            padding: 35px 60px;
+            font-family: monospace;
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            z-index: 999999;
+            text-shadow: 0 0 10px rgba(255, 51, 51, 0.8);
+            animation: red-blink 0.5s infinite;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 0 25px rgba(255, 51, 51, 0.5);
+        }
+        .countdown-num {
+            font-size: 54px;
+            display: block;
+            margin-top: 15px;
+            color: #ffffff;
+            text-shadow: 0 0 15px #ff3333;
+        }
+        .shake-active {
+            animation: terminal-shake 0.15s infinite !important;
+        }
+        .disintegrate-active {
+            animation: terminal-disintegrate 1.5s forwards !important;
+            background-color: #000000 !important;
+            transition: all 1.5s ease-in;
+        }
+    `;
+    document.head.appendChild(style);
+
+    // 2. VYTVOŘENÍ ČERVENÉHO BLIKAJÍCÍHO OBDÉLNÍKU
+    const countdownBox = document.createElement('div');
+    countdownBox.className = 'destruction-box';
+    countdownBox.innerHTML = 'Terminal bude znicen za<br><span id="destruct-timer" class="countdown-num">3</span>';
+    document.body.appendChild(countdownBox);
+
+    // Aktivace chvění obrazovky
+    document.body.classList.add('shake-active');
+
+    let timeLeft = 3;
+    const timerElement = document.getElementById('destruct-timer');
+
+    // ODPOČÍTÁVÁNÍ 3... 2... 1...
+    const countdownInterval = setInterval(() => {
+        timeLeft--;
+        if (timeLeft > 0) {
+            timerElement.innerText = timeLeft;
+        } else {
+            clearInterval(countdownInterval);
+            countdownBox.remove(); // Odstranění okna před rozpadem
+            
+            // 3. EFEKT ROZPADU TERMINÁLU
+            document.body.classList.remove('shake-active');
+            document.body.classList.add('disintegrate-active');
+            
+            // 4. NÁSLEDNÝ RESTART REFRESHNUTÍM STRÁNKY
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+        }
+    }, 1000);
+}
     </script>
 </body>
 </html>
