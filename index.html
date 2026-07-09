@@ -734,7 +734,7 @@
             <h1 style="margin-top: 20px;">NEXUS CORE</h1>
             <p style="letter-spacing: 6px; margin-bottom: 35px; font-size: 16px; opacity: 0.6; text-align: center;">NEXUS SYSTEM OPERATIONAL UNIT // CODENAME: 2026</p>
             
-            <button class="btn" onclick="triggerWowAuthentication()">> INICIÁLNÍ PŘIHLÁŠENÍ AGENTA <br><span style="font-size: 13px; font-weight: normal; opacity: 0.7; margin-left: 5px;">BEZPEČNÝ PROTOKOL SUB-0</span></button>
+            <button class="btn" onclick="triggerWowAuthentication()">> PŘIHLÁŠENÍ AGENTA <br><span style="font-size: 13px; font-weight: normal; opacity: 0.7; margin-left: 5px;">BEZPEČNÝ PROTOKOL SUB-0</span></button>
         </div>
 
         <div id="boot-screen" class="screen">
@@ -757,7 +757,7 @@
             <h2>OPERATIVNÍ BRÍFING JÁDRA</h2>
             <div class="typewriter-content" id="welcome-text-container"></div>
             <div style="flex-shrink:0; text-align:right;">
-                <button class="btn" id="welcome-continue-btn" style="display:none; margin-top: 10px;" onclick="goToMenu()">> AKCEPTOVAT SMĚRNICI JÁDRA</button>
+                <button class="btn" id="welcome-continue-btn" style="display:none; margin-top: 10px;" onclick="goToMenu()">> AKCEPTOVAT </button>
             </div>
         </div>
 
@@ -769,14 +769,13 @@
             </div>
             <div class="ai-dynamic-status" id="menu-ai-status" style="margin-bottom: 20px;">CONNECTING...</div>
 
-            <div class="menu-grid">
-                <button class="btn" onclick="showSection('intro-screen')">> ÚVODNÍ BRIEFING</button>
-                <button class="btn" onclick="showSection('rules-screen')">> OPERAČNÍ KODEX</button>
-                <button class="btn" onclick="showSection('dashboard-screen')">> ŘÍDÍCÍ DASHBOARD</button>
-                <button class="btn" onclick="showSection('registration-screen')">> REGISTRACE IDENTITY</button>
-                <button class="btn" onclick="showSection('faq-screen')">> DEŠIFROVANÉ FAQ</button>
-                <button class="btn" style="border-color: var(--neon-green); color: var(--neon-green);" onclick="showMissionsMenu()">> OPERAČNIES MISE</button>
-                <button class="btn" onclick="openRatingSection()">> HODNOCENÍ AGENTA</button>
+           <div class="menu-container">
+    <button class="menu-btn" onclick="switchScreen('briefing-screen')">> Briefing Nexus</button>
+    <button class="menu-btn" onclick="switchScreen('codex-screen')">> Kodex Agenta</button>
+    <button class="menu-btn" onclick="switchScreen('faq-screen')">> Dotazy Agentů FAQ</button>
+    <button class="menu-btn" onclick="switchScreen('missions-screen')">> Operační Mise</button>
+    <button class="menu-btn" onclick="switchScreen('rating-screen')">> Výsledky agenta</button>
+    <button class="menu-btn" onclick="triggerLogoff()">> Odhlásit se z terminálu</button>
             </div>
             <button class="btn btn-red" style="margin-top: 20px; width: 100%; max-width: 1300px; padding: 18px;" onclick="triggerLogoff()">[ ✕ ] DEAKTIVOVAT TERMINÁL (LOGOFF)</button>
         </div>
@@ -835,7 +834,7 @@
                             <div style="font-size: 12px; text-align: center; opacity: 0.5; margin-top: 4px;">Ukončení: 20. 9. 2026</div>
                         </div>
                         <div class="dash-card">
-                            <div class="card-title">ZÁMKA DEŠIFROVACÍHO CYKLU 2026</div>
+                            <div class="card-title">UZAVŘENÍ CELĚ OPERACE 2026</div>
                             <div class="countdown-timer" id="global-countdown" style="color:var(--neon-green); text-shadow:var(--neon-glow);">000D 00H 00M 00S</div>
                             <div style="font-size: 12px; text-align: center; opacity: 0.5; margin-top: 4px;">Konec operace: 31. 12. 2026</div>
                         </div>
@@ -953,6 +952,12 @@
                     [ KROK 2 ] AUTENTIZACE : VYPLŇTE IDENTITY MATRIX FORMULÁŘ<br>
                     [ KROK 3 ] AUTORIZACE  : VYČKEJTE NA DEKRET CENTRÁLNÍHO JÁDRA
                 </p>
+                <!-- Červený varovný rámeček pro agenty -->
+                <div style="margin-top: 25px; border: 1px solid #ff3333; padding: 12px; background: rgba(255, 51, 51, 0.1); border-radius: 4px; box-shadow: 0 0 10px rgba(255, 51, 51, 0.2);">
+                <p style="color: #ff3333; font-size: 13px; line-height: 1.5; margin: 0; font-weight: bold; letter-spacing: 0.5px;">
+                    > NEZAPOMEŇ AGENTE, ŽE POKUD CHCEŠ POUŽÍT TELEFON, TAK SE NEZAPOMEŇ ZEPTAT DOZORU. RESPEKTUJEME ŠKOLNÍ ŘÁD.
+                </p>
+    </div>
             </div>
             <div class="nav-footer">
                 <button class="btn btn-red" onclick="triggerLogoff()">ODHLÁSIT</button>
@@ -1715,26 +1720,25 @@
             const progressBar = document.getElementById('boot-progress-bar');
             const progressText = document.getElementById('boot-progress-text');
             
-            const bootLogData = 
-                "> INITIALIZING MATRIX CORE COMPONENTS Engine.v32..... [ OK ]\n" +
-                "> ALLOCATING KERNEL MEMORY SPACE [0x7FFF8000]......... [ OK ]\n" +
-                "> LOADING DECENTRALIZED NETWORK DRIVERS.............. [ OK ]\n" +
-                "> INTEGRITY OF ENCRYPTION PROTOCOLS SHA-512........... [ OK ]\n" +
-                "> ESTABLISHING QUANTUM LINK TO CLOUD REPOSITORIES.... [ OK ]\n" +
-                "> DETECTING SUBSYSTEM OVERLAYS....................... [ OK ]\n" +
-                "> MOUNTING ENCRYPTED PARTITION /dev/node_0a........... [ OK ]\n" +
-                "> RE-CALIBRATING HIGH-DENSITY TABLET PIXELS.......... [ OK ]\n" +
-                "> INJECTING ANTI-LOGGING ANTI-HEURISTIC ROUTINES...... [ OK ]\n" +
-                "> FIREWALL BYPASS DETECTION LAYER ACTIVE............. [ OK ]\n" +
-                "> RESOLVING DISTRIBUTED HASH TABLES (DHT)............ [ OK ]\n" +
-                "> SYNCHRONIZING WITH OPERATIONAL MAP NODES............ [ OK ]\n" +
-                "> CLEARING TEMPORARY REGISTRY BUFFER BLOCKS.......... [ OK ]\n" +
-                "> SCANNING LOGICAL OBSTACLES AND TRAPS............... [ OK ]\n" +
-                "> SYSTEM READY. LEVEL GR-MAX ACCESS GRANTED..........\n\n" + 
+          const bootLogData = 
+                "> INICIALIZACE KOMPONENT MATRICOVÉHO JÁDRA Engine.v32 [ OK ]\n" +
+                "> ALOKACE PAMĚŤOVÉHO PROSTORU JÁDRA [0x7FFF8000]...... [ OK ]\n" +
+                "> NAČÍTÁNÍ DECENTRALIZOVANÝCH SÍŤOVÝCH OVLADAČŮ....... [ OK ]\n" +
+                "> KONTROLA INTEGRITY ŠIFROVACÍCH PROTOKOLŮ SHA-512.... [ OK ]\n" +
+                "> NAVAZOVÁNÍ KVANTOVÉHO SPOJENÍ S CLOUDOVÝMI ÚLOŽIŠTI. [ OK ]\n" +
+                "> DETEKCE OVERLAYŮ BEZPEČNOSTNÍCH SUBSYSTÉMŮ.......... [ OK ]\n" +
+                "> PŘIPOJOVÁNÍ ŠIFROVANÉHO ODDÍLU /dev/node_0a......... [ OK ]\n" +
+                "> REKALIBRACE PIXELŮ TABLETU S VYSOKOU HUSTOTOU....... [ OK ]\n" +
+                "> IMPLANTACE ANTI-LOGGOVACÍCH A ANTI-HEURISTICKÝCH RUTIN [ OK ]\n" +
+                "> DETEKČNÍ VRSTVA PRO OBCHÁZENÍ FIREWALLU AKTIVNÍ..... [ OK ]\n" +
+                "> RESOLVING DISTRIBUTOVANÝCH HASHOVACÍCH TABULEK (DHT). [ OK ]\n" +
+                "> SYNCHRONIZACE S OPERAČNÍMI UZLY MAPY................ [ OK ]\n" +
+                "> ČIŠTĚNÍ DOČASNÝCH VYROVNÁVACÍCH BLOKŮ REGISTRU...... [ OK ]\n" +
+                "> SKENOVÁNÍ LOGICKÝCH PŘEKÁŽEK A NASTRAŽENÝCH PASTÍ.... [ OK ]\n" +
+                "> SYSTÉM PŘIPRAVEN. PŘÍSTUP ÚROVNĚ GR-MAX UDĚLEN......\n\n" + 
                 "============================================================\n" +
-                "  ACCESS GRANTED // SUCCESSFUL AGENT LOGIN (LEVEL SUB-0)\n" +
+                "  PŘÍSTUP POVOLEN // ÚSPĚŠNÉ PŘIHLÁŠENÍ AGENTA (ÚROVEŇ SUB-0)\n" +
                 "============================================================";
-
             typeWriter(bootLogData, 'boot-log-container', 4, false);
 
             let progress = 0;
