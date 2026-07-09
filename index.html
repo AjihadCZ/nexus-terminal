@@ -1900,7 +1900,7 @@
             }, 45);
         }
  function spustDestrukciTerminalu() {
-    // 1. DYNAMICKÉ VLOŽENÍ STYLŮ (PRO BLIKÁNÍ, TŘESENÍ A CHYBOVÉ HLÁŠKY)
+    // 1. DYNAMICKÉ VLOŽENÍ STYLŮ (VČETNĚ CRT TV VYPNUTÍ)
     const style = document.createElement('style');
     style.id = 'destruction-effects';
     style.innerHTML = `
@@ -1915,6 +1915,28 @@
             60% { transform: translate(-2px, -3px); }
             80% { transform: translate(3px, 3px); }
             100% { transform: translate(0, 0); }
+        }
+        /* EFEKT STARÉ CRT TELEVIZE */
+        @keyframes crt-tv-off {
+            0% {
+                transform: scaleY(1) scaleX(1);
+                filter: brightness(1) contrast(1) blur(0px);
+            }
+            40% {
+                transform: scaleY(0.005) scaleX(1.05);
+                filter: brightness(3) contrast(2) blur(0.5px);
+                background: #ffffff; /* Záblesk bílé v lince */
+            }
+            75% {
+                transform: scaleY(0.005) scaleX(0.005);
+                filter: brightness(6) blur(1px);
+                background: #ffffff; /* Bod uprostřed jasně svítí */
+            }
+            100% {
+                transform: scaleY(0) scaleX(0);
+                filter: brightness(10);
+                opacity: 0;
+            }
         }
         .destruction-box {
             position: fixed;
@@ -1957,8 +1979,19 @@
             white-space: nowrap;
             text-transform: uppercase;
         }
+        /* Třída pro spuštění TV vypnutí na celé body */
+        .tv-shutdown-active {
+            animation: crt-tv-off 0.55s cubic-bezier(0.23, 1, 0.32, 1) forwards !important;
+            transform-origin: center center !important;
+            overflow: hidden !important;
+        }
     `;
     document.head.appendChild(style);
+
+    // Aby efekt staré televize fungoval správně, pozadí samotného okna prohlížeče (html) musí být černé
+    document.documentElement.style.backgroundColor = '#000000';
+    document.documentElement.style.height = '100%';
+    document.body.style.height = '100%';
 
     // 2. ZAHÁJENÍ ODPOČTU OD 5
     const countdownBox = document.createElement('div');
@@ -1966,7 +1999,6 @@
     countdownBox.innerHTML = 'Terminal bude znicen za<br><span id="destruct-timer" class="countdown-num">5</span>';
     document.body.appendChild(countdownBox);
 
-    // Aktivace chvění obrazovky
     document.body.classList.add('shake-active');
 
     let timeLeft = 5;
@@ -1978,14 +2010,14 @@
             timerElement.innerText = timeLeft;
         } else {
             clearInterval(countdownInterval);
-            countdownBox.remove(); // Odstranění okna odpočtu
+            countdownBox.remove();
             
-            // Přejde na hromadu error hlášek
+            // Přejde na záplavu chyb
             spustZalavuErroru();
         }
     }, 1000);
 
-    // 3. GENERÁTOR HROMADY ERROR HLÁŠEK
+    // 3. GENERÁTOR ERROR HLÁŠEK
     function spustZalavuErroru() {
         const chyboveHlasky = [
             "CRITICAL_ERROR: AI_CORE_OVERLOAD",
@@ -1998,62 +2030,49 @@
             "EMERGENCY: SELF_DESTRUCT_ACTIVE",
             "CORE_DUMP: MEMORY_LEAK_UNRESOLVED",
             "ABORT: OPERATION_NOT_PERMITTED",
-            "HARDWARE_MALFUNCTION: OVERHEATING",
-            "NEXUS_OS: UNHANDLED_EXCEPTION"
+            "HARDWARE_MALFUNCTION: OVERHEATING"
         ];
 
         let pocetChyb = 0;
-        const maxChyb = 50; // Kolik chyb se celkem vygeneruje
+        const maxChyb = 50; 
 
         const errorInterval = setInterval(() => {
             const errorDiv = document.createElement('div');
             errorDiv.className = 'terminal-error-spawn';
             errorDiv.innerText = chyboveHlasky[Math.floor(Math.random() * chyboveHlasky.length)];
             
-            // Náhodné pozice na obrazovce
             errorDiv.style.top = Math.random() * 90 + "%";
             errorDiv.style.left = Math.random() * 75 + "%";
-            // Náhodná velikost písma, aby to vypadalo chaoticky
             errorDiv.style.fontSize = (12 + Math.random() * 16) + "px";
             
             document.body.appendChild(errorDiv);
             pocetChyb++;
 
-            // Jakmile dosáhneme limitu chyb, zastavíme generátor a ztratíme obrazovku
             if (pocetChyb >= maxChyb) {
                 clearInterval(errorInterval);
                 setTimeout(() => {
-                    ztratitObrazovku();
-                }, 400); // Krátká pauza, aby uživatel viděl tu spoušť chyb
+                    vypnoutJakoTelevizi();
+                }, 400); // Malá chvíle na prozkoumání chyb, než to "bouchne"
             }
-        }, 30); // Rychlost chrlí hlášky každých 30 milisekund
+        }, 25); 
     }
 
-    // 4. ZTRACENÍ OBRAZOVKY A RESTART
-    function ztratitObrazovku() {
+    // 4. SAMOTNÉ CRT TELEVIZNÍ VYPNUTÍ
+    function vypnoutJakoTelevizi() {
+        // Vypneme třesení, abychom nenarušili TV animaci
         document.body.classList.remove('shake-active');
+        
+        // Spustíme animaci staré televize na celé tělo stránky
+        document.body.classList.add('tv-shutdown-active');
 
-        // Vytvoříme černou masku přes celou obrazovku pro plynulé zatmění
-        const cernaMaska = document.createElement('div');
-        cernaMaska.style.position = 'fixed';
-        cernaMaska.style.top = '0';
-        cernaMaska.style.left = '0';
-        cernaMaska.style.width = '100vw';
-        cernaMaska.style.height = '100vh';
-        cernaMaska.style.backgroundColor = '#000000';
-        cernaMaska.style.zIndex = '9999999';
-        cernaMaska.style.opacity = '0';
-        cernaMaska.style.transition = 'opacity 1000ms ease-in-out'; // Plynulé ztracení během 1 vteřiny
-        document.body.appendChild(cernaMaska);
-
-        // Vynucení překreslení prohlížečem pro spuštění animace
-        cernaMaska.offsetWidth;
-        cernaMaska.style.opacity = '1'; // Obrazovka zčerná
-
-        // Po dokončení zatmění (1s) počkáme přesně tvou půl vteřinu (500ms) a pak restartujeme
+        // Animace televize trvá 550ms. Jakmile skončí, nastane absolutní tma.
         setTimeout(() => {
-            location.reload();
-        }, 1500); // 1000ms (zatmění) + 500ms (pauza ve tmě) = 1500ms
+            // Teď jsme ve tmě. Počkáme přesně tvou půl vteřinu (500ms) a pak reload.
+            setTimeout(() => {
+                location.reload();
+            }, 500); 
+
+        }, 550);
     }
 }
     </script>
