@@ -1996,7 +1996,7 @@
     // 2. ZAHÁJENÍ ODPOČTU OD 5
     const countdownBox = document.createElement('div');
     countdownBox.className = 'destruction-box';
-    countdownBox.innerHTML = 'Terminal bude znicen za<br><span id="destruct-timer" class="countdown-num">5</span>';
+    countdownBox.innerHTML = '> Terminal bude zničen za:<br><span id="destruct-timer" class="countdown-num">5</span>';
     document.body.appendChild(countdownBox);
 
     document.body.classList.add('shake-active');
@@ -2067,10 +2067,10 @@
 
         // Animace televize trvá 550ms. Jakmile skončí, nastane absolutní tma.
         setTimeout(() => {
-            // Teď jsme ve tmě. Počkáme přesně tvou půl vteřinu (500ms) a pak reload.
+            // Teď jsme ve tmě. Počkáme přesně tvou vteřinu (1000ms) a pak reload.
             setTimeout(() => {
                 location.reload();
-            }, 500); 
+            }, 1000); 
 
         }, 550);
     }
