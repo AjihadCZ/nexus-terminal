@@ -214,6 +214,63 @@
             animation: miniGlitchRed 0.15s linear infinite;
         }
 
+        .btn-login {
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .btn-login .btn-sub {
+            font-size: 13px;
+            font-weight: normal;
+            opacity: 0.7;
+            letter-spacing: 1px;
+        }
+
+        #welcome-text-container {
+            font-size: 17px;
+            line-height: 1.45;
+            padding: 18px 22px;
+        }
+
+        .btn-locked {
+            border-color: rgba(80, 80, 80, 0.5) !important;
+            color: rgba(130, 130, 130, 0.85) !important;
+            background: rgba(25, 25, 25, 0.6) !important;
+            cursor: not-allowed !important;
+            pointer-events: none;
+            opacity: 0.7;
+            text-shadow: none !important;
+            box-shadow: none !important;
+        }
+
+        .btn-locked:hover {
+            transform: none !important;
+            animation: none !important;
+            color: rgba(130, 130, 130, 0.85) !important;
+            border-color: rgba(80, 80, 80, 0.5) !important;
+            background: rgba(25, 25, 25, 0.6) !important;
+            box-shadow: none !important;
+        }
+
+        .rules-warning {
+            color: var(--alert-red);
+            font-size: 16px;
+            line-height: 1.5;
+            padding: 14px 20px;
+            border: 1px solid rgba(255, 51, 51, 0.5);
+            border-radius: 6px;
+            margin-bottom: 15px;
+            flex-shrink: 0;
+            background: rgba(40, 0, 0, 0.25);
+            text-shadow: var(--red-glow);
+            animation: pulseRedWarning 1.6s ease-in-out infinite;
+        }
+
+        @keyframes pulseRedWarning {
+            0%, 100% { opacity: 1; box-shadow: 0 0 12px rgba(255, 51, 51, 0.35); }
+            50% { opacity: 0.72; box-shadow: 0 0 28px rgba(255, 51, 51, 0.65); }
+        }
+
         @keyframes miniGlitch {
             0% { transform: scale(1.02) skewX(0deg); }
             50% { transform: scale(1.02) skewX(1deg); filter: brightness(1.2); }
@@ -734,7 +791,10 @@
             <h1 style="margin-top: 20px;">NEXUS CORE</h1>
             <p style="letter-spacing: 6px; margin-bottom: 35px; font-size: 16px; opacity: 0.6; text-align: center;">NEXUS SYSTEM OPERATIONAL UNIT // CODENAME: 2026</p>
             
-            <button class="btn" onclick="triggerWowAuthentication()">> PŘIHLÁŠENÍ AGENTA <br><span style="font-size: 13px; font-weight: normal; opacity: 0.7; margin-left: 5px;">BEZPEČNÝ PROTOKOL SUB-0</span></button>
+            <button class="btn btn-login" onclick="triggerWowAuthentication()">
+                <span>> PŘIHLÁŠENÍ AGENTA</span>
+                <span class="btn-sub">BEZPEČNÝ PROTOKOL SUB-0</span>
+            </button>
         </div>
 
         <div id="boot-screen" class="screen">
@@ -754,7 +814,7 @@
         </div>
 
         <div id="welcome-screen" class="screen">
-            <h2>OPERATIVNÍ BRÍFING JÁDRA</h2>
+            <h2>OPERATIVNÍ BRIEFING NEXUS JÁDRA</h2>
             <div class="typewriter-content" id="welcome-text-container"></div>
             <div style="flex-shrink:0; text-align:right;">
                 <button class="btn" id="welcome-continue-btn" style="display:none; margin-top: 10px;" onclick="goToMenu()">> AKCEPTOVAT</button>
@@ -798,15 +858,15 @@
         </div>
 
         <div id="missions-menu-screen" class="screen screen-centered">
-            <h1 style="font-size: 3.2rem; margin-bottom: 10px;">SELEKTOR MISÍ</h1>
+            <h1 style="font-size: 3.2rem; margin-bottom: 10px;">VÝBĚR MISE</h1>
             <p style="letter-spacing: 4px; margin-bottom: 30px; font-size: 15px; opacity: 0.7; text-align: center;">ZVOLTE DATOVÝ UZEL PRO SPECIFICKÝ BRIEFING</p>
             
             <div class="missions-menu-grid">
                 <button class="btn" onclick="loadMissionBriefing('intro-op')">> ÚVOD : OPERACE NEXUS</button>
-                <button class="btn" onclick="loadMissionBriefing('m1')">> MISE 1 : DIGITÁLNÍ STOPA</button>
-                <button class="btn" onclick="loadMissionBriefing('m2')">> MISE 2 : KRYPTOGRAFICKÝ KLÍČ</button>
-                <button class="btn" onclick="loadMissionBriefing('m3')">> MISE 3 : INFILTRACE REAKTORU</button>
-                <button class="btn" onclick="loadMissionBriefing('m4')">> MISE 4 : FINÁLNÍ PURGE</button>
+                <button class="btn btn-locked" disabled>> 🔒 Mise 1</button>
+                <button class="btn btn-locked" disabled>> 🔒 Mise 2</button>
+                <button class="btn btn-locked" disabled>> 🔒 Mise 3</button>
+                <button class="btn btn-locked" disabled>> 🔒 Mise 4</button>
             </div>
 
             <div class="nav-footer" style="max-width: 1300px; width: 100%; margin-top: 40px;">
@@ -968,7 +1028,7 @@
         </div>
 
         <div id="intro-screen" class="screen">
-            <h2>PARAMETRY OPERACE NEXUS CORE</h2>
+            <h2>ÚVOD OPERACE NEXUS CORE</h2>
             <div class="typewriter-content" id="intro-text-container"></div>
             <div class="nav-footer">
                 <button class="btn btn-red" onclick="triggerLogoff()">ODHLÁSIT</button>
@@ -977,8 +1037,9 @@
         </div>
 
         <div id="rules-screen" class="screen">
-            <h2>ZÁKLADNÍ BEZPEČNOSTNÍ PROTOKOLY</h2>
+            <h2>PRAVIDLA PRÁCE NEXUS AGENTŮ</h2>
             <div class="typewriter-content" id="rules-text-container"></div>
+            <div class="rules-warning">> VAROVÁNÍ: Pokud dojde k porušení pravidel, či vytvoření nevhodného obsahu budete postihnuti ztrátou bodů, nebo dle školního řádu a případně diskvalifikování.</div>
             <div class="nav-footer">
                 <button class="btn btn-red" onclick="triggerLogoff()">ODHLÁSIT</button>
                 <button class="btn" onclick="goToMenu()">ZPĚT</button>
@@ -1565,15 +1626,15 @@
         function showSection(sectionId) {
             switchScreen(sectionId);
             if (sectionId === 'intro-screen') {
-                const txt = "Vítejte v rozhraní Operace Nexus Core.\n\nTento projekt představuje decentralizovaný systém simulací navržený pro testování taktických a dešifrovacích schopností vybraných agentů.\n\nV průběhu operace budete konfrontováni s logickými úkoly, datovými analýzami a šiframi. Vaším hlavním cílem je úspěšné zdolání všech uzlů dříve, než vyprší globální časový limit.";
+                const txt = "Vítej, agente.\n\nPrávě ses připojil do centrálního terminálu Operace Nexus – informačního systému, který tě bude provázet celou soutěží.\n\nOperace Nexus je školní informatická soutěž zaměřená na rozvoj logického myšlení, kreativity, řešení problémů a práce s digitálními technologiemi. Během soutěže tě čekají čtyři samostatné mise, které postupně prověří tvé schopnosti a posunou tě v hodnostním systému Nexus.\n\nTento terminál slouží jako tvoje hlavní řídicí centrum. Najdeš zde aktuální stav soutěže, informace o jednotlivých misích, časové odpočty, svůj postup a po vyhodnocení také své výsledky a získanou hodnost.\n\nJednotlivé mise jsou na začátku uzamčeny. Ve stanovený čas budou postupně aktivovány a zpřístupněny všem registrovaným agentům. Po jejich odemčení zde najdeš potřebné informace k zahájení mise a další instrukce k jejímu splnění.\n\nPřesné zadání, termíny a důležité informace budou zároveň zasílány na tvůj školní e-mail. Ten pravidelně kontroluj, protože právě prostřednictvím něj bude systém Nexus komunikovat s agenty.\n\nV průběhu soutěže nezáleží pouze na výsledku. Hodnotí se také způsob řešení, logické uvažování, kreativita a schopnost samostatně pracovat. Internet i nástroje umělé inteligence můžeš využít jako pomocníka, ale za své řešení vždy odpovídáš ty. Správný agent nerozumí pouze výsledku, ale také cestě, která k němu vedla.\n\nPamatuj na základní pravidla: pracuj samostatně, respektuj ostatní agenty, odevzdávej vlastní práci a dodržuj stanovené termíny.\n\nTvůj profil je aktivní. Systém Nexus je připraven.\n\nSleduj terminál, kontroluj svůj školní e-mail a připrav se na aktivaci první mise.\n\nOperace Nexus byla zahájena.\n\nHodně štěstí, agente.";
                 typeWriter(txt, 'intro-text-container', 12, false);
             }
             else if (sectionId === 'rules-screen') {
-                const txt = "> REŽIM UTAJENÍ: Všechna data podléhají protokolu sub-0. Sdílení informací s neověřenými subjekty je klasifikováno jako vlastizrada.\n\n> POSTUPNOST: Uzly misí se odemykají striktně v chronologickém pořadí podle centrálního plánu.\n\n> BEZPEČNOST: Pokus o hrubou manipulaci se systémem nebo útoky na kód znamenají trvalou deaktivaci vašeho digitálního podpisu.\n\n> ODHLÁŠENÍ: Po ukončení práce se vždy bezpečně odhlaste, aby se korektně promazala mezipaměť terminálu.";
+                const txt = "> Soutěž je určena pro žáky 2. stupně ZŠ a účast je dobrovolná.\n\n> Každý soutěžící se registruje pouze jednou prostřednictvím registračního formuláře.\n\n> Každý agent používá po celou dobu soutěže své jedinečné Agent ID.\n\n> Soutěž se skládá ze 4 samostatných misí, které se postupně odemykají.\n\n> Každá mise má stanovený termín zahájení i ukončení.\n\n> Po uplynutí časového limitu již není možné řešení odevzdat ani upravit.\n\n> Každý soutěžící pracuje samostatně a odevzdává vlastní řešení.\n\n> Je dovoleno využívat internet, odborné zdroje i nástroje umělé inteligence jako podporu při řešení.\n\n> Soutěžící musí svému řešení rozumět a být schopen vysvětlit použitý postup.\n\n> Kopírování cizích řešení nebo vydávání cizí práce za vlastní není dovoleno.\n\n> Každá mise je hodnocena maximálně 100 body podle správnosti řešení, logického postupu a kreativity.\n\n> Za kvalitní nebo originální řešení mohou být uděleny bonusové body.\n\n> Celkové pořadí je určeno součtem bodů ze všech čtyř misí.\n\n> Organizátor si vyhrazuje právo neuznat řešení nebo vyřadit soutěžícího při porušení pravidel.\n\n> Registrací do soutěže každý účastník potvrzuje, že se s pravidly seznámil a souhlasí s jejich dodržováním.";
                 typeWriter(txt, 'rules-text-container', 12, false);
             }
             else if (sectionId === 'faq-screen') {
-                const txt = "Q: Proč jsou všechny mise 1 až 4 momentálně uzavřeny?\nA: Přístup k datovým uzlům podléhá bezpečnostnímu fázování. Každý uzel má pevný časový zámek.\n\nQ: Co vyjadřují procenta u jednotlivých misí?\nA: Ukazují aktuální stav přípravy a synchronizace datového uzlu centrálním jádrem.\n\nQ: Co se stane po dosažení limitu na konci roku 2026?\nA: Dojde k plné uzávěře operace a dešifrovací klíče budou trvale zničeny.";
+                const txt = "Q: Jak se mohu do soutěže přihlásit?\nA: Registrace probíhá pouze prostřednictvím registračního QR kódu a online formuláře Microsoft Forms.\n\nQ: Co je Agent ID?\nA: Agent ID je tvůj jedinečný identifikátor v soutěži Operace Nexus. Používáš ho po celou dobu soutěže a slouží k identifikaci tvých výsledků.\n\nQ: Mohu si Agent ID po registraci změnit?\nA: Ne. Po úspěšné registraci již Agent ID nelze změnit.\n\nQ: Co když si dva soutěžící zvolí stejné Agent ID?\nA: Platí pravidlo „kdo dřív přijde, ten dřív bere“. Soutěžící, který se zaregistroval později, bude vyzván k vytvoření nového Agent ID.\n\nQ: Kde najdu zadání jednotlivých misí?\nA: Zadání jednotlivých misí najdeš po přihlášení do terminálu Operace Nexus. Mise se postupně odemykají podle harmonogramu soutěže. Přesné informace o dostupnosti misí, termínech a aktuálním stavu soutěže najdeš v Řídícím Dashboardu.\n\nQ: Kdy se mise odemykají?\nA: Každá mise má předem stanovený termín zahájení. Do té doby zůstává uzamčena. Aktuální stav všech misí je zobrazen v Řídícím Dashboardu.\n\nQ: Jak odevzdám své řešení?\nA: Způsob odevzdání je vždy uveden přímo v zadání konkrétní mise. Řešení odevzdávej pouze způsobem, který je v zadání uveden.\n\nQ: Co když nestihnu misi odevzdat včas?\nA: Po uplynutí časového limitu již nebude možné řešení odevzdat ani upravit. Systém misi automaticky uzavře.\n\nQ: Mohu používat internet?\nA: Ano. Internet můžeš využívat jako podporu při řešení úkolů.\n\nQ: Mohu používat umělou inteligenci (AI)?\nA: Ano. AI je povolena jako pomocný nástroj. Musíš však svému řešení rozumět a být schopen vysvětlit, jak jsi k němu dospěl.\n\nQ: Mohu spolupracovat s ostatními?\nA: Ne. Každý agent řeší úkoly samostatně a odevzdává vlastní práci.\n\nQ: Jak jsou mise hodnoceny?\nA: Každá mise je hodnocena maximálně 100 body za správnost řešení, logický postup a kreativitu. Za kvalitní nebo originální řešení může organizátor udělit bonusové body.\n\nQ: Jak zjistím své výsledky?\nA: Po vyhodnocení mise budou tvoje výsledky zveřejněny v terminálu Operace Nexus. Po zadání svého Agent ID uvidíš získané body, aktuální hodnost i celkový postup v soutěži.\n\nQ: Jak získám vyšší hodnost?\nA: Hodnost se automaticky mění podle celkového počtu bodů získaných ze všech čtyř misí.\n\nQ: Co když zapomenu své Agent ID?\nA: Kontaktuj organizátora soutěže. Po ověření totožnosti ti pomůže s jeho dohledáním.\n\nQ: Co když narazím na technický nebo organizační problém?\nA: Kontaktuj organizátora soutěže Mgr. Jakuba Pála, který ti pomůže problém vyřešit.\n\nQ: Budou nejlepší soutěžící odměněni?\nA: Ano. Po ukončení Operace Nexus budou vyhodnoceni nejúspěšnější agenti a získají ocenění.\n\nQ: Kdy soutěž končí?\nA: Operace Nexus končí po dokončení a vyhodnocení všech čtyř misí na konci 1. pololetí školního roku 2026/2027.\n\nQ: Kde získám další informace?\nA: Veškeré aktuální informace najdeš v terminálu Operace Nexus, v Řídícím Dashboardu nebo u organizátora soutěže Mgr. Jakuba Pála.";
                 typeWriter(txt, 'faq-screen-container', 10, false);
             }
         }
@@ -1766,7 +1827,7 @@
                 
                 if (progress === 100) {
                     clearInterval(progressInterval);
-                    setTimeout(() => { startBriefing(); }, 5000); // Prodlouženo na 5 vteřin
+                    setTimeout(() => { startBriefing(); }, 1000);
                 }
             }, 120); // Zpomaleno z 60 na 120 milisekund
         }
@@ -1775,7 +1836,7 @@
             switchScreen('welcome-screen');
             const btn = document.getElementById('welcome-continue-btn');
             if(btn) btn.style.display = "none";
-            const welcomeText = "Vítej, agente.\n\nPrávě ses přihlásil do terminálu Operace Nexus – centrálního systému, který tě bude provázet celou soutěží.\n\nOd této chvíle se stáváš součástí sítě agentů, kteří budou během čtyř misí prověřovat své schopnosti v oblasti informatiky, logického myšlení, algoritmizace a práce s digitálními technologiemi.\n\nTento terminál je tvým hlavním informačním centrem. Najdeš zde všechny důležité informace o soutěži, aktuální stav systému, časové odpočty, přehled misí i své průběžné výsledky.\n\nJednotlivé mise jsou po registraci uzamčeny. Jakmile nastane čas jejich spuštění, systém je postupně zpřístupní. Po zadání svého Agent ID budeš moci zobrazit své bodové hodnocení, získanou hodnost i další informace o svém postupu v Operaci Nexus.\n\nKaždá mise představuje novou výzvu. Hodnotí se nejen správnost řešení, ale také logický postup, kreativita a schopnost samostatně řešit problémy.\n\nInternet i nástroje umělé inteligence můžeš při řešení využívat jako podporu. Nejdůležitější je však porozumět svému řešení a být schopen vysvětlit, jak jsi k němu dospěl.\n\nPravidelně sleduj tento terminál. Právě zde budou postupně odemykány nové mise a zveřejňovány důležité informace o průběhu soutěže.\n\nOperace Nexus byla zahájena.\n\nPřejeme ti mnoho úspěchů, agente.";
+            const welcomeText = "Vítej, agente.\n\nPrávě ses přihlásil do terminálu Operace Nexus – centrálního systému, který tě bude provázet celou soutěží.\n\nStáváš se součástí sítě agentů, kteří během čtyř misí prověří své schopnosti v informatice, logickém myšlení, algoritmizaci a práci s digitálními technologiemi.\n\nTento terminál je tvým hlavním informačním centrem – zde najdeš informace o soutěži, stav systému, časové odpočty, přehled misí i průběžné výsledky. Tento terminál je nutné pravidelně navštěvovat a sledovat své úspěchy a přístupy k misím.\n\nMise jsou po registraci uzamčeny a systém je postupně zpřístupní dle harmonogramu. Po zadání Agent ID zobrazíš bodové hodnocení, hodnost i postup v operaci.\n\nHodnotí se správnost řešení, logický postup, kreativita a samostatnost. Internet i AI můžeš využívat jako podporu – důležité je rozumět svému řešení.\n\nOperace Nexus byla zahájena. Přejeme ti mnoho úspěchů, agente.";
             typeWriter(welcomeText, 'welcome-text-container', 15, false, () => {
                 if(btn) btn.style.display = "inline-block";
                 sndSuccess();
