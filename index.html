@@ -1842,28 +1842,29 @@
                 sndSuccess();
             });
         }
-function triggerLogoff() {
+
+        function triggerLogoff() {
+            clearRatingTimeout(); 
             switchScreen('logoff-screen');
+            sndWarning();
             const progressBar = document.getElementById('logoff-progress-bar');
             const progressText = document.getElementById('logoff-progress-text');
-            if(progressBar) progressBar.style.width = '0%';
-            if(progressText) progressText.innerText = '0%';
 
-            // Skryje okénko bezpečného režimu během odhlašovací animace
-            const safeBox = document.getElementById('safe-mode-container');
-            if (safeBox) safeBox.style.display = 'none';
-
-            const logoffLogData = "========================================================\n" +
-                                  "INICIACE SYSTÉMOVÉHO ODHLÁŠENÍ (LOGOFF PROTOKOL)\n" +
-                                  "========================================================\n" +
-                                  "> Uzamykám identitní registry uživatele...... [ OK ]\n" +
-                                  "> Ukončuji aktivní vlákna taktactického AI...... [ OK ]\n" +
-                                  "> Odpojuji bezpečné síťové uzly NEXUS LINK... [ OK ]\n" +
-                                  "> Čistím dočasnou mezipaměť (RAM PURGE)...... [ OK ]\n" +
-                                  "> Synchronizace šifrovaných klíčů SHA-512..... [ OK ]\n" +
-                                  "--------------------------------------------------------\n" +
-                                  "PROCES ÚSPÊŠNĚ DOKONČEN. TERMINÁL PŘIPRAVEN K REBOOTU.\n" +
-                                  "========================================================\n";
+            const logoffLogData = 
+                "> INITIATING TERMINATION SIGNAL FOR CONTEXT CHANNELS...\n" +
+                "> CLEARING VOLATILE CACHE BLOCKS [0x000000 to 0xFFFFFF]\n" +
+                "> DE-ALLOCATING OPERATIONAL MEMORY HEAP.................. [ DONE ]\n" +
+                "> UNMOUNTING ENCRYPTED STORAGE NODE DISKS................ [ DONE ]\n" +
+                "> WIPING SENSITIVE IDENTITY SIGNS & COOKIE CACHE......... [ DONE ]\n" +
+                "> DESTROYING TEMPORARY FREQUENCY ANALYSIS SALTS.......... [ DONE ]\n" +
+                "> PURGING AI PERSONALITY SUB-ROUTINES FROM BUFFER........ [ DONE ]\n" +
+                "> REVOKING AGENT LEVEL SUB-0 AUTHORIZATION TOKEN..........[ DONE ]\n" +
+                "> DISCONNECTING FROM OPERATIONAL BACKEND INFRASTRUCTURE.. [ DONE ]\n" +
+                "> CLOSING ENCRYPTED SOCKET CONNECTIONS Safely............ [ DONE ]\n" +
+                "> INITIATING SHUTDOWN SM-3 PROCEDURE..................... [ DONE ]\n\n" + 
+                "============================================================\n" +
+                "  TERMINAL DISCONNECTED // SECURE SHUTDOWN COMPLETED\n" +
+                "============================================================";
 
             const element = document.getElementById('logoff-log-container');
             if (element) {
@@ -1894,94 +1895,238 @@ function triggerLogoff() {
                 }
                 if (progress === 100) {
                     clearInterval(progressInterval);
-                    setTimeout(() => { 
-                        switchScreen('start-screen'); 
-                        
-                        // OPRAVA: Jakmile skočíme zpět na start-screen, tlačítko zase ukážeme!
-                        const safeBoxZnovu = document.getElementById('safe-mode-container');
-                        if (safeBoxZnovu) safeBoxZnovu.style.display = 'flex';
-                        
-                    }, 3000);
+                    setTimeout(() => { spustDestrukciTerminalu(); }, 3000);
                 }
             }, 45);
         }
+function spustDestrukciTerminalu() {
+    // 1. DYNAMICKÉ VLOŽENÍ STYLŮ (VČETNĚ CRT TV VYPNUTÍ NA 1 VTEŘINU A REBOOT BOXU)
+    const style = document.createElement('style');
+    style.id = 'destruction-effects';
+    style.innerHTML = `
+        @keyframes red-blink {
+            0%, 100% { border-color: #ff3333; box-shadow: 0 0 20px rgba(255, 51, 51, 0.7); opacity: 1; }
+            50% { border-color: transparent; box-shadow: 0 0 5px rgba(255, 51, 51, 0.2); }
+        }
+        @keyframes terminal-shake {
+            0% { transform: translate(0, 0); }
+            20% { transform: translate(-4px, 2px); }
+            40% { transform: translate(4px, -2px); }
+            60% { transform: translate(-2px, -3px); }
+            80% { transform: translate(3px, 3px); }
+            100% { transform: translate(0, 0); }
+        }
+        /* EFEKT STARÉ CRT TELEVIZE - PRODLOUŽEN NA 1 VTEŘINU */
+        @keyframes crt-tv-off {
+            0% {
+                transform: scaleY(1) scaleX(1);
+                filter: brightness(1) contrast(1) blur(0px);
+                opacity: 1;
+            }
+            40% {
+                transform: scaleY(0.005) scaleX(1.05);
+                filter: brightness(3) contrast(2) blur(0.5px);
+                background: #ffffff;
+                opacity: 1;
+            }
+            75% {
+                transform: scaleY(0.005) scaleX(0.005);
+                filter: brightness(6) blur(1px);
+                background: #ffffff;
+                opacity: 1;
+            }
+            100% {
+                transform: scaleY(0) scaleX(0);
+                filter: brightness(10);
+                opacity: 0;
+            }
+        }
+        .destruction-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 3px solid #ff3333;
+            background-color: rgba(10, 0, 0, 0.95);
+            color: #ff3333;
+            padding: 35px 60px;
+            font-family: monospace;
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            z-index: 999999;
+            text-shadow: 0 0 10px rgba(255, 51, 51, 0.8);
+            animation: red-blink 0.4s infinite;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 0 25px rgba(255, 51, 51, 0.5);
+        }
+        .countdown-num {
+            font-size: 64px;
+            display: block;
+            margin-top: 15px;
+            color: #ffffff;
+            text-shadow: 0 0 15px #ff3333;
+        }
+        .shake-active {
+            animation: terminal-shake 0.1s infinite !important;
+        }
+        .terminal-error-spawn {
+            position: fixed;
+            color: #ff2222;
+            font-family: monospace;
+            font-weight: bold;
+            z-index: 999998;
+            text-shadow: 0 0 8px #ff0000;
+            pointer-events: none;
+            white-space: nowrap;
+            text-transform: uppercase;
+        }
+        /* Třída pro spuštění TV vypnutí (trvá přesně 1s) */
+        .tv-shutdown-active {
+            animation: crt-tv-off 1s cubic-bezier(0.23, 1, 0.32, 1) forwards !important;
+            transform-origin: center center !important;
+            overflow: hidden !important;
+        }
+        /* STYL PRO OKÉNKO NÁSLEDNÉHO REBOOTU */
+        .reboot-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px solid #00ff00;
+            background-color: #050505;
+            color: #00ff00;
+            padding: 25px 45px;
+            font-family: monospace;
+            font-size: 18px;
+            z-index: 99999999;
+            text-shadow: 0 0 5px #00ff00;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+            text-align: center;
+            letter-spacing: 1px;
+        }
+    `;
+    document.head.appendChild(style);
 
-        // ========================================================
-        // BEZPEČNÝ REŽIM PRO EPILEPTIKY (ZELENÉ TICK OKÉNKO)
-        // ========================================================
-        (function() {
-            // 1. Vložení ochranného CSS (vypne animace, záblesky a třesení)
-            const style = document.createElement('style');
-            style.id = 'epilepsy-safe-mode-styles';
-            style.innerHTML = `
-                body.safe-mode, 
-                body.safe-mode * {
-                    animation: none !important;
-                    transition: none !important;
-                    text-shadow: none !important;
-                }
-            `;
-            document.head.appendChild(style);
+    // Příprava černého podkladu okna prohlížeče
+    document.documentElement.style.backgroundColor = '#000000';
+    document.documentElement.style.height = '100%';
+    document.body.style.height = '100%';
 
-            // 2. Vytvoření stylového přepínače v pravém dolním rohu
-            const safeBox = document.createElement('div');
-            safeBox.id = 'safe-mode-container';
-            safeBox.style.position = 'fixed';
-            safeBox.style.bottom = '15px';
-            safeBox.style.right = '15px';
-            safeBox.style.zIndex = '9999999';
-            safeBox.style.fontFamily = 'monospace';
-            safeBox.style.fontSize = '12px';
-            safeBox.style.color = '#00ff00';
-            safeBox.style.backgroundColor = 'rgba(2, 12, 2, 0.9)';
-            safeBox.style.border = '1px solid #00ff00';
-            safeBox.style.padding = '8px 12px';
-            safeBox.style.borderRadius = '4px';
-            safeBox.style.boxShadow = '0 0 10px rgba(0, 255, 0, 0.3)';
-            safeBox.style.display = 'flex';
-            safeBox.style.alignItems = 'center';
-            safeBox.style.gap = '8px';
-            safeBox.style.cursor = 'pointer';
+    // 2. ZAHÁJENÍ ODPOČTU OD 5
+    const countdownBox = document.createElement('div');
+    countdownBox.className = 'destruction-box';
+    countdownBox.innerHTML = 'Terminal bude znicen za<br><span id="destruct-timer" class="countdown-num">5</span>';
+    document.body.appendChild(countdownBox);
 
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.id = 'safe-mode-checkbox';
-            checkbox.style.cursor = 'pointer';
+    document.body.classList.add('shake-active');
+
+    let timeLeft = 5;
+    const timerElement = document.getElementById('destruct-timer');
+
+    const countdownInterval = setInterval(() => {
+        timeLeft--;
+        if (timeLeft > 0) {
+            timerElement.innerText = timeLeft;
+        } else {
+            clearInterval(countdownInterval);
+            countdownBox.remove();
+            spustZalavuErroru();
+        }
+    }, 1000);
+
+    // 3. GENERÁTOR ERROR HLÁŠEK
+    function spustZalavuErroru() {
+        const chyboveHlasky = [
+            "CRITICAL_ERROR: AI_CORE_OVERLOAD",
+            "FATAL: SEGMENTATION_FAULT AT 0x00F3A2",
+            "KERNEL_PANIC: KILLED_BY_AGENT_LOGOFF",
+            "SECURITY_BREACH: DATA_CORRUPTION",
+            "SYS_FAIL: STACK_OVERFLOW_0x7FFF",
+            "WARNING: SYSTEM_INTEGRITY_COMPROMISED",
+            "ERROR: NEXUS_CORE_DISCONNECTED",
+            "EMERGENCY: SELF_DESTRUCT_ACTIVE",
+            "CORE_DUMP: MEMORY_LEAK_UNRESOLVED",
+            "ABORT: OPERATION_NOT_PERMITTED",
+            "HARDWARE_MALFUNCTION: OVERHEATING"
+        ];
+
+        let pocetChyb = 0;
+        const maxChyb = 50; 
+
+        const errorInterval = setInterval(() => {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'terminal-error-spawn';
+            errorDiv.innerText = chyboveHlasky[Math.floor(Math.random() * chyboveHlasky.length)];
             
-            const savedState = localStorage.getItem('terminalSafeMode') === 'true';
-            checkbox.checked = savedState;
+            errorDiv.style.top = Math.random() * 90 + "%";
+            errorDiv.style.left = Math.random() * 75 + "%";
+            errorDiv.style.fontSize = (12 + Math.random() * 16) + "px";
+            
+            document.body.appendChild(errorDiv);
+            pocetChyb++;
 
-            if (savedState) {
-                document.body.classList.add('safe-mode');
+            if (pocetChyb >= maxChyb) {
+                clearInterval(errorInterval);
+                setTimeout(() => {
+                    vypnoutJakoTelevizi();
+                }, 400);
+            }
+        }, 25); 
+    }
+
+    // 4. CRT TELEVIZNÍ VYPNUTÍ (Nyní trvá přesně 1 vteřinu)
+    function vypnoutJakoTelevizi() {
+        document.body.classList.remove('shake-active');
+        document.body.classList.add('tv-shutdown-active');
+
+        // Čekáme 1000ms na dokončení TV vypnutí
+        setTimeout(() => {
+            // Bezpečně vyčistíme zničené rozhraní a resetujeme deformaci body elementu
+            document.body.classList.remove('tv-shutdown-active');
+            document.body.innerHTML = ''; 
+            document.body.style.opacity = '1';
+            document.body.style.transform = 'none';
+            document.body.style.filter = 'none';
+            document.body.style.backgroundColor = '#000000';
+
+            // Přecházíme na zobrazení reboot loadingu
+            spustRebootLoading();
+        }, 1000);
+    }
+
+    // 5. NOVÉ OKÉNKO: REBOOT SYSTEM .... X% (Trvá přesně 1,5 sekundy)
+    function spustRebootLoading() {
+        const rebootBox = document.createElement('div');
+        rebootBox.className = 'reboot-box';
+        rebootBox.innerHTML = 'Reboot system .... <span id="reboot-pct">0</span>%';
+        document.body.appendChild(rebootBox);
+
+        let rebootProgress = 0;
+        const rebootPctElem = document.getElementById('reboot-pct');
+
+        // Interval 15ms * 100 kroků = přesně 1500ms (1.5 sekundy)
+        const rebootInterval = setInterval(() => {
+            rebootProgress++;
+            if (rebootPctElem) {
+                rebootPctElem.innerText = rebootProgress;
             }
 
-            const label = document.createElement('label');
-            label.htmlFor = 'safe-mode-checkbox';
-            label.innerText = 'Bezpečný režim (vypnout záblesky)';
-            label.style.cursor = 'pointer';
-            label.style.userSelect = 'none';
+            if (rebootProgress >= 100) {
+                clearInterval(rebootInterval);
+                
+                // Schováme okénko loadingu, aby nastala absolutní tma
+                rebootBox.remove();
 
-            safeBox.appendChild(checkbox);
-            safeBox.appendChild(label);
-            document.body.appendChild(safeBox);
-
-            // 3. Logika přepínání
-            checkbox.addEventListener('change', (e) => {
-                const isChecked = e.target.checked;
-                localStorage.setItem('terminalSafeMode', isChecked);
-                if (isChecked) {
-                    document.body.classList.add('safe-mode');
-                } else {
-                    document.body.classList.remove('safe-mode');
-                }
-            });
-
-            safeBox.addEventListener('click', (e) => {
-                if (e.target !== checkbox && e.target !== label) {
-                    checkbox.click();
-                }
-            });
-        })();
+                // Slíbená půlvteřinová pauza na závěr (500ms ticho) a pak reload stránky
+                setTimeout(() => {
+                    location.reload();
+                }, 500);
+            }
+        }, 15);
+    }
+}
     </script>
 </body>
 </html>
