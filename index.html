@@ -1842,15 +1842,14 @@
                 sndSuccess();
             });
         }
-
-        function triggerLogoff() {
+function triggerLogoff() {
             switchScreen('logoff-screen');
             const progressBar = document.getElementById('logoff-progress-bar');
             const progressText = document.getElementById('logoff-progress-text');
             if(progressBar) progressBar.style.width = '0%';
             if(progressText) progressText.innerText = '0%';
 
-            // Skryje okénko bezpečného režimu při odhlašování, aby nerušilo efekt
+            // Skryje okénko bezpečného režimu během odhlašovací animace
             const safeBox = document.getElementById('safe-mode-container');
             if (safeBox) safeBox.style.display = 'none';
 
@@ -1858,12 +1857,12 @@
                                   "INICIACE SYSTÉMOVÉHO ODHLÁŠENÍ (LOGOFF PROTOKOL)\n" +
                                   "========================================================\n" +
                                   "> Uzamykám identitní registry uživatele...... [ OK ]\n" +
-                                  "> Ukončuji aktivní vlákna taktického AI...... [ OK ]\n" +
+                                  "> Ukončuji aktivní vlákna taktactického AI...... [ OK ]\n" +
                                   "> Odpojuji bezpečné síťové uzly NEXUS LINK... [ OK ]\n" +
                                   "> Čistím dočasnou mezipaměť (RAM PURGE)...... [ OK ]\n" +
                                   "> Synchronizace šifrovaných klíčů SHA-512..... [ OK ]\n" +
                                   "--------------------------------------------------------\n" +
-                                  "PROCES ÚSPĚŠNĚ DOKONČEN. TERMINÁL PŘIPRAVEN K REBOOTU.\n" +
+                                  "PROCES ÚSPÊŠNĚ DOKONČEN. TERMINÁL PŘIPRAVEN K REBOOTU.\n" +
                                   "========================================================\n";
 
             const element = document.getElementById('logoff-log-container');
@@ -1895,7 +1894,14 @@
                 }
                 if (progress === 100) {
                     clearInterval(progressInterval);
-                    setTimeout(() => { switchScreen('start-screen'); }, 3000);
+                    setTimeout(() => { 
+                        switchScreen('start-screen'); 
+                        
+                        // OPRAVA: Jakmile skočíme zpět na start-screen, tlačítko zase ukážeme!
+                        const safeBoxZnovu = document.getElementById('safe-mode-container');
+                        if (safeBoxZnovu) safeBoxZnovu.style.display = 'flex';
+                        
+                    }, 3000);
                 }
             }, 45);
         }
@@ -1959,7 +1965,7 @@
             safeBox.appendChild(label);
             document.body.appendChild(safeBox);
 
-            // 3. Logika přepínání registrující změny
+            // 3. Logika přepínání
             checkbox.addEventListener('change', (e) => {
                 const isChecked = e.target.checked;
                 localStorage.setItem('terminalSafeMode', isChecked);
