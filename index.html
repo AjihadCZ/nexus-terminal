@@ -1899,6 +1899,89 @@
                 }
             }, 45);
         }
+        if (progress === 100) {
+                    clearInterval(progressInterval);
+                    setTimeout(() => { switchScreen('start-screen'); }, 3000);
+                }
+            }, 45);
+        }
+
+        // ========================================================
+        // BEZPEČNÝ REŽIM PRO EPILEPTIKY
+        // ========================================================
+        (function() {
+            // 1. Vložení ochranného CSS (vypne animace, záblesky a třesení)
+            const style = document.createElement('style');
+            style.id = 'epilepsy-safe-mode-styles';
+            style.innerHTML = `
+                body.safe-mode, 
+                body.safe-mode * {
+                    animation: none !important;
+                    transition: none !important;
+                    text-shadow: none !important;
+                }
+            `;
+            document.head.appendChild(style);
+
+            // 2. Vytvoření stylového přepínače v pravém dolním rohu
+            const safeBox = document.createElement('div');
+            safeBox.id = 'safe-mode-container';
+            safeBox.style.position = 'fixed';
+            safeBox.style.bottom = '15px';
+            safeBox.style.right = '15px';
+            safeBox.style.zIndex = '9999999';
+            safeBox.style.fontFamily = 'monospace';
+            safeBox.style.fontSize = '12px';
+            safeBox.style.color = '#00ff00';
+            safeBox.style.backgroundColor = 'rgba(2, 12, 2, 0.9)';
+            safeBox.style.border = '1px solid #00ff00';
+            safeBox.style.padding = '8px 12px';
+            safeBox.style.borderRadius = '4px';
+            safeBox.style.boxShadow = '0 0 10px rgba(0, 255, 0, 0.3)';
+            safeBox.style.display = 'flex';
+            safeBox.style.alignItems = 'center';
+            safeBox.style.gap = '8px';
+            safeBox.style.cursor = 'pointer';
+
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.id = 'safe-mode-checkbox';
+            checkbox.style.cursor = 'pointer';
+            
+            const savedState = localStorage.getItem('terminalSafeMode') === 'true';
+            checkbox.checked = savedState;
+
+            if (savedState) {
+                document.body.classList.add('safe-mode');
+            }
+
+            const label = document.createElement('label');
+            label.htmlFor = 'safe-mode-checkbox';
+            label.innerText = 'Bezpečný režim (vypnout záblesky)';
+            label.style.cursor = 'pointer';
+            label.style.userSelect = 'none';
+
+            safeBox.appendChild(checkbox);
+            safeBox.appendChild(label);
+            document.body.appendChild(safeBox);
+
+            // 3. Logika přepínání
+            checkbox.addEventListener('change', (e) => {
+                const isChecked = e.target.checked;
+                localStorage.setItem('terminalSafeMode', isChecked);
+                if (isChecked) {
+                    document.body.classList.add('safe-mode');
+                } else {
+                    document.body.classList.remove('safe-mode');
+                }
+            });
+
+            safeBox.addEventListener('click', (e) => {
+                if (e.target !== checkbox && e.target !== label) {
+                    checkbox.click();
+                }
+            });
+        })();
 function spustDestrukciTerminalu() {
     // 1. DYNAMICKÉ VLOŽENÍ STYLŮ (VČETNĚ CRT TV VYPNUTÍ NA 1 VTEŘINU A REBOOT BOXU)
     const style = document.createElement('style');
