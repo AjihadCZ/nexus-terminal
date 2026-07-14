@@ -774,42 +774,56 @@
 
         @keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
         /* ======================================================== */
-        /* OPTIMALIZACE PRO TABLETY 16:10 (GALAXY TAB A 10.1)       */
+        /* OPTIMALIZACE PRO TABLET NA ŠÍŘKU (LANDSCAPE 16:10)       */
         /* ======================================================== */
-        @media screen and (max-height: 900px), screen and (max-width: 1300px) {
+        @media screen and (orientation: landscape) and (max-height: 800px) {
             body {
                 overflow: hidden !important; 
-                font-size: 14px !important;
+                font-size: 13px !important; /* Drobnější písmo pro úsporu místa */
             }
             
+            /* Hlavní kontejnery se natáhnou přesně na výšku displeje */
             .screen, #nexus-core, .container {
                 width: 100vw !important;
                 height: 100vh !important;
                 max-width: 100% !important;
                 max-height: 100% !important;
-                padding: 15px !important;
+                padding: 10px 15px !important; /* Menší horní a spodní okraj */
                 box-sizing: border-box !important;
                 display: flex !important;
                 flex-direction: column !important;
+                justify-content: space-between !important;
             }
 
+            /* Textové logy omezíme výškou, zbytek se odscrolluje prstem */
             .log-container, #logoff-log-container, .terminal-output, #nexus-core-content {
                 flex-grow: 1 !important;
+                max-height: 55vh !important; /* Text zabere maximálně 55% výšky, zbytek zbude na tlačítka */
                 overflow-y: auto !important;
-                height: auto !important;
-                margin-bottom: 10px !important;
-                font-size: 0.9em !important;
+                margin-bottom: 8px !important;
+                font-size: 0.85em !important;
                 padding-right: 10px !important; 
             }
 
-            h1 { font-size: 1.5em !important; margin: 10px 0 !important; }
-            h2 { font-size: 1.2em !important; margin: 8px 0 !important; }
+            /* Nadpisy smrskneme, ať nezabírají místo */
+            h1 { font-size: 1.3em !important; margin: 5px 0 !important; }
+            h2 { font-size: 1.1em !important; margin: 4px 0 !important; }
             
+            /* Ovládací tlačítka se seřadí vedle sebe, ne pod sebe */
+            .button-group, .controls, .menu-actions {
+                display: flex !important;
+                flex-direction: row !important;
+                flex-wrap: wrap !important;
+                justify-content: center !important;
+                gap: 5px !important;
+            }
+            
+            /* Tlačítka dostanou úspornější rozměry na výšku */
             button {
-                padding: 12px 18px !important;
-                font-size: 14px !important;
-                margin: 5px !important;
-                min-height: 44px !important;
+                padding: 8px 14px !important;
+                font-size: 13px !important;
+                margin: 2px !important;
+                min-height: 38px !important; /* Stále pohodlné na stisk prstem, ale úsporné */
             }
         }
         
