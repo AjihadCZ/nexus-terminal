@@ -1183,6 +1183,13 @@
         let ratingTimeoutSeconds = 60;
         let ratingTimeoutInterval = null;
 
+        // Úsporný režim pro Android WebView / Fully Kiosk. Starší tablety by při
+        // současném kreslení tří animovaných pláten zbytečně ztrácely odezvu.
+        const lowPowerDevice = /Android/i.test(navigator.userAgent) ||
+            (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
+        const backgroundFrameDelay = lowPowerDevice ? 150 : 45;
+        const coreFrameDelay = lowPowerDevice ? 110 : 30;
+
         window.addEventListener('DOMContentLoaded', () => {
             canvas = document.getElementById('hud-matrix-canvas'); 
             ctx = canvas.getContext('2d');
@@ -1193,12 +1200,12 @@
             initAICores();
             initBootMatrixGrid();
 
-            setInterval(renderCombinedEngine, 45); 
+            setInterval(renderCombinedEngine, backgroundFrameDelay);
             setInterval(updateClock, 1000); updateClock();
             setInterval(updateTimers, 1000); updateTimers();
-            setInterval(generateFakeHash, 120);
+            setInterval(generateFakeHash, lowPowerDevice ? 400 : 120);
             setInterval(updateAIStatus, 3000);
-            setInterval(updateLiveStats, 1200);
+            setInterval(updateLiveStats, lowPowerDevice ? 2000 : 1200);
             setInterval(spawnAmbientLog, 4000);
             setInterval(spawnDashboardActivityLog, 4000);
 
@@ -1264,18 +1271,19 @@
                 const c = document.getElementById(id);
                 if (!c) return;
                 
-                c.width = 325;
-                c.height = 325;
+                c.width = lowPowerDevice ? 220 : 325;
+                c.height = lowPowerDevice ? 220 : 325;
                 const cCtx = c.getContext('2d');
                 
                 let particles = [];
-                for(let i=0; i<45; i++) {
+                for(let i=0; i < (lowPowerDevice ? 20 : 45); i++) {
                     let angle = Math.random() * Math.PI * 2;
-                    let dist = 45 + Math.random() * 70;
+                    const coreScale = lowPowerDevice ? 220 / 325 : 1;
+                    let dist = (45 + Math.random() * 70) * coreScale;
                     particles.push({
                         angle: angle,
                         distance: dist,
-                        size: 1.5 + Math.random() * 2.5,
+                        size: (1.5 + Math.random() * 2.5) * coreScale,
                         speed: 0.01 + Math.random() * 0.02,
                         pulsePhase: Math.random() * Math.PI
                     });
@@ -1295,7 +1303,7 @@
                 }
             });
             
-            setInterval(renderAICoreLoop, 30);
+            setInterval(renderAICoreLoop, coreFrameDelay);
         }
 
         function renderAICoreLoop() {
@@ -1308,11 +1316,15 @@
             }
 
             aiCoreInstances.forEach(inst => {
+                const screen = inst.canvas.closest('.screen');
+                if (screen && !screen.classList.contains('active')) return;
+
                 const c = inst.canvas;
                 const cCtx = inst.ctx;
                 const p = inst.particles;
                 const cx = c.width / 2;
                 const cy = c.height / 2;
+                const coreScale = c.width / 325;
                 
                 cCtx.clearRect(0, 0, c.width, c.height);
                 
@@ -1338,7 +1350,7 @@
                         let dy = p1_y - p2_y;
                         let d = Math.sqrt(dx*dx + dy*dy);
                         
-                        if (d < 55) { 
+                        if (d < 55 * coreScale) { 
                             cCtx.beginPath();
                             cCtx.moveTo(p1_x, p1_y);
                             cCtx.lineTo(p2_x, p2_y);
@@ -1352,7 +1364,7 @@
                     pt.angle += pt.speed * activeSpeedMultiplier;
                     pt.pulsePhase += 0.05;
                     
-                    let currentDist = pt.distance + Math.sin(pt.pulsePhase) * (globalCoreOverdrive ? 12 : 4);
+                    let currentDist = pt.distance + Math.sin(pt.pulsePhase) * (globalCoreOverdrive ? 12 : 4) * coreScale;
                     let px = cx + Math.cos(pt.angle) * currentDist;
                     let py = cy + Math.sin(pt.angle) * currentDist;
                     
@@ -1364,8 +1376,8 @@
                     cCtx.fill();
                 });
                 
-                let pulseRadius = 32 + Math.sin(time * 4) * 4;
-                if(globalCoreOverdrive) pulseRadius += Math.sin(time * 15) * 6;
+                let pulseRadius = (32 + Math.sin(time * 4) * 4) * coreScale;
+                if(globalCoreOverdrive) pulseRadius += Math.sin(time * 15) * 6 * coreScale;
                 
                 let gradient = cCtx.createRadialGradient(cx, cy, 2, cx, cy, pulseRadius);
                 gradient.addColorStop(0, '#ffffff');
@@ -1382,22 +1394,24 @@
                 cCtx.lineWidth = 1;
                 cCtx.setLineDash([4, 12]);
                 cCtx.beginPath();
-                cCtx.arc(cx, cy, 140, 0, Math.PI * 2);
+                cCtx.arc(cx, cy, 140 * coreScale, 0, Math.PI * 2);
                 cCtx.stroke();
                 
                 cCtx.strokeStyle = coreColor + '0.2)';
                 cCtx.setLineDash([40, 25]);
                 cCtx.beginPath();
-                cCtx.arc(cx, cy, 152, time * 0.2, time * 0.2 + Math.PI * 2);
+                cCtx.arc(cx, cy, 152 * coreScale, time * 0.2, time * 0.2 + Math.PI * 2);
                 cCtx.stroke();
                 cCtx.setLineDash([]); 
             });
         }
 
         function initBackgroundBuffers() {
-            canvas.width = window.innerWidth; 
-            canvas.height = window.innerHeight;
-            mColumns = canvas.width / 20; 
+            // V úsporném režimu vykreslujeme menší interní plátno, které CSS
+            // roztáhne přes displej. Vzhled zůstane stejný, GPU má výrazně méně práce.
+            canvas.width = lowPowerDevice ? Math.min(window.innerWidth, 960) : window.innerWidth;
+            canvas.height = lowPowerDevice ? Math.min(window.innerHeight, 600) : window.innerHeight;
+            mColumns = canvas.width / (lowPowerDevice ? 30 : 20);
             mRainDrops = [];
             for (let x = 0; x < mColumns; x++) mRainDrops[x] = Math.random() * -40;
 
@@ -1408,7 +1422,7 @@
 
             pCtx.strokeStyle = 'rgba(0, 255, 0, 0.18)'; 
             pCtx.lineWidth = 1;
-            let size = 65; 
+            let size = lowPowerDevice ? 80 : 65;
             let h = size * Math.sqrt(3);
             
             function drawHex(cx, cy) {
@@ -1442,13 +1456,14 @@
                 ctx.drawImage(hexPatternCanvas, 0, 0);
             }
 
-            ctx.font = 'bold 16px monospace';
+            ctx.font = lowPowerDevice ? 'bold 14px monospace' : 'bold 16px monospace';
             for (let i = 0; i < mRainDrops.length; i++) {
                 let text = matrixChars[Math.floor(Math.random() * matrixChars.length)];
                 ctx.fillStyle = 'rgba(0, 255, 0, 0.98)';
-                ctx.fillText(text, i * 20, mRainDrops[i] * 20);
+                const columnSize = lowPowerDevice ? 30 : 20;
+                ctx.fillText(text, i * columnSize, mRainDrops[i] * columnSize);
                 
-                if (mRainDrops[i] * 20 > canvas.height && Math.random() > 0.95) {
+                if (mRainDrops[i] * columnSize > canvas.height && Math.random() > 0.95) {
                     mRainDrops[i] = 0;
                 }
                 mRainDrops[i]++;
