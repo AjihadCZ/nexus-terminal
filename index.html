@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NEXUS CORE // AGENT TERMINAL v3.7</title>
+    <title>NEXUS CORE // AGENT TERMINAL v3.8</title>
     <style>
         :root {
             --neon-green: #00ff00;
@@ -38,17 +38,6 @@
             padding: 20px;
             user-select: none;
             -webkit-user-select: none;
-        }
-
-        #hud-matrix-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            opacity: 0.50;
-            pointer-events: none;
         }
 
         .scanlines {
@@ -839,13 +828,12 @@
         <div class="wow-subtext" id="wow-text-node">INITIALIZING BIOMETRIC SCAN...</div>
     </div>
 
-    <canvas id="hud-matrix-canvas"></canvas>
     <div class="scanlines"></div>
     <div class="glitch-overlay" id="g-overlay"></div>
 
     <div class="terminal-container">
         <div class="terminal-header">
-            <div>SYS: <span class="primary-data" style="text-shadow: none;">ONLINE</span> // SECURE NODE TERMINAL v3.7</div>
+            <div>SYS: <span class="primary-data" style="text-shadow: none;">ONLINE</span> // SECURE NODE TERMINAL v3.8</div>
             <div>TIME UPLINK: <span id="live-clock" class="primary-data">2026-07-08 16:00:00</span></div>
         </div>
 
@@ -1185,20 +1173,12 @@
 
         const lowPowerDevice = /Android/i.test(navigator.userAgent) ||
             (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
-        const backgroundFrameDelay = lowPowerDevice ? 150 : 45;
         const coreFrameDelay = lowPowerDevice ? 110 : 30;
 
         window.addEventListener('DOMContentLoaded', () => {
-            canvas = document.getElementById('hud-matrix-canvas'); 
-            ctx = canvas.getContext('2d');
-            
-            initBackgroundBuffers();
-            window.addEventListener('resize', initBackgroundBuffers);
-            
             initAICores();
             initBootMatrixGrid();
 
-            setInterval(renderCombinedEngine, backgroundFrameDelay);
             setInterval(updateClock, 1000); updateClock();
             setInterval(updateTimers, 1000); updateTimers();
             setInterval(generateFakeHash, lowPowerDevice ? 400 : 120);
@@ -2140,7 +2120,7 @@ function spustDestrukciTerminalu() {
 
             // Přecházíme na zobrazení reboot loadingu
             spustRebootLoading();
-        }, 1000);
+        }, 1500);
     }
 
     // 5. NOVÉ OKÉNKO: REBOOT SYSTEM .... X% (Trvá přesně 1,5 sekundy)
