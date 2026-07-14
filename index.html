@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NEXUS CORE // AGENT TERMINAL v3.6</title>
+    <title>NEXUS CORE // AGENT TERMINAL v3.7</title>
     <style>
         :root {
             --neon-green: #00ff00;
@@ -1183,8 +1183,6 @@
         let ratingTimeoutSeconds = 60;
         let ratingTimeoutInterval = null;
 
-        // Úsporný režim pro Android WebView / Fully Kiosk. Starší tablety by při
-        // současném kreslení tří animovaných pláten zbytečně ztrácely odezvu.
         const lowPowerDevice = /Android/i.test(navigator.userAgent) ||
             (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
         const backgroundFrameDelay = lowPowerDevice ? 150 : 45;
@@ -1278,12 +1276,12 @@
                 let particles = [];
                 for(let i=0; i < (lowPowerDevice ? 20 : 45); i++) {
                     let angle = Math.random() * Math.PI * 2;
-                    const coreScale = lowPowerDevice ? 220 / 325 : 1;
-                    let dist = (45 + Math.random() * 70) * coreScale;
+                    const initialCoreScale = lowPowerDevice ? 220 / 325 : 1;
+                    let dist = (45 + Math.random() * 70) * initialCoreScale;
                     particles.push({
                         angle: angle,
                         distance: dist,
-                        size: (1.5 + Math.random() * 2.5) * coreScale,
+                        size: (1.5 + Math.random() * 2.5) * initialCoreScale,
                         speed: 0.01 + Math.random() * 0.02,
                         pulsePhase: Math.random() * Math.PI
                     });
@@ -1318,7 +1316,6 @@
             aiCoreInstances.forEach(inst => {
                 const screen = inst.canvas.closest('.screen');
                 if (screen && !screen.classList.contains('active')) return;
-
                 const c = inst.canvas;
                 const cCtx = inst.ctx;
                 const p = inst.particles;
@@ -1407,8 +1404,6 @@
         }
 
         function initBackgroundBuffers() {
-            // V úsporném režimu vykreslujeme menší interní plátno, které CSS
-            // roztáhne přes displej. Vzhled zůstane stejný, GPU má výrazně méně práce.
             canvas.width = lowPowerDevice ? Math.min(window.innerWidth, 960) : window.innerWidth;
             canvas.height = lowPowerDevice ? Math.min(window.innerHeight, 600) : window.innerHeight;
             mColumns = canvas.width / (lowPowerDevice ? 30 : 20);
@@ -1422,7 +1417,7 @@
 
             pCtx.strokeStyle = 'rgba(0, 255, 0, 0.18)'; 
             pCtx.lineWidth = 1;
-            let size = lowPowerDevice ? 80 : 65;
+            let size = lowPowerDevice ? 80 : 65; 
             let h = size * Math.sqrt(3);
             
             function drawHex(cx, cy) {
@@ -1458,9 +1453,9 @@
 
             ctx.font = lowPowerDevice ? 'bold 14px monospace' : 'bold 16px monospace';
             for (let i = 0; i < mRainDrops.length; i++) {
+                const columnSize = lowPowerDevice ? 30 : 20;
                 let text = matrixChars[Math.floor(Math.random() * matrixChars.length)];
                 ctx.fillStyle = 'rgba(0, 255, 0, 0.98)';
-                const columnSize = lowPowerDevice ? 30 : 20;
                 ctx.fillText(text, i * columnSize, mRainDrops[i] * columnSize);
                 
                 if (mRainDrops[i] * columnSize > canvas.height && Math.random() > 0.95) {
@@ -1850,7 +1845,22 @@
                 "  PŘÍSTUP POVOLEN // ÚSPĚŠNÉ PŘIHLÁŠENÍ AGENTA (ÚROVEŇ SUB-0)\n" +
                 "============================================================";
 
-            typeWriter(bootLogData, 'boot-log-container', 4, false);
+            let bootLogFinished = false;
+            let bootProgressFinished = false;
+            let bootTransitionStarted = false;
+            const continueAfterBoot = () => {
+                if (bootLogFinished && bootProgressFinished && !bootTransitionStarted) {
+                    bootTransitionStarted = true;
+                    setTimeout(startBriefing, 700);
+                }
+            };
+
+            // Fully Kiosk může psaní textu zpomalit. Další obrazovka proto
+            // nenastane dříve, než je vypsán celý bootovací protokol.
+            typeWriter(bootLogData, 'boot-log-container', 4, false, () => {
+                bootLogFinished = true;
+                continueAfterBoot();
+            });
 
             let progress = 0;
             const progressInterval = setInterval(() => {
@@ -1866,7 +1876,8 @@
                 
                 if (progress === 100) {
                     clearInterval(progressInterval);
-                    setTimeout(() => { startBriefing(); }, 1000);
+                    bootProgressFinished = true;
+                    continueAfterBoot();
                 }
             }, 120); // Zpomaleno z 60 na 120 milisekund
         }
@@ -2158,7 +2169,7 @@ function spustDestrukciTerminalu() {
                 // Slíbená půlvteřinová pauza na závěr (500ms ticho) a pak reload stránky
                 setTimeout(() => {
                     location.reload();
-                }, 500);
+                }, 1500);
             }
         }, 15);
     }
