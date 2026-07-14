@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NEXUS CORE // AGENT TERMINAL v3.8</title>
+    <title>NEXUS CORE // AGENT TERMINAL v3.9</title>
     <style>
         :root {
             --neon-green: #00ff00;
@@ -833,7 +833,7 @@
 
     <div class="terminal-container">
         <div class="terminal-header">
-            <div>SYS: <span class="primary-data" style="text-shadow: none;">ONLINE</span> // SECURE NODE TERMINAL v3.8</div>
+            <div>SYS: <span class="primary-data" style="text-shadow: none;">ONLINE</span> // SECURE NODE TERMINAL v3.9</div>
             <div>TIME UPLINK: <span id="live-clock" class="primary-data">2026-07-08 16:00:00</span></div>
         </div>
 
@@ -1859,7 +1859,7 @@
                     bootProgressFinished = true;
                     continueAfterBoot();
                 }
-            }, 120); // Zpomaleno z 60 na 120 milisekund
+            }, 260); // 100 kroků ≈ 26 s: tempo odpovídá bootovacímu výpisu i na tabletu
         }
 
         function startBriefing() {
@@ -2120,7 +2120,7 @@ function spustDestrukciTerminalu() {
 
             // Přecházíme na zobrazení reboot loadingu
             spustRebootLoading();
-        }, 1500);
+        }, 1000);
     }
 
     // 5. NOVÉ OKÉNKO: REBOOT SYSTEM .... X% (Trvá přesně 1,5 sekundy)
@@ -2149,7 +2149,7 @@ function spustDestrukciTerminalu() {
                 // Slíbená půlvteřinová pauza na závěr (500ms ticho) a pak reload stránky
                 setTimeout(() => {
                     location.reload();
-                }, 1500);
+                }, 500);
             }
         }, 15);
     }
