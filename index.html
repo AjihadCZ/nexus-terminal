@@ -15,26 +15,16 @@
             --neon-yellow: #ffea00;
             --neon-magenta: #ff007f;
             
-            --neon-glow: 0 0 3px rgba(0, 255, 0, 0.9);
-            --red-glow: 0 0 3px rgba(255, 51, 51, 0.9);
+            --neon-glow: 0 0 20px rgba(0, 255, 0, 0.6), 0 0 40px rgba(0, 255, 0, 0.3);
+            --red-glow: 0 0 20px rgba(255, 51, 51, 0.6), 0 0 40px rgba(255, 51, 51, 0.3);
         }
-        
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
-        
-        /* ========================================== */
-        /* SEM VLOŽÍŠ KROK 2 (Globální vypnutí efektů) */
-        /* ========================================== */
-        * {
-            backdrop-filter: none !important;
-            -webkit-backdrop-filter: none !important;
-            filter: none !important;
-        }
-        /* ========================================== */
-        
+
         body {
             background-color: var(--bg-black);
             color: var(--dim-green);
@@ -772,61 +762,74 @@
             .boot-visual-side { width: 100%; height: 40%; }
         }
 
-        @keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
-        /* ======================================================== */
-        /* OPTIMALIZACE PRO TABLET NA ŠÍŘKU (LANDSCAPE 16:10)       */
-        /* ======================================================== */
-        @media screen and (orientation: landscape) and (max-height: 800px) {
-            body {
-                overflow: hidden !important; 
-                font-size: 13px !important; /* Drobnější písmo pro úsporu místa */
+        /* Samsung SM-T580 (1920 × 1200) — kompaktní rozvržení pro orientaci na šířku.
+           Přepisuje mobilní skládání panelů, které by jinak skrylo obsah pod spodním okrajem. */
+        @media (orientation: landscape) and (max-height: 1200px) {
+            body { padding: 12px; }
+            .terminal-container {
+                width: 100%;
+                height: calc(100dvh - 24px);
+                max-width: none;
+                max-height: none;
+                padding: 18px;
             }
-            
-            /* Hlavní kontejnery se natáhnou přesně na výšku displeje */
-            .screen, #nexus-core, .container {
-                width: 100vw !important;
-                height: 100vh !important;
-                max-width: 100% !important;
-                max-height: 100% !important;
-                padding: 10px 15px !important; /* Menší horní a spodní okraj */
-                box-sizing: border-box !important;
-                display: flex !important;
-                flex-direction: column !important;
-                justify-content: space-between !important;
+            .terminal-header {
+                padding-bottom: 8px;
+                margin-bottom: 12px;
+                font-size: 12px;
+                letter-spacing: 1px;
             }
+            .screen { height: auto; min-height: 0; }
+            h1 { font-size: clamp(2.2rem, 4vw, 3.6rem) !important; letter-spacing: clamp(5px, 0.8vw, 10px); margin-bottom: 8px !important; }
+            h2 { font-size: clamp(1.35rem, 2.2vw, 2rem); margin-bottom: 12px; padding-bottom: 8px; }
+            .btn { min-height: 44px; padding: 12px 18px; margin: 5px 0; font-size: clamp(14px, 1.5vw, 18px); }
+            .nav-footer { padding-top: 10px; }
+            .nav-footer .btn { min-height: 42px; padding: 9px 20px; }
 
-            /* Textové logy omezíme výškou, zbytek se odscrolluje prstem */
-            .log-container, #logoff-log-container, .terminal-output, #nexus-core-content {
-                flex-grow: 1 !important;
-                max-height: 55vh !important; /* Text zabere maximálně 55% výšky, zbytek zbude na tlačítka */
-                overflow-y: auto !important;
-                margin-bottom: 8px !important;
-                font-size: 0.85em !important;
-                padding-right: 10px !important; 
-            }
+            .ai-core-container-canvas { width: clamp(145px, 17vw, 220px); height: clamp(145px, 17vw, 220px); margin: 4px auto; }
+            .ai-dynamic-status { margin-top: 4px; font-size: 12px; }
+            .menu-grid, .missions-menu-grid { grid-template-columns: repeat(6, 1fr); gap: 10px; max-width: 1400px; }
+            .menu-grid .btn:nth-child(n), .missions-menu-grid .btn:nth-child(n) { grid-column: span 2 !important; }
+            .menu-grid .btn:nth-child(7), .missions-menu-grid .btn:nth-child(1) { grid-column: span 6 !important; }
+            .menu-grid + .btn { margin-top: 8px !important; padding: 10px 18px !important; }
 
-            /* Nadpisy smrskneme, ať nezabírají místo */
-            h1 { font-size: 1.3em !important; margin: 5px 0 !important; }
-            h2 { font-size: 1.1em !important; margin: 4px 0 !important; }
-            
-            /* Ovládací tlačítka se seřadí vedle sebe, ne pod sebe */
-            .button-group, .controls, .menu-actions {
-                display: flex !important;
-                flex-direction: row !important;
-                flex-wrap: wrap !important;
-                justify-content: center !important;
-                gap: 5px !important;
-            }
-            
-            /* Tlačítka dostanou úspornější rozměry na výšku */
-            button {
-                padding: 8px 14px !important;
-                font-size: 13px !important;
-                margin: 2px !important;
-                min-height: 38px !important; /* Stále pohodlné na stisk prstem, ale úsporné */
-            }
+            .dashboard-grid { grid-template-columns: 2.3fr 1fr; gap: 12px; overflow: hidden; margin-bottom: 10px; }
+            .dash-main, .dash-sidebar { gap: 12px; height: 100%; overflow: hidden; }
+            .dash-row-top { grid-template-columns: 1fr 1fr; gap: 12px; height: 94px; }
+            .dash-card { padding: 10px; border-radius: 6px; }
+            .card-title { font-size: 12px; padding-bottom: 5px; margin-bottom: 7px; letter-spacing: 1px; }
+            .countdown-timer { font-size: clamp(20px, 2.2vw, 27px); }
+            .mission-list { gap: 6px; height: auto; flex: 1; }
+            .mission-item { padding: 7px 12px; font-size: 12px; }
+            .mission-header-row { font-size: 13px; margin-bottom: 3px; }
+            .mission-meta-row { font-size: 11px; margin-bottom: 3px; }
+            .mini-progress-bar { height: 5px; }
+            .system-activity-log { padding-top: 7px; }
+            .activity-rows { height: 52px; font-size: 10px; }
+            .activity-header { font-size: 10px; margin-bottom: 4px; }
+            .stat-row { margin-bottom: 6px; font-size: 12px; }
+            .stat-bar-outer { height: 5px; }
+            .dash-sidebar .ai-core-container-canvas { width: clamp(105px, 11vw, 145px); height: clamp(105px, 11vw, 145px); }
+            .ai-core-status-box { margin-top: 5px; padding: 7px; font-size: 10px; line-height: 1.25; }
+
+            .boot-wrapper { flex-direction: row; gap: 16px; height: calc(100% - 58px); }
+            .boot-log-side { width: 60%; height: 100%; padding: 14px; font-size: 13px !important; }
+            .boot-visual-side { width: 40%; height: 100%; padding: 12px; }
+            .matrix-grid { max-width: 230px; margin: 10px 0; }
+            .progress-container { padding: 4px; }
+            .progress-bar { height: 20px; }
+            .progress-text { margin-left: 10px; font-size: 15px; }
+
+            .typewriter-content { padding: 14px; margin-bottom: 12px; font-size: 15px; line-height: 1.45; }
+            .qr-display-container { padding: 16px; max-width: 800px; }
+            .qr-frame { width: 170px; height: 170px; }
+            .qr-scanner-wrapper { margin-bottom: 8px; }
+            .rating-auth-wrapper { max-width: 700px; padding: 16px; gap: 9px; }
+            .terminal-input { font-size: 19px; padding: 11px 15px; }
+            .rating-result-box { min-height: 150px; max-height: 180px; padding: 12px; }
         }
-        
+
+        @keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
     </style>
 </head>
 <body onclick="resetRatingTimeout()">
@@ -1172,7 +1175,6 @@
         let hexPatternCanvas = null;
 
         let isAuthenticating = false;
-        let audioCtx = null;
 
         let aiCoreInstances = [];
         let globalCoreOverdrive = false;
@@ -1181,40 +1183,10 @@
         let ratingTimeoutSeconds = 60;
         let ratingTimeoutInterval = null;
 
-        function initAudio() { 
-            if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-        }
-        
-        function playTone(freq, type, duration, vol=0.1) {
-            try {
-                if(!audioCtx) return;
-                let osc = audioCtx.createOscillator();
-                let gainNode = audioCtx.createGain();
-                osc.type = type;
-                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-                gainNode.gain.setValueAtTime(vol, audioCtx.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
-                osc.connect(gainNode);
-                gainNode.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + duration);
-            } catch(e) {}
-        }
-
-        function sndClick() { initAudio(); playTone(880, 'sine', 0.05, 0.15); }
-        function sndType() { playTone(1200 + Math.random()*400, 'sine', 0.02, 0.04); }
-        function sndSuccess() { playTone(587.33, 'square', 0.1, 0.1); setTimeout(()=>playTone(880, 'square', 0.2, 0.1), 100); }
-        function sndWarning() { playTone(220, 'sawtooth', 0.3, 0.15); }
-        function sndAlarm() { playTone(440, 'sawtooth', 0.15, 0.2); setTimeout(()=>playTone(349.23, 'sawtooth', 0.15, 0.2), 150); }
-
         window.addEventListener('DOMContentLoaded', () => {
             canvas = document.getElementById('hud-matrix-canvas'); 
             ctx = canvas.getContext('2d');
             
-            document.body.addEventListener('touchstart', initAudio, { once: true });
-            document.body.addEventListener('mousedown', initAudio, { once: true });
-
             initBackgroundBuffers();
             window.addEventListener('resize', initBackgroundBuffers);
             
@@ -1230,9 +1202,6 @@
             setInterval(spawnAmbientLog, 4000);
             setInterval(spawnDashboardActivityLog, 4000);
 
-            document.querySelectorAll('button').forEach(btn => {
-                btn.addEventListener('click', sndClick);
-            });
             spawnAmbientLog();
             spawnDashboardActivityLog();
         });
@@ -1319,7 +1288,6 @@
                     const triggerOverdrive = () => {
                         globalCoreOverdrive = true;
                         overdriveTimer = 60; 
-                        playTone(1100, 'sine', 0.15, 0.05);
                         document.querySelectorAll('.ai-dynamic-status').forEach(el => el.classList.add('overdrive'));
                     };
                     parent.addEventListener('mouseenter', triggerOverdrive);
@@ -1534,7 +1502,6 @@
             let overlay = document.getElementById('g-overlay');
             if(overlay) {
                 overlay.style.display = 'block';
-                playTone(140, 'sawtooth', 0.1, 0.08);
                 setTimeout(() => { overlay.style.display = 'none'; }, 120);
             }
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -1546,24 +1513,22 @@
             if(isAuthenticating) return; 
             isAuthenticating = true;
 
-            initAudio();
             let wowScreen = document.getElementById('wow-auth-screen');
             let wowText = document.getElementById('wow-text-node');
             wowScreen.style.display = 'flex';
             
             let phases = [
-                { t: "INITIALIZING BIOMETRIC SCAN...", d: 600, s: sndAlarm },
-                { t: "MATCH FOUND. ANALYZING STRUCTURE...", d: 600, s: sndClick },
-                { t: "DNA VERIFICATION: 99.84% MATCH", d: 500, s: sndAlarm },
-                { t: "AGENT DECREE ACCEPTED BY NEXUS CORES", d: 500, s: sndSuccess },
-                { t: "WELCOME AGENT. GRANTED LEVEL SUB-0.", d: 700, s: sndSuccess }
+                { t: "INITIALIZING BIOMETRIC SCAN...", d: 600 },
+                { t: "MATCH FOUND. ANALYZING STRUCTURE...", d: 600 },
+                { t: "DNA VERIFICATION: 99.84% MATCH", d: 500 },
+                { t: "AGENT DECREE ACCEPTED BY NEXUS CORES", d: 500 },
+                { t: "WELCOME AGENT. GRANTED LEVEL SUB-0.", d: 700 }
             ];
 
             let step = 0;
             function runPhase() {
                 if(step < phases.length) {
                     wowText.innerText = phases[step].t;
-                    phases[step].s();
                     setTimeout(() => { step++; runPhase(); }, phases[step].d);
                 } else {
                     wowScreen.style.display = 'none';
@@ -1663,7 +1628,6 @@
                         element.innerHTML = text.substring(0, i + 1) + `<span class="${cursorClass}"></span>`;
                         i++;
                     }
-                    if(i % 2 === 0) sndType();
                     element.scrollTop = element.scrollHeight;
                     typeTimeout = setTimeout(type, speed);
                 } else {
@@ -1754,7 +1718,6 @@
             outputBox.classList.remove('error-state');
 
             if(!inputVal) {
-                sndWarning();
                 outputBox.classList.add('error-state');
                 outputBox.style.display = 'block';
                 typeWriter("[ ERROR ] NEBYLA ZADÁNA ŽÁDNÁ IDENTITA.", 'rating-output', 8, true, () => {
@@ -1797,7 +1760,6 @@
                     }
 
                     if (nalezeneData) {
-                        sndSuccess();
                         
                         // Strukturovaný HTML kód zalomený do řádků pro hodnocení
                         const strukturovanyVypis = 
@@ -1822,7 +1784,6 @@
                             startRatingTimeout();
                         });
                     } else {
-                        sndWarning();
                         outputBox.classList.add('error-state');
                         const chybaText = `[ ACCESS DENIED ] // IDENTITA NEBYLA DETEKOVÁNA\n` +
                                           `Upozornění: Pokus o neoprávněný vstup byl zalogován.`;
@@ -1832,7 +1793,6 @@
                     }
                 })
                 .catch(error => {
-                    sndWarning();
                     outputBox.classList.add('error-state');
                     typeWriter("[ CRITICAL ERROR ] Soubor 'agenti.csv' nebyl nalezen vedle html souboru na GitHubu. Přilož ho tam podle instrukcí.", 'rating-output', 8, true, () => {
                         startRatingTimeout();
@@ -1903,14 +1863,12 @@
             const welcomeText = "Vítej, agente.\n\nPrávě ses přihlásil do terminálu Operace Nexus – centrálního systému, který tě bude provázet celou soutěží.\n\nStáváš se součástí sítě agentů, kteří během čtyř misí prověří své schopnosti v informatice, logickém myšlení, algoritmizaci a práci s digitálními technologiemi.\n\nTento terminál je tvým hlavním informačním centrem – zde najdeš informace o soutěži, stav systému, časové odpočty, přehled misí i průběžné výsledky. Tento terminál je nutné pravidelně navštěvovat a sledovat své úspěchy a přístupy k misím.\n\nMise jsou po registraci uzamčeny a systém je postupně zpřístupní dle harmonogramu. Po zadání Agent ID zobrazíš bodové hodnocení, hodnost i postup v operaci.\n\nHodnotí se správnost řešení, logický postup, kreativita a samostatnost. Internet i AI můžeš využívat jako podporu – důležité je rozumět svému řešení.\n\nOperace Nexus byla zahájena. Přejeme ti mnoho úspěchů, agente.";
             typeWriter(welcomeText, 'welcome-text-container', 15, false, () => {
                 if(btn) btn.style.display = "inline-block";
-                sndSuccess();
             });
         }
 
         function triggerLogoff() {
             clearRatingTimeout(); 
             switchScreen('logoff-screen');
-            sndWarning();
             const progressBar = document.getElementById('logoff-progress-bar');
             const progressText = document.getElementById('logoff-progress-text');
 
@@ -1938,9 +1896,8 @@
                     if (i < logoffLogData.length) {
                         element.innerHTML = logoffLogData.substring(0, i + 1) + '<span class="cursor red"></span>';
                         i++;
-                        if(i % 2 === 0) sndType();
                         element.scrollTop = element.scrollHeight;
-                        setTimeout(type, 30);
+                        setTimeout(type, 4);
                     } else {
                         element.innerHTML = logoffLogData + '<span class="cursor red"></span>';
                         element.scrollTop = element.scrollHeight;
@@ -2191,13 +2148,6 @@ function spustDestrukciTerminalu() {
         }, 15);
     }
 }
-        // ========================================================
-        // GLOBÁLNÍ VYPNUTÍ VŠECH ZVUKŮ (Zabrání i pádům na tabletu)
-        // ========================================================
-        window.HTMLAudioElement.prototype.play = function() { 
-            return Promise.resolve(); 
-        };
-        
     </script>
 </body>
 </html>
