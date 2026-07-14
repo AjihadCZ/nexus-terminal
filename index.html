@@ -2137,6 +2137,13 @@ function spustDestrukciTerminalu() {
         }, 15);
     }
 }
+        // ========================================================
+        // GLOBÁLNÍ VYPNUTÍ VŠECH ZVUKŮ (Zabrání i pádům na tabletu)
+        // ========================================================
+        window.HTMLAudioElement.prototype.play = function() { 
+            return Promise.resolve(); 
+        };
+        
     </script>
 </body>
 </html>
