@@ -1,10 +1,45 @@
 <!DOCTYPE html>
+<!--
+    ============================================================
+    NEXUS CORE — HLAVNÍ AGENTSKÝ TERMINÁL
+    ============================================================
+    ÚČEL:
+    Centrální rozcestník celé soutěže. Obsahuje přihlášení, bootovací
+    sekvenci, hlavní menu, dashboard, registraci, pravidla, FAQ,
+    nabídku misí, kontrolu výsledků agenta a odhlašovací sekvenci.
+
+    SPUŠTĚNÍ:
+    Otevřete tento soubor v moderním prohlížeči. Pro kompletní provoz
+    ponechte vedle HTML také obrázek "qr_kod.png" a soubor "agenti.csv".
+    Při načítání z webu musí být agenti.csv dostupný ze stejného umístění
+    nebo je nutné upravit cestu ve funkci verifyAgentRating().
+
+    NEJDŮLEŽITĚJŠÍ MÍSTA PRO SPRÁVCE:
+    1. Vzhled a barvy: CSS proměnné v :root na začátku <style>.
+    2. Datum odemčení misí: CONFIG_MISI na začátku <script>.
+    3. Texty briefingů: BRIEFINGY_TEXTY a BRIEFINGY_TITULKY.
+    4. Datum registrace a konce operace: funkce updateTimers().
+    5. Texty úvodu, pravidel a FAQ: funkce showSection().
+    6. Vyhodnocení Agent ID: verifyAgentRating() a externí agenti.csv.
+    7. Průběh bootu a odhlášení: startBootSequence() a triggerLogoff().
+
+    POZOR:
+    JavaScript vyhledává prvky podle atributů id. Přejmenování id v HTML
+    proto vyžaduje stejnou změnu také ve skriptu. Komentáře v tomto
+    souboru nejsou viditelné žákům; slouží pouze správci zdrojového kódu.
+-->
 <html lang="cs">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>NEXUS CORE // AGENT TERMINAL v3.9</title>
     <style>
+        /*
+         * VZHLED TERMINÁLU
+         * :root = centrální paleta a záře.
+         * Následují společné komponenty, jednotlivé obrazovky,
+         * animace a responzivní úpravy pro menší displeje.
+         */
         :root {
             --neon-green: #00ff00;
             --dim-green: rgba(0, 255, 0, 0.85);
@@ -666,6 +701,23 @@
 
         .rating-auth-wrapper { max-width: 650px; width: 100%; margin: auto; display: flex; flex-direction: column; gap: 15px; background: rgba(2, 6, 2, 0.9); border: 1px solid rgba(0, 255, 0, 0.25); padding: 25px; border-radius: 8px; box-shadow: var(--neon-glow); }
         .terminal-input { background: #000; border: 1px solid var(--neon-green); color: var(--neon-green); font-family: 'Courier New', monospace; font-size: 24px; padding: 16px 20px; min-height: 50px; width: 100%; outline: none; text-transform: uppercase; text-align: center; letter-spacing: 3px; box-shadow: inset 0 0 10px rgba(0,255,0,0.2); user-select: text; -webkit-user-select: text; }
+
+        /*
+         * Dobře viditelné ovládání klávesnicí. Používáme starší pseudotřídu
+         * :focus, aby zvýraznění fungovalo i v prohlížeči starého tabletu.
+         */
+        .btn:focus,
+        .terminal-input:focus {
+            outline: 3px solid #ffffff;
+            outline-offset: 3px;
+            border-color: var(--neon-green);
+            box-shadow: 0 0 0 2px #000000, 0 0 18px rgba(0, 255, 0, 0.75);
+        }
+
+        .btn-red:focus {
+            border-color: var(--alert-red);
+            box-shadow: 0 0 0 2px #000000, 0 0 18px rgba(255, 51, 51, 0.75);
+        }
         
         .rating-result-box { 
             display: none; 
@@ -845,25 +897,56 @@
             .rating-result-box { min-height: 150px; max-height: 180px; padding: 12px; }
         }
 
+        /*
+         * Pokud má zařízení v systému zapnuté omezení pohybu, utlumí se jen
+         * dekorace. Boot, odpočty, průběhy misí i odhlášení zůstávají funkční.
+         * Starší prohlížeče, které pravidlo neznají, jej bezpečně ignorují.
+         */
+        @media (prefers-reduced-motion: reduce) {
+            .rules-warning,
+            .cursor,
+            .ai-online-indicator,
+            .blink-dot,
+            .laser-line,
+            .activity-row,
+            .btn:hover,
+            .btn-red:hover {
+                animation: none !important;
+            }
+
+            .btn,
+            .btn::after,
+            .boot-skip-button,
+            .stat-bar-inner,
+            .mini-progress-bar,
+            .matrix-cell {
+                transition: none !important;
+            }
+        }
+
         @keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
     </style>
 </head>
 <body onclick="resetRatingTimeout()">
 
+    <!-- Krátký celoobrazovkový překryv biometrického přihlášení. -->
     <div id="wow-auth-screen">
         <div class="wow-banner">▲ CRITICAL SYSTEM ALERT ▲</div>
         <div class="wow-subtext" id="wow-text-node">INITIALIZING BIOMETRIC SCAN...</div>
     </div>
 
+    <!-- Společné filmové vrstvy nad všemi obrazovkami terminálu. -->
     <div class="scanlines"></div>
     <div class="glitch-overlay" id="g-overlay"></div>
 
     <div class="terminal-container">
+        <!-- Horní systémová lišta zůstává společná pro celý terminál. -->
         <div class="terminal-header">
             <div>SYS: <span class="primary-data" style="text-shadow: none;">ONLINE</span> // SECURE NODE TERMINAL v3.9</div>
             <div>TIME UPLINK: <span id="live-clock" class="primary-data">2026-07-08 16:00:00</span></div>
         </div>
 
+        <!-- 1. Výchozí obrazovka: přihlášení agenta a klidové jádro. -->
         <div id="start-screen" class="screen screen-centered active">
             <div class="ai-core-container-canvas" id="start-core-wrap">
                 <canvas id="ai-core-canvas-start"></canvas>
@@ -879,6 +962,7 @@
             </button>
         </div>
 
+        <!-- 2. Boot: textový log, matice sektorů a průběhová lišta. -->
         <div id="boot-screen" class="screen">
             <h2>NEXUS CORE // DECENTRALIZED BOOT SEQUENCE</h2>
             <div class="boot-wrapper">
@@ -898,6 +982,7 @@
             </div>
         </div>
 
+        <!-- 3. Úvodní systémová zpráva po úspěšném bootu. -->
         <div id="welcome-screen" class="screen">
             <h2>OPERATIVNÍ BRIEFING NEXUS JÁDRA</h2>
             <div class="typewriter-content" id="welcome-text-container"></div>
@@ -906,13 +991,14 @@
             </div>
         </div>
 
+        <!-- 4. Hlavní rozcestník ke všem částem terminálu. -->
         <div id="menu-screen" class="screen screen-centered">
             <h1 style="font-size: 3.5rem; margin-bottom: 5px;">NEXUS MENU</h1>
             
             <div class="ai-core-container-canvas" id="menu-core-wrap">
                 <canvas id="ai-core-canvas-menu"></canvas>
             </div>
-            <div class="ai-dynamic-status" id="menu-ai-status" style="margin-bottom: 20px;">CONNECTING...</div>
+            <div class="ai-dynamic-status" id="menu-ai-status" style="margin-bottom: 20px;" aria-live="polite">CONNECTING...</div>
 
             <div class="menu-grid">
                 <button class="btn" onclick="showSection('intro-screen')">> ÚVODNÍ BRIEFING</button>
@@ -920,12 +1006,13 @@
                 <button class="btn" onclick="showSection('dashboard-screen')">> ŘÍDÍCÍ DASHBOARD</button>
                 <button class="btn" onclick="showSection('registration-screen')">> REGISTRACE AGENTA</button>
                 <button class="btn" onclick="showSection('faq-screen')">> DOTAZY</button>
-                <button class="btn" style="border-color: var(--neon-green); color: var(--neon-green);" onclick="showMissionsMenu()">> OPERAČNI MISE</button>
+                <button class="btn" style="border-color: var(--neon-green); color: var(--neon-green);" onclick="showMissionsMenu()">> OPERAČNÍ MISE</button>
                 <button class="btn" onclick="openRatingSection()">> ZJIŠTĚNÍ ÚROVNĚ AGENTA</button>
             </div>
             <button class="btn btn-red" style="margin-top: 20px; width: 100%; max-width: 1300px; padding: 18px;" onclick="triggerLogoff()">[ ✕ ] DEAKTIVOVAT TERMINÁL (LOGOFF)</button>
         </div>
 
+        <!-- Výsledky: Agent ID se ověřuje proti souboru agenti.csv. -->
         <div id="rating-screen" class="screen">
             <h2>NEXUS CORE // IDENTITY MATRIX HODNOCENÍ</h2>
             <div class="rating-auth-wrapper">
@@ -933,7 +1020,7 @@
                 <input type="text" id="agent-id-input" class="terminal-input" placeholder="Zadejte ID Agenta..." autocomplete="off" oninput="resetRatingTimeout()">
                 <button class="btn" style="margin: 0;" onclick="verifyAgentRating()">> OVĚŘIT KÓD IDENTITY</button>
                 
-                <div class="rating-result-box" id="rating-output"></div>
+                <div class="rating-result-box" id="rating-output" role="status" aria-live="polite"></div>
                 <div class="rating-timeout-display" id="rating-timeout-text">Z bezpečnostních důvodů budeš odhlášen za: 60s</div>
             </div>
             <div class="nav-footer">
@@ -942,16 +1029,17 @@
             </div>
         </div>
 
+        <!-- Nabídka misí; stav prvních dvou tlačítek řídí CONFIG_MISI a updateMissionAccess(). -->
         <div id="missions-menu-screen" class="screen screen-centered">
             <h1 style="font-size: 3.2rem; margin-bottom: 10px;">VÝBĚR MISE</h1>
             <p style="letter-spacing: 4px; margin-bottom: 30px; font-size: 15px; opacity: 0.7; text-align: center;">ZVOLTE DATOVÝ UZEL PRO SPECIFICKÝ BRIEFING</p>
             
             <div class="missions-menu-grid">
                 <button class="btn" onclick="loadMissionBriefing('intro-op')">> ÚVOD : OPERACE NEXUS</button>
-                <button class="btn btn-locked" disabled>> 🔒 Mise 1</button>
-                <button class="btn btn-locked" disabled>> 🔒 Mise 2</button>
-                <button class="btn btn-locked" disabled>> 🔒 Mise 3</button>
-                <button class="btn btn-locked" disabled>> 🔒 Mise 4</button>
+                <button class="btn btn-locked" id="mission-button-m1" type="button" disabled>&gt; 🔒 MISE 1 — DIGITÁLNÍ STOPA</button>
+                <button class="btn btn-locked" id="mission-button-m2" type="button" disabled>&gt; 🔒 MISE 2 — DATOVÝ TREZOR</button>
+                <button class="btn btn-locked" id="mission-button-m3" type="button" disabled>&gt; 🔒 MISE 3 — STABILIZACE JÁDRA</button>
+                <button class="btn btn-locked" id="mission-button-m4" type="button" disabled>&gt; 🔒 MISE 4 — PŘIPRAVUJE SE</button>
             </div>
 
             <div class="nav-footer" style="max-width: 1300px; width: 100%; margin-top: 40px;">
@@ -960,6 +1048,7 @@
             </div>
         </div>
 
+        <!-- Univerzální detail mise plněný daty BRIEFINGY_* ve skriptu. -->
         <div id="mission-detail-screen" class="screen">
             <h2 id="mission-detail-title">SPECIFICKÝ BRIEFING UZLU</h2>
             <div class="typewriter-content" id="mission-detail-container"></div>
@@ -969,6 +1058,7 @@
             </div>
         </div>
 
+        <!-- Dashboard: termíny, telemetrie, stav misí a fiktivní živý protokol. -->
         <div id="dashboard-screen" class="screen">
             <h2>NEXUS CORE // ŘÍDÍCÍ CENTRUM</h2>
             <div class="dashboard-grid">
@@ -991,22 +1081,22 @@
                         <div class="mission-list">
                             <div class="mission-item locked">
                                 <div class="mission-header-row"><span>MISE 01: ---------------</span><span style="color:var(--alert-red);">[ LOCKED ]</span></div>
-                                <div class="mission-meta-row"><span id="m1-timer">Zámek active</span><span>Progres: 0%</span></div>
+                                <div class="mission-meta-row"><span id="m1-timer">Časový zámek aktivní</span><span>Progres: 0%</span></div>
                                 <div class="mini-progress-container"><div class="mini-progress-bar" style="background:#222;"></div></div>
                             </div>
                             <div class="mission-item locked">
                                 <div class="mission-header-row"><span>MISE 02: ---------------</span><span style="color:var(--alert-red);">[ LOCKED ]</span></div>
-                                <div class="mission-meta-row"><span id="m2-timer">Zámek active</span><span>Progres: 0%</span></div>
+                                <div class="mission-meta-row"><span id="m2-timer">Časový zámek aktivní</span><span>Progres: 0%</span></div>
                                 <div class="mini-progress-container"><div class="mini-progress-bar" style="background:#222;"></div></div>
                             </div>
                             <div class="mission-item locked">
                                 <div class="mission-header-row"><span>MISE 03: ---------------</span><span style="color:var(--alert-red);">[ LOCKED ]</span></div>
-                                <div class="mission-meta-row"><span id="m3-timer">Zámek active</span><span>Progres: 0%</span></div>
+                                <div class="mission-meta-row"><span id="m3-timer">Časový zámek aktivní</span><span>Progres: 0%</span></div>
                                 <div class="mini-progress-container"><div class="mini-progress-bar" style="background:#222;"></div></div>
                             </div>
                             <div class="mission-item locked">
                                 <div class="mission-header-row"><span>MISE 04: ---------------</span><span style="color:var(--alert-red);">[ LOCKED ]</span></div>
-                                <div class="mission-meta-row"><span id="m4-timer">Zámek active</span><span>Progres: 0%</span></div>
+                                <div class="mission-meta-row"><span id="m4-timer">Časový zámek aktivní</span><span>Progres: 0%</span></div>
                                 <div class="mini-progress-container"><div class="mini-progress-bar" style="background:#222;"></div></div>
                             </div>
                         </div>
@@ -1082,6 +1172,7 @@
             </div>
         </div>
 
+        <!-- Registrace: QR obrázek se načítá ze souboru qr_kod.png. -->
         <div id="registration-screen" class="screen">
             <h2>IDENTITY SECURE UPLINK REGISTRATION</h2>
             <div class="qr-display-container">
@@ -1112,6 +1203,7 @@
             </div>
         </div>
 
+        <!-- Textové informační obrazovky; jejich obsah doplňuje showSection(). -->
         <div id="intro-screen" class="screen">
             <h2>ÚVOD OPERACE NEXUS CORE</h2>
             <div class="typewriter-content" id="intro-text-container"></div>
@@ -1140,6 +1232,7 @@
             </div>
         </div>
 
+        <!-- Bezpečné odhlášení s logem, průběhem a závěrečným vypnutím. -->
         <div id="logoff-screen" class="screen">
             <h2 style="color: var(--alert-red); border-color: var(--alert-red); text-shadow: var(--red-glow);">NEXUS PROTOCOL // SECURE TERMINAL SHUTDOWN</h2>
             <div class="typewriter-content" id="logoff-log-container" style="color: var(--alert-red); border-color: rgba(255,51,51,0.3); font-size: 16px; font-family: monospace;"></div>
@@ -1150,24 +1243,59 @@
         </div>
     </div>
 
-    <div class="ambient-log-box" id="ambient-log-node"></div>
+    <div class="ambient-log-box" id="ambient-log-node" aria-hidden="true"></div>
 
     <script>
+        /*
+         * MAPA JAVASCRIPTU
+         * A. Konfigurace termínů a textů misí.
+         * B. Inicializace stránky po DOMContentLoaded.
+         * C. Canvas jádra, Matrix pozadí a fiktivní telemetrie.
+         * D. Přepínání obrazovek, psací efekt a navigace.
+         * E. Odpočty registrace/operace/misí.
+         * F. Načtení agenti.csv a zobrazení výsledku Agent ID.
+         * G. Přihlašovací, bootovací a odhlašovací sekvence.
+         *
+         * Hodnoty v této první konfigurační části lze měnit bez zásahu
+         * do vykreslovacího enginu níže.
+         */
+        // Datum, od kterého dashboard považuje jednotlivé mise za aktivní.
         const CONFIG_MISI = {
-            m1: { targetDate: 'August 1, 2026 12:00:00' },
-            m2: { targetDate: 'September 1, 2026 12:00:00' },
-            m3: { targetDate: 'October 1, 2026 12:00:00' },
-            m4: { targetDate: 'November 1, 2026 12:00:00' }
+            m1: {
+                targetDate: '2026-08-01T12:00:00+02:00',
+                title: 'MISE 1 — DIGITÁLNÍ STOPA',
+                url: 'mise1-start.html'
+            },
+            m2: {
+                targetDate: '2026-09-01T12:00:00+02:00',
+                title: 'MISE 2 — DATOVÝ TREZOR',
+                url: 'mise2-intro.html'
+            },
+            m3: {
+                targetDate: '2026-10-01T12:00:00+02:00',
+                title: 'MISE 3 — STABILIZACE JÁDRA',
+                url: 'mise3-komplet.html'
+            },
+            m4: {
+                targetDate: '2026-11-01T12:00:00+01:00',
+                title: 'MISE 4 — PŘIPRAVUJE SE',
+                url: null
+            }
         };
 
+        // Univerzální testovací identita organizátora; funguje i bez záznamu v agenti.csv.
+        const SUPERAGENT_ID = 'AJIHAD';
+
+        // Text, který se zobrazí v univerzální obrazovce detailu mise.
         const BRIEFINGY_TEXTY = {
-            'intro-op': "OPERAČNÍ MANUÁL: OPERACE NEXUS\n\nTento uzel obsahuje kompletní rámcovou strukturu naší ofenzívy. Hlavním úkolem operace je postupné proniknutí skrze čtyři oddělené obranné vrstvy cizího subsystému.\n\nKaždá fáze vyžaduje specifický soubor šifrovacích dekrétů. Selhání na jakékoliv úrovni znamená automatické resetování všech dosavadních postupů a ztrátu oprávnění úrovně SUB-0.\n\nSledujte telemetrii a vyčkejte na otevření časových zámků.",
-            'm1': "BRIEFING: MISE 1 - DIGITÁLNÍ STOPA\n\nCÍL: Lokalizace a extrakce úvodních přístupových logů zanechaných na hraničním proxy serveru.\n\nPOKYNY:\n1. Proveďte pasivní skenování portů na zadaném segmentu.\n2. Vyhněte se aktivním dotazům, které by mohly zalarmovat místní IDS vrstvu.\n3. Extrahujte hexadecimální hashe identifikující pohyb předchozích entit.\n\nRIZIKO ODHALENÍ: VELMI NÍZKÉ",
-            'm2': "BRIEFING: MISE 2 - KRYPTOGRAFICKÝ KLÍČ\n\nCÍL: Dešifrování datového balíku zachyceného v první fázi operace a sestavení primárního symetrického klíče.\n\nPOKYNY:\n1. Implementujte frekvenční analýzu na poškozené bloky dat.\n2. Využijte taktické AI jádro pro prolomení solí v algoritmu SHA-512.\n3. Zkompletovaný klíč uložte do lokálního identitního registru.\n\nRIZIKO ODHALENÍ: STŘEDNÍ",
-            'm3': "BRIEFING: MISE 3 - INFILTRACE REAKTORU\n\nCÍL: Přemostění bezpečnostních subsystémů chladicího jádra a získání kontroly nad distribucí energie.\n\nPOKYNY:\n1. Vytvořte falešný autorizační token s využitím klíče z Mise 2.\n2. Projděte skrze firewallovou bariéru SIGMA_4.\n3. Vyvolejte simulované přetížení logických obvodů pro otevření servisních kanálů.\n\nRIZIKO ODHALENÍ: VYSOKÉ",
-            'm4': "BRIEFING: MISE 4 - FINÁLNÍ PURGE\n\nCÍL: Trvalé odstranění všech digitálních stop operace a uzavření komunikačního uzlu.\n\nPOKYNY:\n1. Spusťte rekurzivní čistící skript napříč celou infrastrukturou.\n2. Přepište sektory paměti náhodným šumem.\n3. Iniciujte nouzový shutdown terminálu (LOGOFF) s destrukcí šifrovací mezipaměti.\n\nRIZIKO ODHALENÍ: CRITICAL"
+            'intro-op': "OPERAČNÍ MANUÁL: OPERACE NEXUS\n\nUmělá inteligence Omega pronikla do systému Nexus a s každou misí se pokouší převzít další část jeho řízení. Úkolem agentů je zjistit, jak narušení provedla, napravit způsobené škody a zabránit úplnému ovládnutí Nexusu.\n\nKaždá ze čtyř samostatných misí prověří jinou digitální dovednost. Přesné zadání a způsob odevzdání získá každý agent po odemčení příslušné mise.\n\nSleduj stav systému, kontroluj školní e-mail a vyčkej na otevření časových zámků.",
+            'm1': "BRIEFING: MISE 1 — DIGITÁLNÍ STOPA\n\nCÍL: Zjistit, které veřejné informace o pěti fiktivních členech Nexusu Omega získala, jak je propojila a jak jí pomohly připravit útok.\n\nPRÁCE: Každý žák pracuje samostatně. Prozkoumá materiály v datovém trezoru, doloží závěry konkrétními stopami a navrhne ochranná opatření.",
+            'm2': "BRIEFING: MISE 2 — NARUŠENÝ DATOVÝ TREZOR\n\nCÍL: Opravit poškozenou databázi, odstranit duplicitu a záznam Omegy, doplnit chybějící hodnoty a z opravených dat získat obnovovací kód.\n\nPRÁCE: Každý agent pracuje ve vlastní kopii tabulkového souboru. Přesný postup je na listu ZADÁNÍ.",
+            'm3': "BRIEFING: MISE 3 — STABILIZACE JÁDRA\n\nCÍL: Obnovit hlasový modul Nexusu sestavením programu z blokových příkazů.\n\nPRÁCE: Každý agent pracuje samostatně. Ve čtyřech částech řídí servisní jednotku pomocí posloupností, opakování a podmínek. Program musí uspět ve všech testovacích scénářích; neúspěšná simulace odečte jednu minutu.",
+            'm4': "MISE 4\n\nOperační obsah se připravuje. Terminál jej neodemkne, dokud nebude doplněn do konfigurace."
         };
 
+        // Nadpis odpovídající stejnému klíči v BRIEFINGY_TEXTY.
         const BRIEFINGY_TITULKY = {
             'intro-op': "NEXUS CORE // ÚVODNÍ BRIEFING OPERACE",
             'm1': "NEXUS CORE // BRIEFING K MISI 1",
@@ -1176,6 +1304,7 @@
             'm4': "NEXUS CORE // BRIEFING K MISI 4"
         };
 
+        // Náhodně rotující dekorativní záznamy dashboardu; nejde o skutečná data.
         const FIKTIVNI_HLASKY_DASH = [
             "SYS: Paket ze sub-uzlu 01 ověřen via SHA-512.",
             "NET: Pokus o ping na bránu Firewall... Odezva 12ms.",
@@ -1225,6 +1354,7 @@
             spawnDashboardActivityLog();
         });
 
+        /* ---------- BOOTOVACÍ MATICE A DEKORATIVNÍ ŽIVÉ LOGY ---------- */
         function initBootMatrixGrid() {
             const grid = document.getElementById('boot-matrix-grid');
             if(!grid) return;
@@ -1276,6 +1406,11 @@
             }
         }
 
+        /*
+         * MALÁ JÁDRA NEXUS
+         * Vytvoří samostatnou canvas instanci pro start, menu a dashboard.
+         * Hover/dotyk dočasně aktivuje růžový režim overdrive.
+         */
         function initAICores() {
             const canvasIds = ['ai-core-canvas-start', 'ai-core-canvas-menu', 'ai-core-canvas-dash'];
             
@@ -1417,6 +1552,11 @@
             });
         }
 
+        /*
+         * CELOPLOŠNÉ POZADÍ
+         * Připraví Matrix sloupce a předkreslenou hexagonální texturu.
+         * renderCombinedEngine() je potom skládá do jednoho canvasu.
+         */
         function initBackgroundBuffers() {
             canvas.width = lowPowerDevice ? Math.min(window.innerWidth, 960) : window.innerWidth;
             canvas.height = lowPowerDevice ? Math.min(window.innerHeight, 600) : window.innerHeight;
@@ -1522,6 +1662,11 @@
             if(container.children.length > 4) container.removeChild(container.children[0]);
         }
 
+        /*
+         * NAVIGACE
+         * Všechny "stránky" jsou ve skutečnosti div.screen v jednom HTML.
+         * switchScreen() skryje aktivní obrazovku a ukáže cílové id.
+         */
         function switchScreen(screenId) {
             let overlay = document.getElementById('g-overlay');
             if(overlay) {
@@ -1584,8 +1729,37 @@
             }
         }
 
+        /*
+         * ČASOVÉ ZÁMKY
+         * Zde jsou kromě CONFIG_MISI natvrdo uvedena dvě globální data:
+         * konec celé operace a konec registrace.
+         */
+        function updateMissionAccess(now) {
+            Object.entries(CONFIG_MISI).forEach(([klic, mise]) => {
+                const button = document.getElementById(`mission-button-${klic}`);
+                if (!button) return;
+
+                const dateReached = now >= new Date(mise.targetDate).getTime();
+                const isAvailable = dateReached && Boolean(mise.url);
+                button.disabled = !isAvailable;
+                button.classList.toggle('btn-locked', !isAvailable);
+                button.setAttribute('aria-disabled', String(!isAvailable));
+
+                if (isAvailable) {
+                    button.textContent = `> ${mise.title}`;
+                    button.title = `Otevřít ${mise.title}`;
+                    button.onclick = () => { window.location.href = mise.url; };
+                } else {
+                    button.textContent = `> 🔒 ${mise.title}`;
+                    button.title = mise.url ? 'Mise zatím není odemčena.' : 'Obsah mise se připravuje.';
+                    button.onclick = null;
+                }
+            });
+        }
+
         function updateTimers() {
             const now = new Date().getTime();
+            updateMissionAccess(now);
             const targetGlobal = new Date('December 31, 2026 23:59:59').getTime();
             const diffGlobal = targetGlobal - now;
             const gCount = document.getElementById('global-countdown');
@@ -1620,7 +1794,8 @@
                 const tDiff = tTarget - now;
                 const timerEl = document.getElementById(`${klic}-timer`);
                 if (timerEl) {
-                    if (tDiff <= 0) { timerEl.innerText = "Uzel dostupný k dešifrování."; } 
+                    if (tDiff <= 0 && m.url) { timerEl.innerText = "Uzel dostupný k dešifrování."; }
+                    else if (tDiff <= 0) { timerEl.innerText = "Obsah mise se připravuje."; }
                     else {
                         const d = Math.floor(tDiff / (1000 * 60 * 60 * 24));
                         const h = Math.floor((tDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -1631,6 +1806,7 @@
             }
         }
 
+        /* Společný psací efekt používaný briefingem a informačními obrazovkami. */
         let typeTimeout;
         function typeWriter(text, elementId, speed = 15, isError = false, callback = null) {
             clearTimeout(typeTimeout);
@@ -1697,6 +1873,11 @@
             typeWriter(text, 'mission-detail-container', 12, false);
         }
 
+        /*
+         * TEXTY ÚVODU, KODEXU A FAQ
+         * Podle sectionId se zde vybere dlouhý text a vypíše typewriterem.
+         * Chcete-li změnit obsah těchto tří obrazovek, upravujte právě zde.
+         */
         function showSection(sectionId) {
             switchScreen(sectionId);
             if (sectionId === 'intro-screen') {
@@ -1713,6 +1894,11 @@
             }
         }
 
+        /*
+         * VÝSLEDKY AGENTA
+         * Obrazovka se po 60 s nečinnosti bezpečnostně odhlásí.
+         * verifyAgentRating() načítá agenti.csv a hledá shodu Agent ID.
+         */
         function openRatingSection() {
             switchScreen('rating-screen');
             document.getElementById('agent-id-input').value = '';
@@ -1767,6 +1953,26 @@
                 outputBox.classList.add('error-state');
                 outputBox.style.display = 'block';
                 typeWriter("[ ERROR ] NEBYLA ZADÁNA ŽÁDNÁ IDENTITA.", 'rating-output', 8, true, () => {
+                    startRatingTimeout();
+                });
+                return;
+            }
+
+            if (inputVal === SUPERAGENT_ID) {
+                outputBox.style.display = 'block';
+                const superagentVypis =
+                    `<div class="evaluation-report">` +
+                        `<div class="report-section">` +
+                            `<div class="report-line highlight"><span>Identita:</span><strong>AJIHAD</strong></div>` +
+                            `<div class="report-line highlight"><span>Úroveň přístupu:</span><span class="rank-badge">SUPERAGENT</span></div>` +
+                            `<div class="report-line"><span>Testovací režim:</span><strong>AKTIVNÍ</strong></div>` +
+                            `<div class="report-line"><span>Přístup k misím:</span><strong>UNIVERZÁLNÍ</strong></div>` +
+                        `</div>` +
+                        `<div class="report-message">` +
+                            `Autorizace organizátora dokončena. Diagnostické rozhraní je připraveno.` +
+                        `</div>` +
+                    `</div>`;
+                typeWriter(superagentVypis, 'rating-output', 6, false, () => {
                     startRatingTimeout();
                 });
                 return;
@@ -1847,6 +2053,12 @@
                 });
         }
 
+        /*
+         * HLAVNÍ PŘÍBĚHOVÉ SEKQUENCE TERMINÁLU
+         * startBootSequence() vypisuje boot a plní progress.
+         * startBriefing() naváže uvítací zprávou.
+         * triggerLogoff() a navazující funkce provedou dramatické vypnutí.
+         */
         function startBootSequence() {
             bootSequenceToken += 1;
             const currentBootToken = bootSequenceToken;
