@@ -1004,7 +1004,7 @@
                 <button class="btn" onclick="showSection('intro-screen')">> ÚVODNÍ BRIEFING</button>
                 <button class="btn" onclick="showSection('rules-screen')">> KODEX AGENTA</button>
                 <button class="btn" onclick="showSection('dashboard-screen')">> ŘÍDÍCÍ DASHBOARD</button>
-                <button class="btn" onclick="showSection('registration-screen')">> REGISTRACE AGENTA</button>
+                <button class="btn" id="registration-button" type="button" onclick="showSection('registration-screen')">> REGISTRACE AGENTA</button>
                 <button class="btn" onclick="showSection('faq-screen')">> DOTAZY</button>
                 <button class="btn" style="border-color: var(--neon-green); color: var(--neon-green);" onclick="showMissionsMenu()">> OPERAČNÍ MISE</button>
                 <button class="btn" onclick="openRatingSection()">> ZJIŠTĚNÍ ÚROVNĚ AGENTA</button>
@@ -1039,7 +1039,7 @@
                 <button class="btn btn-locked" id="mission-button-m1" type="button" disabled>&gt; 🔒 MISE 1 — DIGITÁLNÍ STOPA</button>
                 <button class="btn btn-locked" id="mission-button-m2" type="button" disabled>&gt; 🔒 MISE 2 — DATOVÝ TREZOR</button>
                 <button class="btn btn-locked" id="mission-button-m3" type="button" disabled>&gt; 🔒 MISE 3 — STABILIZACE JÁDRA</button>
-                <button class="btn btn-locked" id="mission-button-m4" type="button" disabled>&gt; 🔒 MISE 4 — PŘIPRAVUJE SE</button>
+                <button class="btn btn-locked" id="mission-button-m4" type="button" disabled>&gt; 🔒 MISE 4 — PROTOKOL GENESIS</button>
             </div>
 
             <div class="nav-footer" style="max-width: 1300px; width: 100%; margin-top: 40px;">
@@ -1067,35 +1067,35 @@
                         <div class="dash-card">
                             <div class="card-title">REGISTRAČNÍ OKNO AGENTŮ</div>
                             <div class="countdown-timer" id="registration-countdown">--D --H --M --S</div>
-                            <div style="font-size: 12px; text-align: center; opacity: 0.5; margin-top: 4px;">Ukončení: 20. 9. 2026</div>
+                            <div style="font-size: 12px; text-align: center; opacity: 0.5; margin-top: 4px;">Ukončení: 30. 9. 2026 ve 23:59</div>
                         </div>
                         <div class="dash-card">
-                            <div class="card-title">ZÁMKA DEŠIFROVACÍHO CYKLU 2026</div>
+                            <div class="card-title">ZÁMKA DEŠIFROVACÍHO CYKLU 2026/2027</div>
                             <div class="countdown-timer" id="global-countdown" style="color:var(--neon-green); text-shadow:var(--neon-glow);">000D 00H 00M 00S</div>
-                            <div style="font-size: 12px; text-align: center; opacity: 0.5; margin-top: 4px;">Konec operace: 31. 12. 2026</div>
+                            <div style="font-size: 12px; text-align: center; opacity: 0.5; margin-top: 4px;">Konec operace: 31. 1. 2027 ve 23:59</div>
                         </div>
                     </div>
                     
                     <div class="dash-card dash-card-misions">
                         <div class="card-title">FAZOVANÉ SYSTÉMOVÉ UZLY</div>
                         <div class="mission-list">
-                            <div class="mission-item locked">
-                                <div class="mission-header-row"><span>MISE 01: ---------------</span><span style="color:var(--alert-red);">[ LOCKED ]</span></div>
+                            <div class="mission-item locked" id="mission-item-m1">
+                                <div class="mission-header-row"><span>MISE 01: DIGITÁLNÍ STOPA</span><span id="mission-status-m1" style="color:var(--alert-red);">[ LOCKED ]</span></div>
                                 <div class="mission-meta-row"><span id="m1-timer">Časový zámek aktivní</span><span>Progres: 0%</span></div>
                                 <div class="mini-progress-container"><div class="mini-progress-bar" style="background:#222;"></div></div>
                             </div>
-                            <div class="mission-item locked">
-                                <div class="mission-header-row"><span>MISE 02: ---------------</span><span style="color:var(--alert-red);">[ LOCKED ]</span></div>
+                            <div class="mission-item locked" id="mission-item-m2">
+                                <div class="mission-header-row"><span>MISE 02: DATOVÝ TREZOR</span><span id="mission-status-m2" style="color:var(--alert-red);">[ LOCKED ]</span></div>
                                 <div class="mission-meta-row"><span id="m2-timer">Časový zámek aktivní</span><span>Progres: 0%</span></div>
                                 <div class="mini-progress-container"><div class="mini-progress-bar" style="background:#222;"></div></div>
                             </div>
-                            <div class="mission-item locked">
-                                <div class="mission-header-row"><span>MISE 03: ---------------</span><span style="color:var(--alert-red);">[ LOCKED ]</span></div>
+                            <div class="mission-item locked" id="mission-item-m3">
+                                <div class="mission-header-row"><span>MISE 03: STABILIZACE JÁDRA</span><span id="mission-status-m3" style="color:var(--alert-red);">[ LOCKED ]</span></div>
                                 <div class="mission-meta-row"><span id="m3-timer">Časový zámek aktivní</span><span>Progres: 0%</span></div>
                                 <div class="mini-progress-container"><div class="mini-progress-bar" style="background:#222;"></div></div>
                             </div>
-                            <div class="mission-item locked">
-                                <div class="mission-header-row"><span>MISE 04: ---------------</span><span style="color:var(--alert-red);">[ LOCKED ]</span></div>
+                            <div class="mission-item locked" id="mission-item-m4">
+                                <div class="mission-header-row"><span>MISE 04: PROTOKOL GENESIS</span><span id="mission-status-m4" style="color:var(--alert-red);">[ LOCKED ]</span></div>
                                 <div class="mission-meta-row"><span id="m4-timer">Časový zámek aktivní</span><span>Progres: 0%</span></div>
                                 <div class="mini-progress-container"><div class="mini-progress-bar" style="background:#222;"></div></div>
                             </div>
@@ -1259,27 +1259,37 @@
          * Hodnoty v této první konfigurační části lze měnit bez zásahu
          * do vykreslovacího enginu níže.
          */
-        // Datum, od kterého dashboard považuje jednotlivé mise za aktivní.
+        // Jediné místo pro správu termínů registrace a celé operace.
+        const CONFIG_HARMONOGRAM = {
+            registrationEnd: '2026-09-30T23:59:59.999+02:00',
+            operationEnd: '2027-01-31T23:59:59.999+01:00'
+        };
+
+        // Každá mise je přístupná jen uvnitř svého časového okna v českém čase.
         const CONFIG_MISI = {
             m1: {
-                targetDate: '2026-08-01T12:00:00+02:00',
+                startDate: '2026-10-01T00:00:00+02:00',
+                endDate: '2026-10-31T23:59:59.999+01:00',
                 title: 'MISE 1 — DIGITÁLNÍ STOPA',
                 url: 'mise1-start.html'
             },
             m2: {
-                targetDate: '2026-09-01T12:00:00+02:00',
+                startDate: '2026-11-01T00:00:00+01:00',
+                endDate: '2026-11-30T23:59:59.999+01:00',
                 title: 'MISE 2 — DATOVÝ TREZOR',
                 url: 'mise2-intro.html'
             },
             m3: {
-                targetDate: '2026-10-01T12:00:00+02:00',
+                startDate: '2026-12-01T00:00:00+01:00',
+                endDate: '2026-12-31T23:59:59.999+01:00',
                 title: 'MISE 3 — STABILIZACE JÁDRA',
                 url: 'mise3-komplet.html'
             },
             m4: {
-                targetDate: '2026-11-01T12:00:00+01:00',
-                title: 'MISE 4 — PŘIPRAVUJE SE',
-                url: null
+                startDate: '2027-01-01T00:00:00+01:00',
+                endDate: '2027-01-31T23:59:59.999+01:00',
+                title: 'MISE 4 — PROTOKOL GENESIS',
+                url: 'mise4-protokol-genesis.html'
             }
         };
 
@@ -1292,7 +1302,7 @@
             'm1': "BRIEFING: MISE 1 — DIGITÁLNÍ STOPA\n\nCÍL: Zjistit, které veřejné informace o pěti fiktivních členech Nexusu Omega získala, jak je propojila a jak jí pomohly připravit útok.\n\nPRÁCE: Každý žák pracuje samostatně. Prozkoumá materiály v datovém trezoru, doloží závěry konkrétními stopami a navrhne ochranná opatření.",
             'm2': "BRIEFING: MISE 2 — NARUŠENÝ DATOVÝ TREZOR\n\nCÍL: Opravit poškozenou databázi, odstranit duplicitu a záznam Omegy, doplnit chybějící hodnoty a z opravených dat získat obnovovací kód.\n\nPRÁCE: Každý agent pracuje ve vlastní kopii tabulkového souboru. Přesný postup je na listu ZADÁNÍ.",
             'm3': "BRIEFING: MISE 3 — STABILIZACE JÁDRA\n\nCÍL: Obnovit hlasový modul Nexusu sestavením programu z blokových příkazů.\n\nPRÁCE: Každý agent pracuje samostatně. Ve čtyřech částech řídí servisní jednotku pomocí posloupností, opakování a podmínek. Program musí uspět ve všech testovacích scénářích; neúspěšná simulace odečte jednu minutu.",
-            'm4': "MISE 4\n\nOperační obsah se připravuje. Terminál jej neodemkne, dokud nebude doplněn do konfigurace."
+            'm4': "BRIEFING: MISE 4 — PROTOKOL GENESIS\n\nCÍL: Připravit hodnoty, bezpečnostní pravidla, způsob pomoci a vizuální podobu nové instance Nexus Core.\n\nPRÁCE: Každý agent samostatně dokončí čtyři nezávislé části, získá čtyři klíče a exportuje svůj návrh do souboru. Po jeho odevzdání do datového trezoru může spustit závěrečnou sekvenci Genesis."
         };
 
         // Nadpis odpovídající stejnému klíči v BRIEFINGY_TEXTY.
@@ -1729,78 +1739,97 @@
             }
         }
 
-        /*
-         * ČASOVÉ ZÁMKY
-         * Zde jsou kromě CONFIG_MISI natvrdo uvedena dvě globální data:
-         * konec celé operace a konec registrace.
-         */
+        /* ČASOVÉ ZÁMKY — všechna data jsou soustředěna v CONFIG_HARMONOGRAM a CONFIG_MISI. */
+        function formatCountdown(diff, dayDigits = 2) {
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            return `${String(days).padStart(dayDigits, '0')}D ${String(hours).padStart(2, '0')}H ${String(minutes).padStart(2, '0')}M ${String(seconds).padStart(2, '0')}S`;
+        }
+
+        function updateRegistrationAccess(now) {
+            const button = document.getElementById('registration-button');
+            if (!button) return;
+
+            const isClosed = now > new Date(CONFIG_HARMONOGRAM.registrationEnd).getTime();
+            button.disabled = isClosed;
+            button.classList.toggle('btn-locked', isClosed);
+            button.setAttribute('aria-disabled', String(isClosed));
+            button.textContent = isClosed ? '> 🔒 REGISTRACE UKONČENA' : '> REGISTRACE AGENTA';
+            button.title = isClosed ? 'Registrační okno bylo uzavřeno 30. 9. 2026 ve 23:59.' : 'Otevřít registraci agenta';
+            button.onclick = isClosed ? null : () => showSection('registration-screen');
+        }
+
         function updateMissionAccess(now) {
             Object.entries(CONFIG_MISI).forEach(([klic, mise]) => {
                 const button = document.getElementById(`mission-button-${klic}`);
-                if (!button) return;
+                const item = document.getElementById(`mission-item-${klic}`);
+                const status = document.getElementById(`mission-status-${klic}`);
+                const start = new Date(mise.startDate).getTime();
+                const end = new Date(mise.endDate).getTime();
+                const isBefore = now < start;
+                const isAfter = now > end;
+                const isAvailable = !isBefore && !isAfter && Boolean(mise.url);
 
-                const dateReached = now >= new Date(mise.targetDate).getTime();
-                const isAvailable = dateReached && Boolean(mise.url);
-                button.disabled = !isAvailable;
-                button.classList.toggle('btn-locked', !isAvailable);
-                button.setAttribute('aria-disabled', String(!isAvailable));
+                if (button) {
+                    button.disabled = !isAvailable;
+                    button.classList.toggle('btn-locked', !isAvailable);
+                    button.setAttribute('aria-disabled', String(!isAvailable));
 
-                if (isAvailable) {
-                    button.textContent = `> ${mise.title}`;
-                    button.title = `Otevřít ${mise.title}`;
-                    button.onclick = () => { window.location.href = mise.url; };
-                } else {
-                    button.textContent = `> 🔒 ${mise.title}`;
-                    button.title = mise.url ? 'Mise zatím není odemčena.' : 'Obsah mise se připravuje.';
-                    button.onclick = null;
+                    if (isAvailable) {
+                        button.textContent = `> ${mise.title}`;
+                        button.title = `Otevřít ${mise.title}`;
+                        button.onclick = () => { window.location.href = mise.url; };
+                    } else {
+                        button.textContent = `> 🔒 ${mise.title}${isAfter ? ' — UKONČENA' : ''}`;
+                        button.title = isAfter ? 'Časové okno této mise již skončilo.' : 'Mise zatím není odemčena.';
+                        button.onclick = null;
+                    }
+                }
+
+                if (item) item.classList.toggle('locked', !isAvailable);
+                if (status) {
+                    status.textContent = isAvailable ? '[ ACTIVE ]' : isAfter ? '[ CLOSED ]' : '[ LOCKED ]';
+                    status.style.color = isAvailable ? 'var(--neon-green)' : 'var(--alert-red)';
                 }
             });
         }
 
         function updateTimers() {
             const now = new Date().getTime();
+            updateRegistrationAccess(now);
             updateMissionAccess(now);
-            const targetGlobal = new Date('December 31, 2026 23:59:59').getTime();
+            const targetGlobal = new Date(CONFIG_HARMONOGRAM.operationEnd).getTime();
             const diffGlobal = targetGlobal - now;
             const gCount = document.getElementById('global-countdown');
             if (gCount) {
-                if (diffGlobal <= 0) { gCount.innerText = "000D 00H 00M 00S"; } 
-                else {
-                    const days = Math.floor(diffGlobal / (1000 * 60 * 60 * 24));
-                    const hours = Math.floor((diffGlobal % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    const minutes = Math.floor((diffGlobal % (1000 * 60 * 60)) / (1000 * 60));
-                    const seconds = Math.floor((diffGlobal % (1000 * 60)) / 1000);
-                    gCount.innerText = `${String(days).padStart(3, '0')}D ${String(hours).padStart(2, '0')}H ${String(minutes).padStart(2, '0')}M ${String(seconds).padStart(2, '0')}S`;
-                }
+                gCount.innerText = diffGlobal <= 0 ? "OPERACE UKONČENA" : formatCountdown(diffGlobal, 3);
             }
 
-            const targetReg = new Date('September 20, 2026 23:59:59').getTime();
+            const targetReg = new Date(CONFIG_HARMONOGRAM.registrationEnd).getTime();
             const diffReg = targetReg - now;
             const regCount = document.getElementById('registration-countdown');
             if (regCount) {
                 if (diffReg <= 0) { regCount.innerText = "REGISTRACE UKONČENA"; regCount.style.color = "var(--alert-red)"; } 
                 else {
-                    const rDays = Math.floor(diffReg / (1000 * 60 * 60 * 24));
-                    const rHours = Math.floor((diffReg % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    const rMinutes = Math.floor((diffReg % (1000 * 60 * 60)) / (1000 * 60));
-                    const rSeconds = Math.floor((diffReg % (1000 * 60)) / 1000);
-                    regCount.innerText = `${String(rDays).padStart(2, '0')}D ${String(rHours).padStart(2, '0')}H ${String(rMinutes).padStart(2, '0')}M ${String(rSeconds).padStart(2, '0')}S`;
+                    regCount.style.color = '';
+                    regCount.innerText = formatCountdown(diffReg);
                 }
             }
 
             for (let klic in CONFIG_MISI) {
                 const m = CONFIG_MISI[klic];
-                const tTarget = new Date(m.targetDate).getTime();
-                const tDiff = tTarget - now;
+                const start = new Date(m.startDate).getTime();
+                const end = new Date(m.endDate).getTime();
                 const timerEl = document.getElementById(`${klic}-timer`);
                 if (timerEl) {
-                    if (tDiff <= 0 && m.url) { timerEl.innerText = "Uzel dostupný k dešifrování."; }
-                    else if (tDiff <= 0) { timerEl.innerText = "Obsah mise se připravuje."; }
-                    else {
-                        const d = Math.floor(tDiff / (1000 * 60 * 60 * 24));
-                        const h = Math.floor((tDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                        const min = Math.floor((tDiff % (1000 * 60 * 60)) / (1000 * 60));
-                        timerEl.innerText = `Odemčení za: ${d}d ${h}h ${min}m`;
+                    if (now < start) {
+                        timerEl.innerText = `Odemčení za: ${formatCountdown(start - now)}`;
+                    } else if (now <= end) {
+                        timerEl.innerText = `Uzel dostupný // uzavření za: ${formatCountdown(end - now)}`;
+                    } else {
+                        timerEl.innerText = "Časové okno mise bylo uzavřeno.";
                     }
                 }
             }
