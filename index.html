@@ -729,9 +729,10 @@
             font-size: 15px; 
             line-height: 1.45; 
             text-align: left; 
-            min-height: 220px;
-            max-height: 245px;
-            overflow-y: hidden;
+            min-height: 0;
+            max-height: none;
+            height: auto;
+            overflow: visible;
         }
         
         .rating-result-box.error-state {
@@ -894,7 +895,19 @@
             .qr-scanner-wrapper { margin-bottom: 8px; }
             .rating-auth-wrapper { max-width: 700px; padding: 16px; gap: 9px; }
             .terminal-input { font-size: 19px; padding: 11px 15px; }
-            .rating-result-box { min-height: 150px; max-height: 180px; padding: 12px; }
+            .rating-result-box {
+                min-height: 0;
+                max-height: none;
+                height: auto;
+                overflow: visible;
+                padding: 12px 16px;
+                margin-top: 8px;
+            }
+            .rating-result-box .report-section { gap: 3px; }
+            .rating-result-box .report-line { padding: 3px 0; font-size: 14px; }
+            .rating-result-box .report-line.highlight { font-size: 15px; margin-top: 3px; }
+            .rating-result-box .report-divider { margin: 6px 0; }
+            .rating-result-box .report-message { margin-top: 7px; font-size: 13px; }
         }
 
         /*
