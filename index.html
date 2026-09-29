@@ -2018,13 +2018,19 @@
                     return response.text();
                 })
                 .then(csvText => {
-                    const lines = csvText.split(/\r?\n/);
+                    const lines = csvText.split(/\r?\n/).filter(line => line.trim().length > 0);
                     let nalezeneData = null;
 
+                    // Excel může CSV uložit se středníkem, čárkou nebo tabulátorem.
+                    // Oddělovač proto zjistíme automaticky z hlavičky souboru.
+                    const header = lines[0] || '';
+                    const delimiterCandidates = ['\t', ';', ','];
+                    const delimiter = delimiterCandidates
+                        .map(d => ({ d, count: header.split(d).length - 1 }))
+                        .sort((a, b) => b.count - a.count)[0].d;
+
                     for (let i = 1; i < lines.length; i++) {
-                        if (!lines[i]) continue;
-                        
-                        const columns = lines[i].split(';');
+                        const columns = lines[i].split(delimiter);
                         
                         if (columns[0] && columns[0].trim().toUpperCase() === inputVal) {
                             nalezeneData = {
