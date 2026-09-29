@@ -2033,14 +2033,22 @@
                                 m2: columns[2] ? columns[2].trim() : "0",
                                 m3: columns[3] ? columns[3].trim() : "0",
                                 m4: columns[4] ? columns[4].trim() : "0",
-                                celkem: columns[5] ? columns[5].trim() : "0",
-                                hodnost: columns[6] ? columns[6].trim() : "Neznámá"
+                                celkem: columns[5] ? columns[5].trim() : "0"
                             };
                             break;
                         }
                     }
 
                     if (nalezeneData) {
+                        const celkemBodu = Number.parseInt(nalezeneData.celkem, 10) || 0;
+                        const vypocitejHodnost = (body) => {
+                            if (body >= 350) return 'Legend';
+                            if (body >= 300) return 'Elite Agent';
+                            if (body >= 200) return 'Specialista';
+                            if (body >= 100) return 'Operative';
+                            return 'Rekrut';
+                        };
+                        const hodnost = vypocitejHodnost(celkemBodu);
                         
                         // Strukturovaný HTML kód zalomený do řádků pro hodnocení
                         const strukturovanyVypis = 
@@ -2054,7 +2062,7 @@
                                 `<hr class="report-divider">` +
                                 `<div class="report-section">` +
                                     `<div class="report-line highlight"><span>Celkový počet bodů:</span><strong>${nalezeneData.celkem} b</strong></div>` +
-                                    `<div class="report-line highlight"><span>Hodnost agenta:</span><span class="rank-badge">${nalezeneData.hodnost}</span></div>` +
+                                    `<div class="report-line highlight"><span>Hodnost agenta:</span><span class="rank-badge">${hodnost}</span></div>` +
                                 `</div>` +
                                 `<div class="report-message">` +
                                     `Autorizace kompletní. Gratulujeme k výsledkům, Agente!` +
