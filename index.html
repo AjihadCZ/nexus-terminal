@@ -2023,7 +2023,7 @@
             outputBox.style.display = 'block';
             outputBox.innerHTML = "Stahuji zabezpečený registr `agenti.csv`...\nAutorizuji přístup k šifrované buňce...";
             
-            fetch('agenti.csv')
+            fetch('agenti.csv?v=' + Date.now(), { cache: 'no-store' })
                 .then(response => {
                     if (!response.ok) {
                         throw new Error("Soubor agenti.csv nebyl na serveru nalezen.");
@@ -2059,7 +2059,13 @@
                     }
 
                     if (nalezeneData) {
-                        const celkemBodu = Number.parseInt(nalezeneData.celkem, 10) || 0;
+                        // Celkový počet bodů se vždy počítá přímo ze čtyř misí.
+                        // Sloupce "Celkem bodů" a "hodnost" v CSV tak nemají vliv na výsledek.
+                        const bodyM1 = Number.parseInt(nalezeneData.m1, 10) || 0;
+                        const bodyM2 = Number.parseInt(nalezeneData.m2, 10) || 0;
+                        const bodyM3 = Number.parseInt(nalezeneData.m3, 10) || 0;
+                        const bodyM4 = Number.parseInt(nalezeneData.m4, 10) || 0;
+                        const celkemBodu = bodyM1 + bodyM2 + bodyM3 + bodyM4;
                         const vypocitejHodnost = (body) => {
                             if (body >= 350) return 'Legend';
                             if (body >= 300) return 'Elite Agent';
@@ -2080,7 +2086,7 @@
                                 `</div>` +
                                 `<hr class="report-divider">` +
                                 `<div class="report-section">` +
-                                    `<div class="report-line highlight"><span>Celkový počet bodů:</span><strong>${nalezeneData.celkem} b</strong></div>` +
+                                    `<div class="report-line highlight"><span>Celkový počet bodů:</span><strong>${celkemBodu} b</strong></div>` +
                                     `<div class="report-line highlight"><span>Hodnost agenta:</span><span class="rank-badge">${hodnost}</span></div>` +
                                 `</div>` +
                                 `<div class="report-message">` +
